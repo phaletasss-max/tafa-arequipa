@@ -12,6 +12,7 @@ import Institutions from '@/components/Institutions'
 import CTA from '@/components/CTA'
 import Footer from '@/components/Footer'
 import QRModal from '@/components/QRModal'
+import TouristAIAssistant from '@/components/ai/TouristAIAssistant'
 import { QrCode } from 'lucide-react'
 
 export default function App() {
@@ -29,13 +30,13 @@ export default function App() {
       {/* Banner de Prevención & Emergencias Turísticas */}
       <EmergencyBanner />
 
-      {/* Hero Principal */}
+      {/* Hero Principal con Video Carátula Local */}
       <Hero />
 
       {/* Scrollytelling Destinos Animados */}
       <ScrollyDestinations />
 
-      {/* Inventario Oficial & Buscador Dinámico */}
+      {/* Inventario Oficial & Buscador Dinámico Supabase */}
       <Highlights />
 
       {/* Arequipa Inexplorada (Diversificación de Rutas) */}
@@ -64,6 +65,9 @@ export default function App() {
           <span className="hidden sm:inline">Escanear QR Turístico</span>
         </button>
       </div>
+
+      {/* Asistente AI Multilingüe Gemini 3.6 Flash */}
+      <TouristAIAssistant />
 
       {/* Llamado a la Acción & Pie de Página */}
       <CTA />
