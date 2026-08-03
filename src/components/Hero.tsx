@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
-import { Upload, Map, LayoutDashboard, CalendarDays, UtensilsCrossed, Sparkles } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { Upload, Map, LayoutDashboard, CalendarDays, UtensilsCrossed, Sparkles, UserCheck } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SurveyModal from './SurveyModal'
+import AuthModal from './auth/AuthModal'
 
 function NavButton({ children, href = '#' }: { children: React.ReactNode; href?: string }) {
   return (
@@ -19,10 +20,19 @@ function NavButton({ children, href = '#' }: { children: React.ReactNode; href?:
 export default function Hero() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isSurveyOpen, setIsSurveyOpen] = useState(false)
+  const [isAuthOpen, setIsAuthOpen] = useState(false)
+  const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
   const [promptText, setPromptText] = useState(
     "Quiero recorrer Arequipa durante cinco días. Busco lugares históricos, gastronomía tradicional, eventos culturales y rutas con información actualizada."
   )
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('tafa_tourist_user')
+    if (saved) {
+      try { setTouristUser(JSON.parse(saved)); } catch(e) {}
+    }
+  }, [])
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -88,6 +98,21 @@ export default function Hero() {
             </div>
 
             <div className="flex items-center gap-6">
+              {touristUser ? (
+                <div className="flex items-center gap-2 bg-green-500/10 text-green-700 border border-green-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold max-md:hidden">
+                  <UserCheck className="w-4 h-4 text-green-600" />
+                  <span>{touristUser.nombre} ({touristUser.docType})</span>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsAuthOpen(true)}
+                  className="bg-transparent border-none cursor-pointer font-outfit text-[15px]
+                             font-semibold uppercase text-[#292929] tracking-[0.04em]
+                             transition-opacity hover:opacity-55 max-md:hidden"
+                >
+                  Acceder (DNI / Pasaporte)
+                </button>
+              )}
               <button
                 onClick={() => setIsSurveyOpen(true)}
                 className="bg-transparent border-none cursor-pointer font-outfit text-[15px]
@@ -268,6 +293,13 @@ export default function Hero() {
       <SurveyModal
         isOpen={isSurveyOpen}
         onClose={() => setIsSurveyOpen(false)}
+      />
+
+      {/* Auth Modal para DNI y Pasaporte */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onAuthSuccess={(u) => setTouristUser(u)}
       />
     </>
   )
