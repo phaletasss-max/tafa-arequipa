@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { CheckCircle2, Search, Filter, Clock, Tag, X } from 'lucide-react'
+import { CheckCircle2, Search, Filter, Clock, Tag, X, Landmark, TreePine, Castle, Compass, Utensils, Mountain } from 'lucide-react'
 import { getLugaresSupabase } from '@/services/supabaseService'
 import { Lugar } from '@/services/api'
 
@@ -37,17 +37,13 @@ export default function Highlights() {
     loadData()
   }
 
-  const getEmoji = (cat: string) => {
+  const renderCategoryIcon = (cat: string) => {
     switch (cat) {
-      case 'Patrimonio': return '🏛️'
-      case 'Naturaleza': return '🌿'
-      case 'Centro Histórico': return '🏰'
-      case 'Museo': return '🏺'
-      case 'Cultural': return '🎭'
-      case 'Mirador': return '🔭'
-      case 'Arqueología': return '🗿'
-      case 'Bienestar': return '♨️'
-      default: return '📍'
+      case 'Patrimonio': return <Landmark className="w-6 h-6 text-purple-600" />
+      case 'Naturaleza': return <TreePine className="w-6 h-6 text-emerald-600" />
+      case 'Centro Histórico': return <Castle className="w-6 h-6 text-red-600" />
+      case 'Cultural': return <Compass className="w-6 h-6 text-amber-600" />
+      default: return <Mountain className="w-6 h-6 text-tafa-volcán" />
     }
   }
 
@@ -56,9 +52,7 @@ export default function Highlights() {
       case 'Patrimonio': return '#8e44ad'
       case 'Naturaleza': return '#27ae60'
       case 'Centro Histórico': return '#c0392b'
-      case 'Museo': return '#2980b9'
       case 'Cultural': return '#e67e22'
-      case 'Mirador': return '#f39c12'
       default: return '#c0392b'
     }
   }
@@ -75,7 +69,7 @@ export default function Highlights() {
         >
           <div className="w-8 h-[2px] bg-tafa-volcán" />
           <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-volcán">
-            Lugares Turísticos (Conectado a Backend)
+            Inventario Oficial de Atractivos
           </span>
         </motion.div>
 
@@ -88,11 +82,10 @@ export default function Highlights() {
               className="font-outfit text-[clamp(28px,3.5vw,48px)] font-medium text-tafa-text
                          leading-[1.1] tracking-[-0.03em] max-w-[540px]"
             >
-              Inventario oficial verificado por DIRCETUR / MINCETUR
+              Información oficial verificada por DIRCETUR y MINCETUR
             </motion.h2>
           </div>
 
-          {/* Search and Filters */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={inView ? { opacity: 1 } : {}}
@@ -122,30 +115,26 @@ export default function Highlights() {
                 <option value="Patrimonio">Patrimonio</option>
                 <option value="Naturaleza">Naturaleza</option>
                 <option value="Centro Histórico">Centro Histórico</option>
-                <option value="Museo">Museo</option>
                 <option value="Cultural">Cultural</option>
-                <option value="Mirador">Mirador</option>
-                <option value="Arqueología">Arqueología</option>
               </select>
               <Filter className="absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-tafa-muted pointer-events-none" />
             </div>
           </motion.div>
         </div>
 
-        {/* Loading state */}
         {loading ? (
           <div className="py-20 text-center">
             <div className="w-8 h-8 border-4 border-tafa-volcán border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-tafa-muted text-sm font-medium">Cargando lugares desde la base de datos local...</p>
+            <p className="text-tafa-muted text-sm font-medium">Cargando atractivos desde Supabase PostgreSQL...</p>
           </div>
         ) : lugares.length === 0 ? (
           <div className="py-16 text-center border border-dashed border-black/10 rounded-[24px]">
-            <p className="text-tafa-muted font-medium mb-2">No se encontraron lugares con los filtros actuales.</p>
+            <p className="text-tafa-muted font-medium mb-2">No se encontraron registros para la consulta actual.</p>
             <button
               onClick={() => { setSearch(''); setCategoria(''); loadData(); }}
               className="text-tafa-volcán font-semibold text-sm hover:underline"
             >
-              Restablecer filtros
+              Restablecer consulta
             </button>
           </div>
         ) : (
@@ -171,19 +160,19 @@ export default function Highlights() {
 
                   <div className="flex items-start justify-between mb-4 mt-1">
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center"
                       style={{ background: `${color}15` }}
                     >
-                      {getEmoji(l.categoria)}
+                      {renderCategoryIcon(l.categoria)}
                     </div>
-                    {l.verificado === 1 ? (
+                    {l.verificado === 1 || (l.verificado as any) === true ? (
                       <div className="flex items-center gap-1 text-[11px] font-semibold text-[#27ae60] bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         Verificado
                       </div>
                     ) : (
                       <div className="text-[11px] font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                        Pendiente
+                        En Revisión
                       </div>
                     )}
                   </div>
@@ -203,7 +192,7 @@ export default function Highlights() {
                   </div>
 
                   <p className="text-tafa-muted text-xs line-clamp-2 mb-4 leading-relaxed">
-                    {l.descripcion || 'Sin descripción disponible.'}
+                    {l.descripcion || 'Descripción oficial no disponible.'}
                   </p>
 
                   <div className="flex items-center justify-between pt-3 border-t border-black/5">
@@ -222,7 +211,6 @@ export default function Highlights() {
 
       </div>
 
-      {/* Modal Detalle Lugar */}
       {selectedLugar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
           <div className="bg-white border border-black/10 rounded-[28px] max-w-lg w-full p-7 relative shadow-2xl animate-scale-up">
@@ -235,10 +223,10 @@ export default function Highlights() {
 
             <div className="flex items-center gap-3 mb-4">
               <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
+                className="w-12 h-12 rounded-2xl flex items-center justify-center"
                 style={{ background: `${getColor(selectedLugar.categoria)}18` }}
               >
-                {getEmoji(selectedLugar.categoria)}
+                {renderCategoryIcon(selectedLugar.categoria)}
               </div>
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-tafa-muted">
