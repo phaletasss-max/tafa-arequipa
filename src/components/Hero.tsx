@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { Upload, Map, LayoutDashboard, CalendarDays, UtensilsCrossed, Sparkles, UserCheck } from 'lucide-react'
+import { Upload, Map, LayoutDashboard, Sparkles, UserCheck } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SurveyModal from './SurveyModal'
 import AuthModal from './auth/AuthModal'
@@ -93,7 +93,7 @@ export default function Hero() {
             <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 max-md:hidden">
               <NavButton href="#explorar">Explorar</NavButton>
               <NavButton href="#mapa">Mapa</NavButton>
-              <NavButton href="#acerca">Acerca de</NavButton>
+              <NavButton href="#sobre-proyecto">Acerca de</NavButton>
               <NavButton href="http://localhost:3000/admin.html">Admin</NavButton>
             </div>
 
@@ -144,7 +144,7 @@ export default function Hero() {
                          border border-black/10 rounded-full px-4 py-1.5 text-sm font-medium text-tafa-muted shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-tafa-volcán animate-pulse" />
-              Plataforma oficial de turismo — Arequipa, Perú
+              Plataforma Oficial de Turismo — Arequipa, Perú
             </motion.div>
 
             <motion.h1
@@ -189,7 +189,6 @@ export default function Hero() {
                          shadow-glass overflow-hidden text-left p-7"
               style={{ backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
             >
-              {/* Prompt textarea */}
               <textarea
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
@@ -198,14 +197,12 @@ export default function Hero() {
                 style={{ color: '#905831' }}
               />
 
-              {/* Uploaded file preview tag if selected */}
               {selectedFile && (
                 <div className="absolute left-[70px] top-[145px] text-xs bg-white/40 backdrop-blur-md px-3 py-1 rounded-full text-tafa-text font-medium border border-white/60 truncate max-w-[200px]">
-                  📎 {selectedFile.name}
+                  Adjunto: {selectedFile.name}
                 </div>
               )}
 
-              {/* CTA button inside card */}
               <button
                 onClick={handleExploreClick}
                 className="absolute bottom-[21px] right-[21px] w-[156px] h-14
@@ -218,7 +215,6 @@ export default function Hero() {
                 Explorar
               </button>
 
-              {/* Hidden file input */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -227,11 +223,10 @@ export default function Hero() {
                 className="hidden"
               />
 
-              {/* Upload button */}
               <button
                 onClick={() => fileInputRef.current?.click()}
-                aria-label="Subir inspiración o foto"
-                title="Subir foto de referencia"
+                aria-label="Subir referencia o imagen"
+                title="Subir imagen de referencia"
                 className="absolute left-[21px] top-[137px] w-11 h-11
                            bg-transparent border border-white/70 rounded-full
                            cursor-pointer flex items-center justify-center
@@ -252,10 +247,9 @@ export default function Hero() {
               className="mt-8 flex items-center gap-4 flex-wrap justify-center"
             >
               {[
-                { icon: Map, label: 'Mapa interactivo', href: '#mapa' },
-                { icon: LayoutDashboard, label: 'Dashboard Live', href: 'http://localhost:3000' },
-                { icon: Sparkles, label: 'Encuesta Turista', onClick: () => setIsSurveyOpen(true) },
-                { icon: UtensilsCrossed, label: 'Picanterías', href: '#explorar' },
+                { icon: Map, label: 'Mapa Interactivo', href: '#mapa' },
+                { icon: LayoutDashboard, label: 'Dashboard Regional', href: 'http://localhost:3000' },
+                { icon: Sparkles, label: 'Encuesta Turística', onClick: () => setIsSurveyOpen(true) },
               ].map(({ icon: Icon, label, href, onClick }) => (
                 onClick ? (
                   <button
@@ -289,13 +283,11 @@ export default function Hero() {
         </div>
       </section>
 
-      {/* Survey Modal */}
       <SurveyModal
         isOpen={isSurveyOpen}
         onClose={() => setIsSurveyOpen(false)}
       />
 
-      {/* Auth Modal para DNI y Pasaporte */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
