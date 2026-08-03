@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
+import { fetchDashboard, DashboardResumen } from '@/services/api'
 
 function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
@@ -15,35 +17,45 @@ function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
   return <motion.span ref={ref}>{display}</motion.span>
 }
 
-const stats = [
-  { value: 21, suffix: '+', label: 'Lugares verificados', sub: 'inventario oficial MINCETUR' },
-  { value: 10, suffix: '', label: 'Restaurantes mapeados', sub: 'picanterías y fusión' },
-  { value: 5,  suffix: '', label: 'Fuentes institucionales', sub: 'DIRCETUR, AUTOCOLCA, INEI, Municipalidad' },
-  { value: 8,  suffix: '', label: 'Distritos cubiertos', sub: 'región Arequipa completa' },
-  { value: 100, suffix: '%', label: 'Datos anonimizados', sub: 'cumple Ley 29733' },
-  { value: 36,  suffix: '+', label: 'Puntos en el mapa', sub: 'lugares + gastronomía' },
-]
-
 export default function Stats() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  const [dash, setDash] = useState<DashboardResumen | null>(null)
+
+  useEffect(() => {
+    fetchDashboard()
+      .then(setDash)
+      .catch(console.error)
+  }, [])
+
+  const statsList = [
+    { value: dash?.totales.lugares ?? 21, suffix: '', label: 'Lugares turísticos', sub: 'registrados en SQLite local' },
+    { value: dash?.totales.verificados ?? 18, suffix: '', label: 'Verificados', sub: 'oficiales MINCETUR/DIRCETUR' },
+    { value: dash?.totales.gastronomia ?? 10, suffix: '', label: 'Registros Gastronomía', sub: 'picanterías y alta cocina' },
+    { value: dash?.totales.encuestas ?? 10, suffix: '', label: 'Encuestas recibidas', sub: 'turistas reales y de demo' },
+    { value: Math.round((dash?.avg_satisfaccion ?? 4.8) * 20), suffix: '%', label: 'Satisfacción', sub: `${dash?.avg_satisfaccion ?? 4.8} / 5.0 de calificación` },
+    { value: 100, suffix: '%', label: 'Protección de Datos', sub: 'conforme a Ley N° 29733' },
+  ]
 
   return (
     <section className="bg-[#0a0a0a] border-y border-white/[0.07] py-24 px-6" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="text-center text-sm font-semibold uppercase tracking-[0.12em]
-                     text-tafa-muted mb-16"
+          className="flex items-center justify-center gap-2 mb-16"
         >
-          Impacto del proyecto en números
-        </motion.p>
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-muted">
+            Métricas en tiempo real (Live API)
+          </span>
+        </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-          {stats.map(({ value, suffix, label, sub }, i) => (
+          {statsList.map(({ value, suffix, label, sub }, i) => (
             <motion.div
               key={label}
               initial={{ opacity: 0, y: 24 }}
