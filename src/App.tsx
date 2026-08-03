@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import EmergencyBanner from '@/components/safety/EmergencyBanner'
 import AccessibilityBar from '@/components/accessibility/AccessibilityBar'
-import Hero from '@/components/Hero'
-import ScrollyDestinations from '@/components/ScrollyDestinations'
+import CinematicStoryteller from '@/components/CinematicStoryteller'
+import DirectAIConversation from '@/components/ai/DirectAIConversation'
 import Highlights from '@/components/Highlights'
 import MapPreview from '@/components/MapPreview'
 import UnexploredRoutes from '@/components/UnexploredRoutes'
+import JoinEcosystem from '@/components/ecosystem/JoinEcosystem'
 import AboutProject from '@/components/AboutProject'
 import Stats from '@/components/Stats'
 import Institutions from '@/components/Institutions'
@@ -30,28 +31,29 @@ export default function App() {
       {/* Banner de Prevención & Emergencias Turísticas */}
       <EmergencyBanner />
 
-      {/* Hero Principal con Video Carátula Local */}
-      <Hero />
+      {/* PORTAL 1: TURISTA — Storytelling Cinematográfico 9 Capítulos */}
+      <CinematicStoryteller />
 
-      {/* Scrollytelling Destinos Animados */}
-      <ScrollyDestinations />
+      {/* Conversación Directa con IA (Inmediatamente después de la historia) */}
+      <DirectAIConversation />
 
-      {/* Inventario Oficial & Buscador Dinámico Supabase */}
+      {/* Inventario Oficial & Atractivos en Supabase */}
       <Highlights />
 
-      {/* Arequipa Inexplorada (Diversificación de Rutas) */}
+      {/* Arequipa Inexplorada (Rutas Alternativas) */}
       <UnexploredRoutes />
 
       {/* Mapa Interactivo con Coordenadas Reales */}
       <MapPreview />
 
-      {/* Sección Institucional sobre el Proyecto TAFA */}
+      {/* PORTAL 3: ECOSISTEMA — Join TAFA Ecosystem (Postulación MYPEs) */}
+      <JoinEcosystem />
+
+      {/* PORTAL 2: PROYECTO — Conoce el Proyecto TAFA (Explicación Institucional) */}
       <AboutProject />
 
-      {/* Métricas en Tiempo Real */}
+      {/* Métricas e Instituciones */}
       <Stats />
-
-      {/* Fuentes Oficiales MINCETUR/DIRCETUR */}
       <Institutions />
 
       {/* Botón Flotante de Escaneo de Señalética QR */}
