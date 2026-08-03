@@ -9,7 +9,7 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="font-display text-[36px] text-white leading-none mb-4">TAFA</div>
+            <img src="/img/logo.png" alt="TAFA Logo" className="h-12 w-auto object-contain mb-4" />
             <p className="text-[#8b949e] text-[14px] leading-relaxed max-w-[340px] mb-6">
               Turismo Arequipa: Fragmentado → Accesible.
               Plataforma digital de centralización de datos turísticos
