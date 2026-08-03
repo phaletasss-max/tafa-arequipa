@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Building2, ShieldCheck, Award, ArrowUpRight, Send, CheckCircle2 } from 'lucide-react'
+import { Building2, ShieldCheck, Award, ArrowUpRight, Send, CheckCircle2, FileText, CheckSquare, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function JoinEcosystem() {
@@ -14,6 +14,8 @@ export default function JoinEcosystem() {
   const [phone, setPhone] = useState('')
   const [category, setCategory] = useState('Picantería Tradicional')
   const [district, setDistrict] = useState('Yanahuara')
+  const [hasRuc, setHasRuc] = useState(true)
+  const [hasDircetur, setHasDircetur] = useState(true)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -34,6 +36,7 @@ export default function JoinEcosystem() {
           category,
           district,
           status: 'pending',
+          notes: `RUC Activo: ${hasRuc ? 'Sí' : 'No'} | Registro DIRCETUR: ${hasDircetur ? 'Sí' : 'No'}`,
         },
       ])
 
@@ -80,15 +83,15 @@ export default function JoinEcosystem() {
           </motion.p>
         </div>
 
-        {/* 3 Pillars for Business Allies */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        {/* Requirements & Standards Section */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white/5 border border-white/10 p-8 rounded-[32px] space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="font-outfit text-xl font-bold text-white">Beneficios del Aliado</h3>
+            <h3 className="font-outfit text-xl font-bold text-white">Programa Discover More</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              Integración inmediata al catálogo Discover More de TAFA Explorer Pass, visibilidad internacional y promoción activa por recomendación de IA.
+              Integración al catálogo oficial de recompensas del TAFA Explorer Pass. Los turistas desbloquean experiencias exclusivas al visitar tu establecimiento.
             </p>
           </div>
 
@@ -96,24 +99,24 @@ export default function JoinEcosystem() {
             <div className="w-12 h-12 rounded-2xl bg-tafa-volcán/20 text-tafa-volcán flex items-center justify-center text-xl font-bold">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="font-outfit text-xl font-bold text-white">Estándares de Calidad</h3>
+            <h3 className="font-outfit text-xl font-bold text-white">Estándares DIRCETUR</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              Verificación de la oferta con el sello DIRCETUR / MINCETUR, garantizando la reputación y confianza de todo el ecosistema regional.
+              Verificación oficial de la oferta con distintivo regional DIRCETUR / MINCETUR, garantizando la calidad y reputación de todo el ecosistema.
             </p>
           </div>
 
           <div className="bg-white/5 border border-white/10 p-8 rounded-[32px] space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-emerald-400/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
-              <Building2 className="w-6 h-6" />
+              <CheckSquare className="w-6 h-6" />
             </div>
             <h3 className="font-outfit text-xl font-bold text-white">Requisitos de Ingreso</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              RUC activo y habido, licencia de funcionamiento vigente y compromiso con prácticas inclusivas de accesibilidad WCAG 2.1.
+              RUC activo y habido, licencia municipal de funcionamiento vigente y compromiso con infraestructura accesible WCAG 2.1.
             </p>
           </div>
         </div>
 
-        {/* Formulario de Postulación de Aliados */}
+        {/* Official Ecosystem Application Form */}
         <div className="bg-tafa-dark border border-white/15 rounded-[36px] p-8 md:p-12 max-w-[800px] mx-auto shadow-2xl">
           {submitted ? (
             <div className="py-8 text-center space-y-4">
@@ -122,19 +125,19 @@ export default function JoinEcosystem() {
               </div>
               <h3 className="text-2xl font-bold font-outfit text-white">Postulación Recibida</h3>
               <p className="text-gray-300 text-sm leading-relaxed max-w-md mx-auto">
-                Tu solicitud ha ingresado a la etapa de Evaluación del Ecosistema TAFA. Nuestro equipo se pondrá en contacto para validar la documentación formal.
+                Tu solicitud ha ingresado a la etapa de Evaluación del Ecosistema TAFA. Nuestro equipo técnico validará tu RUC y distintivo DIRCETUR antes del alta definitiva.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="border-b border-white/10 pb-4 mb-6">
-                <h3 className="text-2xl font-bold font-outfit text-white">Postular al Ecosistema TAFA</h3>
-                <p className="text-xs text-gray-400 mt-1">Completa el formulario de postulación oficial para iniciar la evaluación.</p>
+                <h3 className="text-2xl font-bold font-outfit text-white">Formulario de Postulación de Aliados MYPE</h3>
+                <p className="text-xs text-gray-400 mt-1">Ingresa tus datos comerciales para unirte a la red regional de turismo inteligente.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">RUC del Negocio *</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">RUC del Negocio (11 dígitos) *</label>
                   <input
                     type="text"
                     required
@@ -161,7 +164,7 @@ export default function JoinEcosystem() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Correo de Contacto *</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Correo de Contacto Oficial *</label>
                   <input
                     type="email"
                     required
@@ -215,6 +218,29 @@ export default function JoinEcosystem() {
                     <option value="Cerro Colorado">Cerro Colorado</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Declaración Jurada de Requisitos */}
+              <div className="pt-2 border-t border-white/10 space-y-2 text-xs">
+                <div className="font-semibold text-amber-400 mb-1">Verificación de Requisitos Obligatorios:</div>
+                <label className="flex items-center gap-2 cursor-pointer text-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={hasRuc}
+                    onChange={(e) => setHasRuc(e.target.checked)}
+                    className="rounded bg-white/10 border-white/20 text-tafa-volcán"
+                  />
+                  <span>Cuento con RUC activo y habido en SUNAT</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer text-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={hasDircetur}
+                    onChange={(e) => setHasDircetur(e.target.checked)}
+                    className="rounded bg-white/10 border-white/20 text-tafa-volcán"
+                  />
+                  <span>Cuento con distintivo oficial o registro de prestador DIRCETUR</span>
+                </label>
               </div>
 
               <button
