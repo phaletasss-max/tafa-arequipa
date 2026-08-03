@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { MapPin, Sparkles, ArrowRight, ShieldCheck, Clock, Tag } from 'lucide-react'
 
