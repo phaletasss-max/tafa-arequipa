@@ -3,6 +3,7 @@ import { Upload, Map, LayoutDashboard, Sparkles, UserCheck } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SurveyModal from './SurveyModal'
 import AuthModal from './auth/AuthModal'
+import TAFAExplorerPassModal from './rewards/TAFAExplorerPassModal'
 
 function NavButton({ children, href = '#' }: { children: React.ReactNode; href?: string }) {
   return (
@@ -21,6 +22,7 @@ export default function Hero() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isSurveyOpen, setIsSurveyOpen] = useState(false)
   const [isAuthOpen, setIsAuthOpen] = useState(false)
+  const [isPassModalOpen, setIsPassModalOpen] = useState(false)
   const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
   const [promptText, setPromptText] = useState(
     "Quiero recorrer Arequipa durante cinco días. Busco lugares históricos, gastronomía tradicional, eventos culturales y rutas con información actualizada."
@@ -99,6 +101,14 @@ export default function Hero() {
             </div>
 
             <div className="flex items-center gap-6">
+              <button
+                onClick={() => setIsPassModalOpen(true)}
+                className="bg-amber-400 hover:bg-amber-500 text-black border-none cursor-pointer font-outfit text-[14px]
+                           font-bold uppercase tracking-[0.04em] px-4 py-2 rounded-full
+                           transition-all active:scale-95 shadow-sm max-md:hidden"
+              >
+                TAFA Pass (+100 PTS)
+              </button>
               {touristUser ? (
                 <div className="flex items-center gap-2 bg-green-500/10 text-green-700 border border-green-500/30 px-3.5 py-1.5 rounded-full text-xs font-semibold max-md:hidden">
                   <UserCheck className="w-4 h-4 text-green-600" />
@@ -289,10 +299,17 @@ export default function Hero() {
         onClose={() => setIsSurveyOpen(false)}
       />
 
+      {/* Auth Modal para DNI y Pasaporte */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onAuthSuccess={(u) => setTouristUser(u)}
+      />
+
+      {/* TAFA Explorer Pass & Rewards Modal */}
+      <TAFAExplorerPassModal
+        isOpen={isPassModalOpen}
+        onClose={() => setIsPassModalOpen(false)}
       />
     </>
   )
