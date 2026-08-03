@@ -3,7 +3,8 @@ import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { CheckCircle2, Search, Filter, Clock, Tag, X } from 'lucide-react'
-import { fetchLugares, Lugar } from '@/services/api'
+import { getLugaresSupabase } from '@/services/supabaseService'
+import { Lugar } from '@/services/api'
 
 export default function Highlights() {
   const ref = useRef(null)
@@ -22,7 +23,7 @@ export default function Highlights() {
   async function loadData() {
     try {
       setLoading(true)
-      const data = await fetchLugares({ categoria: categoria || undefined, search: search || undefined })
+      const data = await getLugaresSupabase(categoria || undefined, search || undefined)
       setLugares(data)
     } catch (e) {
       console.error(e)
