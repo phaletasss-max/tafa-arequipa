@@ -56,6 +56,7 @@ export default function Hero() {
           loop
           playsInline
         >
+          <source src="/video/caratula.mp4" type="video/mp4" />
           <source src="https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4" type="video/mp4" />
         </video>
 
