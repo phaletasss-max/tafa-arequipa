@@ -3,6 +3,7 @@ import EmergencyBanner from '@/components/safety/EmergencyBanner'
 import AccessibilityBar from '@/components/accessibility/AccessibilityBar'
 import CinematicStoryteller from '@/components/CinematicStoryteller'
 import DirectAIConversation from '@/components/ai/DirectAIConversation'
+import HistoricVisualStories from '@/components/stories/HistoricVisualStories'
 import Highlights from '@/components/Highlights'
 import MapPreview from '@/components/MapPreview'
 import UnexploredRoutes from '@/components/UnexploredRoutes'
@@ -37,6 +38,9 @@ export default function App() {
       {/* Conversación Directa con IA (Inmediatamente después de la historia) */}
       <DirectAIConversation />
 
+      {/* Visual Tourist Stories (Historias Visuales Interactivas de Lugares Históricos) */}
+      <HistoricVisualStories />
+
       {/* Inventario Oficial & Atractivos en Supabase */}
       <Highlights />
 
@@ -46,7 +50,7 @@ export default function App() {
       {/* Mapa Interactivo con Coordenadas Reales */}
       <MapPreview />
 
-      {/* PORTAL 3: ECOSISTEMA — Join TAFA Ecosystem (Postulación MYPEs) */}
+      {/* PORTAL 3: ECOSISTEMA — Join TAFA Ecosystem (Postulación MYPEs & Requisitos) */}
       <JoinEcosystem />
 
       {/* PORTAL 2: PROYECTO — Conoce el Proyecto TAFA (Explicación Institucional) */}
