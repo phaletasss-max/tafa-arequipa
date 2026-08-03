@@ -72,9 +72,13 @@ export default function Hero() {
 
           {/* Navigation */}
           <nav className="flex items-center justify-between px-20 pt-6 pb-4 max-md:px-6 max-md:pt-5">
-            <span className="font-display text-[40px] text-black leading-none select-none max-md:text-[32px] tracking-tight">
-              TAFA
-            </span>
+            <a href="#" className="flex items-center gap-2">
+              <img
+                src="/img/logo.png"
+                alt="TAFA"
+                className="h-12 max-md:h-9 w-auto object-contain transition-transform hover:scale-105"
+              />
+            </a>
 
             <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 max-md:hidden">
               <NavButton href="#explorar">Explorar</NavButton>
