@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+    background: #fff;
+    color: #1a1a1a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 99px; }
+
+  ::selection { background: rgba(192,57,43,0.3); color: #fff; }
+}
+
+@layer components {
+  .glass-card {
+    background: rgba(255,255,255,0.06);
+    border: 3px solid rgba(255,255,255,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 44px;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.15);
+  }
+
+  .section-dark {
+    background: #0a0a0a;
+    color: #f5f5f5;
+  }
+
+  .section-light {
+    background: #fafafa;
+    color: #1a1a1a;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #c0392b, #e74c3c, #f39c12);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .btn-primary {
+    @apply bg-tafa-dark text-white border-none cursor-pointer font-outfit
+           text-[15px] font-medium uppercase tracking-[0.04em]
+           px-5 py-3.5 rounded-full transition-all
+           hover:bg-[#333] active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent border border-white/30 text-white cursor-pointer
+           font-outfit text-[15px] font-medium uppercase tracking-[0.04em]
+           px-5 py-3.5 rounded-full transition-all
+           hover:border-white/60 hover:bg-white/10 active:scale-95;
+  }
+}
+
+/* Video fit */
+video { object-fit: cover; }
+
+/* Framer motion defaults */
+[data-framer-appear] { opacity: 0; }
