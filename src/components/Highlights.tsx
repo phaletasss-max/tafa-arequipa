@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { CheckCircle2, Search, Filter, Clock, Tag, X, Landmark, TreePine, Castle, Compass, Utensils, Mountain, Award, MapPin, Accessibility, Sparkles } from 'lucide-react'
+import { CheckCircle2, Search, Filter, Clock, Tag, X, Landmark, TreePine, Castle, Compass, Utensils, Mountain, Award, MapPin, Accessibility, Sparkles, PhoneCall } from 'lucide-react'
 import { getLugaresSupabase } from '@/services/supabaseService'
 import { Lugar } from '@/services/api'
 
@@ -557,16 +557,30 @@ export default function Highlights() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
                 <span className="text-xs text-gray-500 font-medium">
                   Fuente oficial: <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
                 </span>
-                <button
-                  onClick={() => setSelectedLugar(null)}
-                  className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors shadow-md"
-                >
-                  Entendido
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <a
+                    href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20reservar%20mi%20visita%20o%20tour%20para:%20${encodeURIComponent(selectedLugar.nombre)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => {
+                      alert('¡Ganaste +100 PTS TAFA por consultar reserva oficial al WhatsApp 921 378 349!')
+                    }}
+                    className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 no-underline"
+                  >
+                    <PhoneCall className="w-4 h-4 text-white" />
+                    <span>Reservar (921 378 349)</span>
+                  </a>
+                  <button
+                    onClick={() => setSelectedLugar(null)}
+                    className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-300 transition-colors"
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
             </div>
           </div>

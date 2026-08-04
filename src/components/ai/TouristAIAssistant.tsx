@@ -1,16 +1,34 @@
 import { useState } from 'react'
-import { Bot, Send, X, Globe, Sparkles, User, RefreshCw, Key } from 'lucide-react'
+import { Bot, Send, X, Globe, Sparkles, User, RefreshCw, Key, PhoneCall } from 'lucide-react'
+import { MOCK_LUGARES, MOCK_GASTRONOMIA } from '@/data/mockData'
 
 interface Message {
   id: string
   sender: 'ai' | 'user'
   text: string
   timestamp: string
+  actionUrl?: string
 }
+
+// System DB context payload for Gemini AI
+const DB_CONTEXT = `
+DATOS OFICIALES DE AREQUIPA (BASE DE DATOS TAFA):
+RUTAS Y ATRACTIVOS:
+${MOCK_LUGARES.map(l => `- ${l.nombre} (${l.distrito}, ${l.categoria}): ${l.descripcion}. Horario: ${l.horario}. Tarifa: ${l.precio_entrada}. Fuente: ${l.fuente}`).join('\n')}
+
+GASTRONOMÍA Y PICANTERÍAS:
+${MOCK_GASTRONOMIA.map(g => `- ${g.nombre} (${g.distrito}, ${g.tipo}): ${g.descripcion}. Ubicación: ${g.ubicacion}. Rango: ${g.precio_rango}`).join('\n')}
+
+PROYECTOS REGIONALES 2026:
+- Andagua, Toro Muerto, Cotahuasi, Pillones, Puerto Inka, Quilca, Salinas, Choqolaqa, Uzuña, Culebrillas.
+
+RESERVAS Y CONTACTO ÚNICO OFICIAL:
+Todas las reservaciones, tours y atención por WhatsApp se realizan directamente al número oficial: +51 921 378 349 (WhatsApp: https://wa.me/51921378349).
+`
 
 export default function TouristAIAssistant() {
   const [isOpen, setIsOpen] = useState(false)
-  const [apiKey, setApiKey] = useState('')
+  const [apiKey, setApiKey] = useState('AQ.Ab8RN6KDcnN1xKp1jaom9qxdE6_zT1itZ9na3qe7amMLQkot7g')
   const [showKeyInput, setShowKeyInput] = useState(false)
   const [language, setLanguage] = useState<'es' | 'en' | 'fr' | 'de'>('es')
   const [inputMsg, setInputMsg] = useState('')
@@ -19,7 +37,7 @@ export default function TouristAIAssistant() {
     {
       id: '1',
       sender: 'ai',
-      text: '¡Hola! Soy tu asistente de viaje inteligente Arequipa360°. Puedo recomendarte itinerarios personalizados, lugares accesibles, picanterías tradicionales y consejos sobre el mal de altura. ¿En qué te puedo orientar hoy?',
+      text: '¡Hola! Soy la Inteligencia Artificial Oficial de TAFA Arequipa. Tengo acceso directo a la base de datos regional de atractivos, horarios, precios, picanterías y reservas en directo al WhatsApp 921 378 349. ¿Qué te gustaría consultar hoy?',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ])
@@ -39,61 +57,55 @@ export default function TouristAIAssistant() {
     if (!customText) setInputMsg('')
     setLoading(true)
 
-    // Si el usuario ingresó una API key de Gemini, hacer la llamada real a Gemini API
+    // Consulta real a la API de Gemini con context de la base de datos
     if (apiKey.trim()) {
       try {
+        const promptText = `
+${DB_CONTEXT}
+
+Rol: Eres la Inteligencia Artificial experta en turismo de Arequipa (TAFA AI). Responde de forma concisa (máximo 3 párrafos), clara y hospitalaria en idioma ${language}. Utiliza ÚNICAMENTE datos reales de la base de datos arriba compartida. Si el usuario pregunta por reservas o teléfonos, indícale que toda reserva se gestiona vía WhatsApp al 921 378 349.
+
+Pregunta del usuario: ${query}
+`
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey.trim()}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{
-              parts: [{
-                text: `Eres el Asistente Turístico Inteligente oficial de Arequipa360° (TAFA). Responde de forma concisa, útil y hospitalaria en idioma ${language}. Conoces la Plaza de Armas, Catedral, Santa Catalina, Colca, Añashuayco, Cotahuasi, Picanterías, accesibilidad WCAG y teléfonos de emergencia POLTUR (054-201258). Pregunta del turista: ${query}`
-              }]
+              parts: [{ text: promptText }]
             }]
           })
         })
         const data = await res.json()
-        const aiResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No pude obtener respuesta de Gemini API.'
+        const aiResponseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Toda reserva e información de Arequipa se coordina directamente por WhatsApp al 921 378 349.'
         
+        const isBookingRelated = query.toLowerCase().includes('reser') || query.toLowerCase().includes('tour') || query.toLowerCase().includes('contacto') || query.toLowerCase().includes('precio')
+
         setMessages(prev => [...prev, {
           id: (Date.now() + 1).toString(),
           sender: 'ai',
           text: aiResponseText,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          actionUrl: isBookingRelated ? 'https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20reservar%20una%20experiencia/visita.' : undefined,
         }])
         setLoading(false)
         return
       } catch (e) {
-        console.warn('Fallback a respuestas contextuales locales:', e)
+        console.warn('Error en llamada a Gemini API, usando respuesta contextual con DB:', e)
       }
     }
 
-    // Respuestas contextuales inteligentes fallback (sin API key)
+    // Respuestas contextuales basadas en la base de datos
     setTimeout(() => {
       let reply = ''
       const q = query.toLowerCase()
 
-      if (q.includes('días') || q.includes('itinerario') || q.includes('dias') || q.includes('rutas')) {
-        reply = language === 'en' 
-          ? 'Recommended 3-day itinerary: Day 1: Plaza de Armas, Cathedral & Santa Catalina Monastery. Day 2: Añashuayco Sillar Route & Yanahuara Picantería. Day 3: Colca Canyon & Cruz del Cóndor.'
-          : 'Itinerario recomendado de 3 días: Día 1: Plaza de Armas, Catedral y Monasterio de Santa Catalina. Día 2: Ruta del Sillar Añashuayco y picantería en Yanahuara. Día 3: Excursión al Cañón del Colca y Cruz del Cóndor.'
-      } else if (q.includes('accesible') || q.includes('silla') || q.includes('rampa')) {
-        reply = language === 'en'
-          ? 'Accessible spots with ramps and WCAG 2.1 compliance: Monasterio de Santa Catalina, Plaza de Armas & Catedral, and La Nueva Palomino restaurant.'
-          : 'Atractivos con accesibilidad motriz comprobada (rampas y baños adaptados): Monasterio de Santa Catalina, Plaza de Armas, Catedral de Arequipa y restaurante La Nueva Palomino.'
-      } else if (q.includes('soroche') || q.includes('altura') || q.includes('salud') || q.includes('seguridad')) {
-        reply = language === 'en'
-          ? 'Arequipa is at 2,335m and Colca at 3,630m. Rest 4 hours upon arrival, drink coca tea, and keep hydration. POLTUR Police Emergency Hotline: (054) 201258.'
-          : 'Arequipa se encuentra a 2,335 msnm y el Colca a 3,630 msnm. Descansa 4 horas al llegar, toma té de coca y mantén hidratación. Policía de Turismo POLTUR: (054) 201258.'
-      } else if (q.includes('comer') || q.includes('picanter') || q.includes('comida') || q.includes('rocoto')) {
-        reply = language === 'en'
-          ? 'Top traditional Picanterías: La Nueva Palomino (Yanahuara), La Capitana (Paucarpata), and Chicha by Gastón Acurio (Cercado). Must try: Rocoto Relleno and Chupe de Camarones.'
-          : 'Picanterías recomendadas: La Nueva Palomino en Yanahuara, La Capitana en Paucarpata y Chicha por Gastón Acurio en el Cercado. Platos imperdibles: Rocoto Relleno, Adobo de Domingo y Chupe de Camarones.'
+      if (q.includes('reser') || q.includes('tour') || q.includes('contacto') || q.includes('whatsapp')) {
+        reply = 'Todas las reservaciones para tours, picanterías y visitas guiadas en Arequipa se gestionan directamente a través de nuestra central telefónica y WhatsApp oficial: +51 921 378 349.'
+      } else if (q.includes('días') || q.includes('itinerario') || q.includes('dias') || q.includes('rutas')) {
+        reply = 'Basado en nuestra base de datos: Te recomendamos recorrer el primer día la Plaza de Armas y Monasterio de Santa Catalina (Cercado). El segundo día las Canteras de Añashuayco (Ruta del Sillar) y picantería en Yanahuara. El tercer día el Cañón del Colca en Chivay/Cruz del Cóndor. Para reservas inmediatas comunícate al WhatsApp 921 378 349.'
       } else {
-        reply = language === 'en'
-          ? `Thank you for your question. Arequipa360° offers verified official data on over 20 attractions, traditional food, and 24/7 tourism assistance.`
-          : `Gracias por tu consulta. En Arequipa360° cuentas con inventarios oficiales verificados por DIRCETUR y MINCETUR, mapa interactivo y señalética digital por código QR en los principales monumentos.`
+        reply = 'Contamos con inventarios oficiales verificados por MINCETUR y DIRCETUR sobre más de 25 atractivos y picanterías en Arequipa. Para asistencia personalizada o reservas inmediatas comunícate al 921 378 349.'
       }
 
       setMessages(prev => [...prev, {
@@ -101,9 +113,10 @@ export default function TouristAIAssistant() {
         sender: 'ai',
         text: reply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        actionUrl: 'https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20informacion%20o%20reservar.'
       }])
       setLoading(false)
-    }, 700)
+    }, 600)
   }
 
   return (
@@ -204,6 +217,17 @@ export default function TouristAIAssistant() {
                 )}
                 <div className={`max-w-[80%] p-3 rounded-2xl ${msg.sender === 'user' ? 'bg-tafa-volcán text-white rounded-br-none' : 'bg-white/10 text-gray-200 border border-white/10 rounded-bl-none'}`}>
                   <p className="leading-relaxed">{msg.text}</p>
+                  {msg.actionUrl && (
+                    <a
+                      href={msg.actionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2.5 inline-flex items-center gap-1.5 bg-green-500 hover:bg-green-600 text-black font-bold px-3 py-1.5 rounded-full text-[11px] no-underline shadow-md transition-transform hover:scale-105"
+                    >
+                      <PhoneCall className="w-3.5 h-3.5" />
+                      Reservar WhatsApp 921 378 349
+                    </a>
+                  )}
                   <span className="block text-[9px] text-gray-400 text-right mt-1">{msg.timestamp}</span>
                 </div>
               </div>
