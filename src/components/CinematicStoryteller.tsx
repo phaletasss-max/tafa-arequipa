@@ -118,27 +118,35 @@ export default function CinematicStoryteller() {
   return (
     <section className="relative w-full h-[88vh] min-h-[580px] max-h-[850px] bg-black text-white overflow-hidden flex flex-col justify-between p-6 md:p-12">
 
-      {/* Background Media (Video + Fallback Poster HD) */}
+      {/* Background Media: Video si es único, o Imagen HD de cada capítulo */}
       <AnimatePresence mode="wait">
         <motion.div
           key={chapter.id}
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.06 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+          exit={{ opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
           className="absolute inset-0 z-0 overflow-hidden"
         >
-          <video
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={chapter.poster}
-          >
-            <source src={chapter.video} type="video/mp4" />
-          </video>
-          {/* Overlay de gradientes para garantizar contraste de texto perfecto */}
+          {chapter.video && chapter.id === 1 ? (
+            <video
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              poster={chapter.poster}
+            >
+              <source src={chapter.video} type="video/mp4" />
+            </video>
+          ) : (
+            <img
+              src={chapter.poster}
+              alt={chapter.title}
+              className="w-full h-full object-cover transition-transform duration-1000 scale-105"
+            />
+          )}
+          {/* Overlay de gradientes para garantizar legibilidad del texto */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-black/50" />
         </motion.div>
       </AnimatePresence>
