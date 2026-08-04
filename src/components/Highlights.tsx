@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { CheckCircle2, Search, Filter, Clock, Tag, X, Landmark, TreePine, Castle, Compass, Utensils, Mountain, Award, MapPin, Accessibility, Sparkles, PhoneCall } from 'lucide-react'
 import { getLugaresSupabase } from '@/services/supabaseService'
 import { Lugar } from '@/services/api'
+import { getTranslatedPlace } from '@/services/placeTranslationService'
 
 // Pestañas Estilo Despegar.com para Navegación de Turismo
 const DESPEGAR_TABS = [
@@ -26,7 +27,7 @@ const QUICK_FILTERS = [
 ]
 
 export default function Highlights() {
-  const { t } = useTranslation(['explorer', 'common'])
+  const { t, i18n } = useTranslation(['explorer', 'common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -44,8 +45,18 @@ export default function Highlights() {
   async function loadData() {
     try {
       setLoading(true)
-      const data = await getLugaresSupabase(categoria || undefined, search || undefined)
-      setLugares(data)
+      const data = await getLugaresSupabase(undefined, search || undefined)
+      let filtered = data
+      if (categoria === 'Patrimonio Histórico') {
+        filtered = data.filter(l => l.categoria === 'Patrimonio Histórico')
+      } else if (categoria === 'Naturaleza') {
+        filtered = data.filter(l => l.categoria === 'Naturaleza')
+      } else if (categoria === 'Cultural') {
+        filtered = data.filter(l => l.categoria === 'Cultural')
+      } else if (categoria === 'Centro Histórico') {
+        filtered = data.filter(l => l.distrito === 'Cercado' || l.categoria === 'Patrimonio Histórico')
+      }
+      setLugares(filtered)
     } catch (e) {
       console.error(e)
     } finally {
@@ -248,6 +259,7 @@ export default function Highlights() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredLugares.map((l, i) => {
               const color = getColor(l.categoria)
+              const translated = getTranslatedPlace(l.id, i18n.language, l.nombre, l.descripcion)
               return (
                 <motion.div
                   key={l.id}
@@ -264,7 +276,7 @@ export default function Highlights() {
                       <div className="relative h-[180px] w-full overflow-hidden bg-gray-100">
                         <img
                           src={l.imagen_url}
-                          alt={l.nombre}
+                          alt={translated.nombre}
                           onError={(e) => {
                             (e.currentTarget as HTMLImageElement).src = '/images/places/plaza-de-armas.jpg'
                           }}
@@ -289,7 +301,7 @@ export default function Highlights() {
                             </span>
                           ) : (
                             <span className="text-[10px] font-bold text-white bg-amber-600/90 backdrop-blur-md px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md">
-                              Revisión
+                              {t('explorer:under_review', 'Revisión')}
                             </span>
                           )}
                         </div>
@@ -317,7 +329,7 @@ export default function Highlights() {
                     <div className="p-6 space-y-2">
                       <div>
                         <h3 className="font-outfit font-extrabold text-xl text-tafa-text leading-tight group-hover:text-tafa-volcán transition-colors">
-                          {l.nombre}
+                          {translated.nombre}
                         </h3>
                         <div className="text-xs text-gray-500 flex items-center gap-1 mt-1 font-medium">
                           <Landmark className="w-3.5 h-3.5 text-tafa-volcán shrink-0" />
@@ -326,7 +338,7 @@ export default function Highlights() {
                       </div>
 
                       <p className="text-gray-600 text-xs line-clamp-2 leading-relaxed">
-                        {l.descripcion || 'Atractivo turístico verificado en el catálogo regional de Arequipa.'}
+                        {translated.descripcion}
                       </p>
                     </div>
                   </div>
@@ -352,112 +364,115 @@ export default function Highlights() {
       </div>
 
       {/* Detail Modal */}
-      {selectedLugar && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white border border-gray-200 rounded-[32px] max-w-lg w-full overflow-hidden relative shadow-2xl animate-scale-up">
-            
-            {/* Modal Image Header */}
-            {selectedLugar.imagen_url && (
-              <div className="relative h-[220px] w-full">
-                <img
-                  src={selectedLugar.imagen_url}
-                  alt={selectedLugar.nombre}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <button
-                  onClick={() => setSelectedLugar(null)}
-                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white transition-colors border border-white/20"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-                <div className="absolute bottom-4 left-6 right-6 text-white">
-                  <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                    {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
-                  </span>
-                  <h3 className="text-2xl font-extrabold font-outfit leading-tight drop-shadow-md">
-                    {selectedLugar.nombre}
-                  </h3>
-                </div>
-              </div>
-            )}
-
-            <div className="p-7 space-y-5">
-              {!selectedLugar.imagen_url && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                      style={{ background: `${getColor(selectedLugar.categoria)}18` }}
-                    >
-                      {renderCategoryIcon(selectedLugar.categoria)}
-                    </div>
-                    <div>
-                      <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                        {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
-                      </span>
-                      <h3 className="text-2xl font-extrabold font-outfit text-tafa-text leading-tight">
-                        {selectedLugar.nombre}
-                      </h3>
-                    </div>
-                  </div>
+      {selectedLugar && (() => {
+        const modalTranslated = getTranslatedPlace(selectedLugar.id, i18n.language, selectedLugar.nombre, selectedLugar.descripcion)
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white border border-gray-200 rounded-[32px] max-w-lg w-full overflow-hidden relative shadow-2xl animate-scale-up">
+              
+              {/* Modal Image Header */}
+              {selectedLugar.imagen_url && (
+                <div className="relative h-[220px] w-full">
+                  <img
+                    src={selectedLugar.imagen_url}
+                    alt={modalTranslated.nombre}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <button
                     onClick={() => setSelectedLugar(null)}
-                    className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+                    className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white transition-colors border border-white/20"
                   >
                     <X className="w-4 h-4" />
                   </button>
+                  <div className="absolute bottom-4 left-6 right-6 text-white">
+                    <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                      {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
+                    </span>
+                    <h3 className="text-2xl font-extrabold font-outfit leading-tight drop-shadow-md">
+                      {modalTranslated.nombre}
+                    </h3>
+                  </div>
                 </div>
               )}
 
-              <p className="text-tafa-text text-sm leading-relaxed bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                {selectedLugar.descripcion}
-              </p>
-
-              <div className="grid grid-cols-2 gap-3 text-xs">
-                <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
-                  <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                    <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:hours_label', 'Horario Oficial')}
+              <div className="p-7 space-y-5">
+                {!selectedLugar.imagen_url && (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                        style={{ background: `${getColor(selectedLugar.categoria)}18` }}
+                      >
+                        {renderCategoryIcon(selectedLugar.categoria)}
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                          {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
+                        </span>
+                        <h3 className="text-2xl font-extrabold font-outfit text-tafa-text leading-tight">
+                          {modalTranslated.nombre}
+                        </h3>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSelectedLugar(null)}
+                      className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
-                  <div className="font-bold text-tafa-text">{selectedLugar.horario || 'No especificado'}</div>
-                </div>
-                <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
-                  <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                    <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:fee_label')}
-                  </div>
-                  <div className="font-bold text-tafa-andino">{translatePrice(selectedLugar.precio_entrada)}</div>
-                </div>
-              </div>
+                )}
 
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
-                <span className="text-xs text-gray-500 font-medium">
-                  {t('explorer:source_label')} <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
-                </span>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
-                  <a
-                    href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20reservar%20mi%20visita%20o%20tour%20para:%20${encodeURIComponent(selectedLugar.nombre)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
-                      alert('¡Ganaste +100 PTS TAFA por consultar reserva oficial al WhatsApp 921 378 349!')
-                    }}
-                    className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 no-underline"
-                  >
-                    <PhoneCall className="w-4 h-4 text-white" />
-                    <span>{t('explorer:reserve_whatsapp')}</span>
-                  </a>
-                  <button
-                    onClick={() => setSelectedLugar(null)}
-                    className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-300 transition-colors"
-                  >
-                    {t('explorer:close_modal')}
-                  </button>
+                <p className="text-tafa-text text-sm leading-relaxed bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                  {modalTranslated.descripcion}
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                    <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
+                      <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:hours_label', 'Horario Oficial')}
+                    </div>
+                    <div className="font-bold text-tafa-text">{selectedLugar.horario || 'No especificado'}</div>
+                  </div>
+                  <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                    <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
+                      <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:fee_label')}
+                    </div>
+                    <div className="font-bold text-tafa-andino">{translatePrice(selectedLugar.precio_entrada)}</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
+                  <span className="text-xs text-gray-500 font-medium">
+                    {t('explorer:source_label')} <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
+                  </span>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <a
+                      href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20reservar%20mi%20visita%20o%20tour%20para:%20${encodeURIComponent(selectedLugar.nombre)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        alert('¡Ganaste +100 PTS TAFA por consultar reserva oficial al WhatsApp 921 378 349!')
+                      }}
+                      className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 no-underline"
+                    >
+                      <PhoneCall className="w-4 h-4 text-white" />
+                      <span>{t('explorer:reserve_whatsapp')}</span>
+                    </a>
+                    <button
+                      onClick={() => setSelectedLugar(null)}
+                      className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-300 transition-colors"
+                    >
+                      {t('explorer:close_modal')}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
     </section>
   )
 }
