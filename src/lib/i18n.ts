@@ -8,20 +8,28 @@ const namespaces = ['navigation', 'hero', 'explorer', 'accessibility', 'common',
 const localeModules = import.meta.glob('../locales/*/*.json', { eager: false }) as Record<string, () => Promise<{ default: Record<string, unknown> }>>
 
 function normalizeLanguage(lng?: string | null) {
-  const candidate = (lng || defaultLng).toLowerCase().split('-')[0]
+  if (!lng) return defaultLng
+  const candidate = lng.toLowerCase().split('-')[0]
   return supportedLngs.includes(candidate as (typeof supportedLngs)[number]) ? candidate : defaultLng
 }
 
 async function loadNamespaceResources(language: string, namespace: string) {
   const modulePath = `../locales/${language}/${namespace}.json`
   const loader = localeModules[modulePath]
-  if (!loader) return null
+  if (!loader) {
+    // Si no existe el módulo exacto para el idioma (p. ej. de, fr, pt), usar fallback 'es'
+    const fallbackPath = `../locales/${defaultLng}/${namespace}.json`
+    const fallbackLoader = localeModules[fallbackPath]
+    if (!fallbackLoader) return null
+    const fallbackModule = await fallbackLoader()
+    return (fallbackModule.default ?? fallbackModule) as Record<string, unknown>
+  }
 
   const module = await loader()
   return (module.default ?? module) as Record<string, unknown>
 }
 
-async function loadLanguageResources(language: string) {
+export async function loadLanguageResources(language: string) {
   const normalized = normalizeLanguage(language)
 
   for (const namespace of namespaces) {
@@ -31,6 +39,15 @@ async function loadLanguageResources(language: string) {
     }
   }
 
+  return normalized
+}
+
+export async function setAppLanguage(languageCode: string) {
+  const normalized = normalizeLanguage(languageCode)
+  await loadLanguageResources(normalized)
+  await i18n.changeLanguage(normalized)
+  document.documentElement.lang = normalized
+  localStorage.setItem('i18nextLng', normalized)
   return normalized
 }
 
@@ -57,14 +74,21 @@ export async function initI18n() {
   })
 
   const detected = normalizeLanguage(i18n.resolvedLanguage || i18n.language || defaultLng)
-  await loadLanguageResources(detected)
-
+  await loadLanguageResources(defaultLng) // Carga base en español
   if (detected !== defaultLng) {
-    await loadLanguageResources(defaultLng)
+    await loadLanguageResources(detected) // Carga idioma detectado
   }
 
   await i18n.changeLanguage(detected)
+  document.documentElement.lang = detected
   return i18n
 }
+
+// Suscribirse a eventos de cambio de idioma de i18next para cargar paquetes faltantes dinámicamente
+i18n.on('languageChanged', (lng) => {
+  const normalized = normalizeLanguage(lng)
+  loadLanguageResources(normalized)
+  document.documentElement.lang = normalized
+})
 
 export default i18n

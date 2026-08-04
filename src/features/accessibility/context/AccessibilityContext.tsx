@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import type { AccessibilitySettings, AccessibilityContextType, FontScale } from '../types/accessibility'
 import { useTranslation } from 'react-i18next'
+import { setAppLanguage } from '@/lib/i18n'
 
 const STORAGE_KEY = 'tafa_accessibility_settings'
 
@@ -78,7 +79,7 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
 
   const setLanguage = (language: string) => {
     setSettings(prev => ({ ...prev, language }))
-    i18n.changeLanguage(language.toLowerCase())
+    setAppLanguage(language)
     announce(`Idioma cambiado a ${language}`)
   }
 
