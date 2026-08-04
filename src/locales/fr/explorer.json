@@ -15,6 +15,9 @@
   "free_access": "Accès Libre",
   "fee_label": "Tarif d'entrée",
   "source_label": "Source officielle :",
-  "reserve_whatsapp": "Réserver sur WhatsApp (+51 921 378 349)",
-  "close_modal": "Fermer"
+  "reserve_whatsapp": "Réserver via WhatsApp (+51 921 378 349)",
+  "close_modal": "Fermer",
+  "under_review": "En Révision",
+  "attraction_badge": "Attraction",
+  "hours_label": "Horaires Officiels"
 }

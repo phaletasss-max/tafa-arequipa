@@ -13,8 +13,11 @@
   "tab_projects": "Proyectos Estratégicos (10)",
   "verified_dircetur": "Verificado DIRCETUR",
   "free_access": "Acceso Libre",
-  "fee_label": "Ingreso / Tarifa",
+  "fee_label": "Tarifa Ingreso",
   "source_label": "Fuente oficial:",
   "reserve_whatsapp": "Reservar (921 378 349)",
-  "close_modal": "Cerrar"
+  "close_modal": "Cerrar",
+  "under_review": "En Revisión",
+  "attraction_badge": "Atractivo",
+  "hours_label": "Horario Oficial"
 }

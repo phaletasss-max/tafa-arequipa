@@ -5,9 +5,10 @@
   "font_size_large": "Texto: A+",
   "font_size_extralarge": "Texto: A++",
   "contrast_normal": "Contraste",
-  "contrast_high": "Contraste Alto",
-  "audio_route_start": "Audioruta",
-  "audio_route_stop": "Detener Voz",
+  "contrast_high": "Alto Contraste",
+  "audio_route_start": "Audiorruta",
+  "audio_route_stop": "Detener Audio",
   "visual_mode": "Modo Visual",
-  "sign_language": "Lengua de Señas"
+  "sign_language": "Lengua de Señas",
+  "skip_to_content": "Saltar al contenido principal"
 }

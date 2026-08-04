@@ -1,10 +1,13 @@
 {
-  "explore": "Explorar",
-  "map": "Mapa",
-  "about": "Acerca de",
+  "explore": "Explorar Atractivos",
+  "map": "Mapa Interactivo",
+  "about": "Sobre TAFA",
   "admin": "Admin",
-  "sign_in": "Ingresar",
+  "sign_in": "Entrar",
   "account": "Cuenta Turista",
   "settings": "Configuración",
-  "survey": "Encuesta"
+  "survey": "Encuesta",
+  "routes": "Rutas Inexploradas",
+  "mype": "Ecosistema MYPE",
+  "sign_up": "Registrarse"
 }

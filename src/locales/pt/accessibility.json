@@ -6,8 +6,9 @@
   "font_size_extralarge": "Texto: A++",
   "contrast_normal": "Contraste",
   "contrast_high": "Alto Contraste",
-  "audio_route_start": "Audiorrota",
-  "audio_route_stop": "Parar Voz",
+  "audio_route_start": "Audio Rota",
+  "audio_route_stop": "Parar Áudio",
   "visual_mode": "Modo Visual",
-  "sign_language": "Língua de Sinais"
+  "sign_language": "Língua de Sinais",
+  "skip_to_content": "Ir para o conteúdo principal"
 }

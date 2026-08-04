@@ -1,58 +1,58 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import { ArrowRight, ChevronLeft, ChevronRight, Compass, MapPin, Play, Pause, Sparkles } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight, Compass, MapPin } from 'lucide-react'
 
-const chapters = [
+const chapterConfig = [
   {
     id: 1,
-    title: 'Plaza de Armas y Basílica Catedrática',
-    subtitle: 'Corazón del Centro Histórico de Arequipa',
-    desc: 'Construido íntegramente en sillar blanco con su imponente Catedral neoclásica de 70 metros de frente y arquerías de granito sobre el fondo del volcán Misti.',
+    titleKey: 'hero:chapter_1_title',
+    subtitleKey: 'hero:chapter_1_subtitle',
+    descKey: 'hero:chapter_1_desc',
+    locationKey: 'hero:chapter_1_location',
+    tagKey: 'hero:chapter_1_tag',
     video: '/video/caratula.mp4',
     poster: '/images/places/plaza-de-armas.jpg',
-    location: 'Plaza de Armas · Cercado de Arequipa',
-    tag: 'Patrimonio Cultural UNESCO',
   },
   {
     id: 2,
-    title: 'Monasterio de Santa Catalina',
-    subtitle: 'Ciudadela Conventual de 1579',
-    desc: 'Ciudadela monástica de más de 20,000 m² con claustros pintados en azul añil y rojo terracota, calles de piedra y patios floridos esculpidos en sillar.',
+    titleKey: 'hero:chapter_2_title',
+    subtitleKey: 'hero:chapter_2_subtitle',
+    descKey: 'hero:chapter_2_desc',
+    locationKey: 'hero:chapter_2_location',
+    tagKey: 'hero:chapter_2_tag',
     video: '',
     poster: '/images/places/monasterio-santa-catalina.webp',
-    location: 'Calle Santa Catalina 301 · Cercado',
-    tag: 'Joya Colonial de 1579',
   },
   {
     id: 3,
-    title: 'Mirador de Yanahuara',
-    subtitle: 'Vista Panorámica a los 3 Volcanes',
-    desc: 'Arcos de sillar construidos en el siglo XIX grabados con versos de poetas arequipeños y la vista más famosa hacia el Misti, Chachani y Pichu Pichu.',
+    titleKey: 'hero:chapter_3_title',
+    subtitleKey: 'hero:chapter_3_subtitle',
+    descKey: 'hero:chapter_3_desc',
+    locationKey: 'hero:chapter_3_location',
+    tagKey: 'hero:chapter_3_tag',
     video: '',
     poster: '/images/places/mirador-yanahuara.jpg',
-    location: 'Plaza de Yanahuara · Yanahuara',
-    tag: 'Sillar Volcánico & Mirador',
   },
   {
     id: 4,
-    title: 'Ruta del Sillar — Canteras de Añashuayco',
-    subtitle: 'Esculpido en Vivo en Piedra Volcánica',
-    desc: 'Canteras vivas donde maestros canteros labran la piedra sillar a comba y cincel en megagrabados de roca volcánica y fachadas barrocas a tamaño real.',
+    titleKey: 'hero:chapter_4_title',
+    subtitleKey: 'hero:chapter_4_subtitle',
+    descKey: 'hero:chapter_4_desc',
+    locationKey: 'hero:chapter_4_location',
+    tagKey: 'hero:chapter_4_tag',
     video: '',
     poster: '/images/places/ruta-sillar.jpg',
-    location: 'Quebrada Añashuayco · Cerro Colorado',
-    tag: 'Cultura Viva & Canteros',
   },
   {
     id: 5,
-    title: 'Cañón del Colca & Cruz del Cóndor',
-    subtitle: 'Vuelo del Cóndor Andino en su Hábitat',
-    desc: 'Uno de los cañones más profundos del planeta (más de 4,160 m) con planeo de cóndores andinos sobre terrazas y andenes preincas.',
+    titleKey: 'hero:chapter_5_title',
+    subtitleKey: 'hero:chapter_5_subtitle',
+    descKey: 'hero:chapter_5_desc',
+    locationKey: 'hero:chapter_5_location',
+    tagKey: 'hero:chapter_5_tag',
     video: '',
     poster: '/images/places/canon-colca.jpg',
-    location: 'Mirador Cruz del Cóndor · Caylloma',
-    tag: 'Maravilla Natural del Perú',
   },
 ]
 
@@ -60,15 +60,14 @@ export default function CinematicStoryteller() {
   const { t } = useTranslation(['hero', 'common'])
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Auto-play cada 6.5 segundos
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % chapters.length)
+      setCurrentIndex((prev) => (prev + 1) % chapterConfig.length)
     }, 6500)
     return () => clearInterval(timer)
   }, [])
 
-  const chapter = chapters[currentIndex]
+  const chapter = chapterConfig[currentIndex]
 
   function scrollToSection(id: string) {
     const el = document.getElementById(id)
@@ -102,7 +101,7 @@ export default function CinematicStoryteller() {
           ) : (
             <img
               src={chapter.poster}
-              alt={chapter.title}
+              alt={t(chapter.titleKey)}
               className="w-full h-full object-cover transition-transform duration-1000 scale-105"
             />
           )}
@@ -122,23 +121,23 @@ export default function CinematicStoryteller() {
             className="space-y-4"
           >
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-300 bg-black/60 backdrop-blur-md border border-amber-400/30 px-4 py-1.5 rounded-full shadow-lg">
-              <Compass className="w-3.5 h-3.5 text-amber-400" /> {chapter.subtitle}
+              <Compass className="w-3.5 h-3.5 text-amber-400" /> {t(chapter.subtitleKey)}
             </div>
 
             <h1 className="font-outfit text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.08] text-white drop-shadow-2xl">
-              {chapter.title}
+              {t(chapter.titleKey)}
             </h1>
 
             <p className="font-outfit text-sm md:text-lg font-normal text-gray-200 leading-relaxed max-w-[680px] mx-auto drop-shadow">
-              {chapter.desc}
+              {t(chapter.descKey)}
             </p>
 
             <div className="flex items-center justify-center gap-3 text-xs text-emerald-300 font-semibold pt-1">
               <span className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
-                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> {chapter.location}
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> {t(chapter.locationKey)}
               </span>
               <span className="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30">
-                {chapter.tag}
+                {t(chapter.tagKey)}
               </span>
             </div>
 
@@ -161,39 +160,37 @@ export default function CinematicStoryteller() {
         </AnimatePresence>
       </div>
 
-      {/* Bottom Controls & Chapter Selector Indicators */}
+      {/* Bottom Controls */}
       <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-4">
-        {/* Navigation Arrows */}
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setCurrentIndex((prev) => (prev - 1 + chapters.length) % chapters.length)}
-            aria-label={`Capítulo anterior (${chapters[(currentIndex - 1 + chapters.length) % chapters.length]?.subtitle || 'anterior'})`}
+            onClick={() => setCurrentIndex((prev) => (prev - 1 + chapterConfig.length) % chapterConfig.length)}
+            aria-label={t('hero:prev_chapter')}
             className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 focus:outline-none"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setCurrentIndex((prev) => (prev + 1) % chapters.length)}
-            aria-label={`Capítulo siguiente (${chapters[(currentIndex + 1) % chapters.length]?.subtitle || 'siguiente'})`}
+            onClick={() => setCurrentIndex((prev) => (prev + 1) % chapterConfig.length)}
+            aria-label={t('hero:next_chapter')}
             className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 focus:outline-none"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Chapter Dots Navigation */}
         <div 
           className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 overflow-x-auto max-w-[100%]"
           role="tablist"
           aria-label="Seleccionar capítulo"
         >
-          {chapters.map((c, i) => (
+          {chapterConfig.map((c, i) => (
             <button
               key={c.id}
               onClick={() => setCurrentIndex(i)}
               role="tab"
               aria-selected={i === currentIndex}
-              aria-label={`Capítulo ${i + 1}: ${c.subtitle}`}
+              aria-label={`Capítulo ${i + 1}`}
               className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${
                 i === currentIndex ? 'w-8 bg-tafa-volcán' : 'w-2 bg-white/30 hover:bg-white/60'
               }`}

@@ -16,5 +16,8 @@
   "fee_label": "Entrance Fee",
   "source_label": "Official Source:",
   "reserve_whatsapp": "Book via WhatsApp (+51 921 378 349)",
-  "close_modal": "Close"
+  "close_modal": "Close",
+  "under_review": "Under Review",
+  "attraction_badge": "Attraction",
+  "hours_label": "Official Hours"
 }

@@ -7,7 +7,8 @@
   "contrast_normal": "Contrast",
   "contrast_high": "High Contrast",
   "audio_route_start": "Audio Route",
-  "audio_route_stop": "Stop Voice",
+  "audio_route_stop": "Stop Audio",
   "visual_mode": "Visual Mode",
-  "sign_language": "Sign Language"
+  "sign_language": "Sign Language",
+  "skip_to_content": "Skip to main content"
 }
