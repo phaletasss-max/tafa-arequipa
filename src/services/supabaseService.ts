@@ -4,21 +4,34 @@ import { MOCK_LUGARES, MOCK_GASTRONOMIA, MOCK_STATS } from '@/data/mockData'
 
 /**
  * Servicio Supabase Cloud Native — con fallback robusto a mockData
+ * Garantiza que todo lugar tenga imagen_url válida en public/images/places/
  */
 
+function getMockImageForPlace(idOrName: number | string): string {
+  const match = MOCK_LUGARES.find(m => m.id === idOrName || m.nombre.toLowerCase() === String(idOrName).toLowerCase())
+  return match?.imagen_url || '/images/places/plaza-de-armas.jpg'
+}
+
 export async function getLugaresSupabase(categoria?: string, search?: string): Promise<Lugar[]> {
-  // Intento 1: tabla lugares_turisticos
+  // Intento 1: tabla lugares_turisticos en Supabase
   try {
     let query = supabase.from('lugares_turisticos').select('*')
     if (categoria) query = query.eq('categoria', categoria)
     if (search) query = query.ilike('nombre', `%${search}%`)
     const { data, error } = await query.order('nombre', { ascending: true })
-    if (!error && data && data.length > 0) return data as Lugar[]
+    if (!error && data && data.length > 0) {
+      return data.map(item => ({
+        ...item,
+        imagen_url: item.imagen_url && item.imagen_url.trim() !== '' 
+          ? item.imagen_url 
+          : getMockImageForPlace(item.id || item.nombre)
+      })) as Lugar[]
+    }
   } catch (e) {
-    console.warn('Supabase lugares_turisticos no disponible, intentando places...')
+    console.warn('Supabase lugares_turisticos no disponible, usando mockData...')
   }
 
-  // Intento 2: tabla places (schema nuevo)
+  // Intento 2: tabla places (schema alternativo)
   try {
     let query2 = supabase.from('places').select('*')
     if (search) query2 = query2.ilike('name', `%${search}%`)
@@ -29,12 +42,12 @@ export async function getLugaresSupabase(categoria?: string, search?: string): P
         nombre: p.name,
         categoria: p.category || 'Atractivo',
         descripcion: p.description,
-        imagen_url: '',
+        imagen_url: p.image_url || getMockImageForPlace(p.id || p.name),
         lat: p.lat,
         lng: p.lng,
         distrito: p.district || 'Arequipa',
-        horario: p.opening_hours,
-        precio_entrada: p.admission_fee,
+        horario: p.opening_hours || '24 horas',
+        precio_entrada: p.admission_fee || 'Acceso Libre',
         fuente: p.official_source || 'MINCETUR',
         verificado: p.is_verified ? 1 : 0,
         estado: 'activo',
@@ -42,7 +55,7 @@ export async function getLugaresSupabase(categoria?: string, search?: string): P
     }
   } catch (e2) { /* silencioso */ }
 
-  // Fallback final: mockData (sin dependencia de Express)
+  // Fallback final: MOCK_LUGARES directo de data/mockData.ts
   let result = MOCK_LUGARES
   if (categoria) result = result.filter(l => l.categoria === categoria)
   if (search) result = result.filter(l => l.nombre.toLowerCase().includes(search.toLowerCase()))
@@ -56,8 +69,6 @@ export async function getGastronomiaSupabase(): Promise<Gastronomia[]> {
   } catch (e) {
     console.warn('Fallback a API local gastronomía:', e)
   }
-
-  // Fallback final: mockData
   return MOCK_GASTRONOMIA
 }
 
@@ -66,7 +77,6 @@ export async function getEventosSupabase(): Promise<Evento[]> {
     const { data, error } = await supabase.from('eventos').select('*').order('fecha_inicio', { ascending: true })
     if (!error && data && data.length > 0) return data as Evento[]
   } catch (e) { /* silencioso */ }
-  // Sin eventos en mock — retornar vacío
   return []
 }
 
@@ -84,7 +94,6 @@ export async function submitEncuestaSupabase(encuesta: {
     console.warn('Fallback enviando encuesta local:', e)
   }
 
-  // Sin backend local — guardar en localStorage como respaldo
   try {
     const prev = JSON.parse(localStorage.getItem('tafa_encuestas_local') || '[]')
     prev.push({ ...encuesta, id: Date.now(), created_at: new Date().toISOString() })
@@ -122,7 +131,6 @@ export async function getDashboardSupabase(): Promise<DashboardResumen> {
       proximos_eventos: eventos.slice(0, 5),
     }
   } catch (e) {
-    // Fallback final: mockData (sin Express)
     return {
       ...MOCK_STATS,
       lugares_mapa: MOCK_LUGARES,

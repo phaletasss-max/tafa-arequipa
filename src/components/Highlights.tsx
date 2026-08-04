@@ -9,11 +9,10 @@ import { Lugar } from '@/services/api'
 // Pestañas Estilo Despegar.com para Navegación de Turismo
 const DESPEGAR_TABS = [
   { id: '', labelKey: 'explorer:tab_all', icon: Sparkles, color: 'bg-tafa-volcán text-white' },
-  { id: 'Patrimonio', labelKey: 'explorer:tab_heritage', icon: Landmark, color: 'bg-purple-600 text-white' },
+  { id: 'Patrimonio Histórico', labelKey: 'explorer:tab_heritage', icon: Landmark, color: 'bg-purple-600 text-white' },
   { id: 'Naturaleza', labelKey: 'explorer:tab_nature', icon: TreePine, color: 'bg-emerald-600 text-white' },
   { id: 'Centro Histórico', labelKey: 'explorer:tab_historic', icon: Castle, color: 'bg-red-600 text-white' },
   { id: 'Cultural', labelKey: 'explorer:tab_culture', icon: Compass, color: 'bg-amber-600 text-white' },
-  { id: 'Proyectos', labelKey: 'explorer:tab_projects', icon: Award, color: 'bg-blue-600 text-white' },
 ]
 
 // Quick Filters Despegar Style
@@ -24,159 +23,6 @@ const QUICK_FILTERS = [
   'Yanahuara',
   'Cañón del Colca',
   'Ruta del Sillar',
-]
-
-const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
-  {
-    id: 101,
-    nombre: 'Valle de los Volcanes de Andagua',
-    categoria: 'Proyectos',
-    distrito: 'Castilla · Andagua',
-    descripcion: 'Campo volcánico fascinante único en Sudamérica con más de 80 conitos volcánicos extintos de baja altura (de 50 a 300 metros). Vuelos panorámicos, miradores de cristal y observatorio astroturístico.',
-    lat: -15.4900,
-    lng: -72.3500,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/valle-andagua-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 102,
-    nombre: 'Petroglifos de Toro Muerto y Valle de Majes',
-    categoria: 'Proyectos',
-    distrito: 'Castilla · Corire',
-    descripcion: 'Uno de los campos de arte rupestre más extensos del mundo con más de 5,000 grabados en rocas volcánicas. App AR 3D, canotaje en río Majes y hoteles en bodegas pisqueras.',
-    lat: -16.2234,
-    lng: -72.4831,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/toro-muerto-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 103,
-    nombre: 'Cañón del Cotahuasi',
-    categoria: 'Proyectos',
-    distrito: 'La Unión · Cotahuasi',
-    descripcion: 'El cañón más profundo de la tierra (3,535 m). Santuario virgen de cataratas como Sipia, bosques de puyas Raimondi y complejas termas de Luicho.',
-    lat: -15.2100,
-    lng: -72.8900,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/cotahuasi-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 104,
-    nombre: 'Cataratas de Pillones e Imata',
-    categoria: 'Proyectos',
-    distrito: 'Caylloma · San Antonio de Chuca',
-    descripcion: 'Impresionante caída de agua rodeada de gigantescas columnas de piedra talladas por la erosión eólica. Parador térmico, puentes colgantes y trekking inclusivo.',
-    lat: -15.8600,
-    lng: -71.1900,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/pillones-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 105,
-    nombre: 'Puerto Inka y Quebrada de la Waca',
-    categoria: 'Proyectos',
-    distrito: 'Caravelí · Atiquipa',
-    descripcion: 'Antiguo puerto Inca donde se extraían mariscos para el Inca en Cusco. Puesta en valor del Camino Inca costero, muelle de kayak y ecolodges.',
-    lat: -15.8450,
-    lng: -74.3460,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/puerto-inka-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 106,
-    nombre: 'Caleta de Quilca y Puerto Matarani',
-    categoria: 'Proyectos',
-    distrito: 'Camaná e Islay',
-    descripcion: 'Bahías históricas con rica biodiversidad marina, acantilados escarpados y gastronomía de pesca fresca. Circuito de lobos/pingüinos y buceo.',
-    lat: -16.7150,
-    lng: -72.4280,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/quilca-matarani-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 107,
-    nombre: 'Laguna y Reserva de Salinas',
-    categoria: 'Proyectos',
-    distrito: 'San Juan de Tarucani',
-    descripcion: 'Santuario de flamencos y espejos de sal a más de 4,300 msnm. Miradores de aves, glamping con domos solares y bus turístico.',
-    lat: -16.3700,
-    lng: -71.1400,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/salinas-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 108,
-    nombre: 'Bosque de Piedras de Choqolaqa',
-    categoria: 'Proyectos',
-    distrito: 'Caylloma · Tisco',
-    descripcion: 'Paisaje surrealista de torres rocosas blancas que simulan una ciudadela antigua petrificada. Campamento fotográfico y albergues comunales.',
-    lat: -15.3500,
-    lng: -71.4500,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/choqolaqa-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 109,
-    nombre: 'Represa de San José de Uzuña',
-    categoria: 'Proyectos',
-    distrito: 'Arequipa · Polobaya',
-    descripcion: 'Espejo de agua rodeado de montañas ideal para deportes náuticos ecológicos, picnics familiares, kayaks y patio gastronómico de trucha frita.',
-    lat: -16.5700,
-    lng: -71.3800,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/uzuna-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
-  {
-    id: 110,
-    nombre: 'Quebrada de Culebrillas y Canteras de Sillar',
-    categoria: 'Proyectos',
-    distrito: 'Uchumayo / Yura / Cerro Colorado',
-    descripcion: 'Cañones serpenteantes de sillar blanco con petroglifos preincas y canteras vivas. Centro de interpretación, senderos nocturnos y esculpido en vivo.',
-    lat: -16.3572,
-    lng: -71.5908,
-    horario: 'Proyecto TAFA 2026',
-    precio_entrada: 'Plan Regional',
-    imagen_url: '/images/projects/culebrillas-project.webp',
-    fuente: 'Gobierno Regional / TAFA',
-    verificado: 1,
-    estado: 'activo',
-  },
 ]
 
 export default function Highlights() {
@@ -198,16 +44,8 @@ export default function Highlights() {
   async function loadData() {
     try {
       setLoading(true)
-      const data = await getLugaresSupabase(categoria === 'Proyectos' ? undefined : (categoria || undefined), search || undefined)
-      let combined = [...data, ...STRATEGIC_PROJECTS_CARDS]
-
-      if (categoria === 'Proyectos') {
-        combined = combined.filter(l => l.categoria === 'Proyectos')
-      } else if (categoria) {
-        combined = combined.filter(l => l.categoria === categoria)
-      }
-
-      setLugares(combined)
+      const data = await getLugaresSupabase(categoria || undefined, search || undefined)
+      setLugares(data)
     } catch (e) {
       console.error(e)
     } finally {
@@ -409,6 +247,9 @@ export default function Highlights() {
                         <img
                           src={l.imagen_url}
                           alt={l.nombre}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src = '/images/places/plaza-de-armas.jpg'
+                          }}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
