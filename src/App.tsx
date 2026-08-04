@@ -67,18 +67,7 @@ export default function App() {
       <Footer />
 
       {/* ── Botón flotante de Escaneo QR ─────────────────────────────────── */}
-      <div className="fixed bottom-6 left-6 z-40">
-        <button
-          id="btn-scan-qr"
-          onClick={() => handleOpenQR('QR-PLAZA-01')}
-          title="Escanear Señalética Digital QR — Turismo para Todos"
-          aria-label="Escanear código QR turístico"
-          className="bg-tafa-volcán hover:bg-tafa-lava text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 border border-white/20"
-        >
-          <QrCode className="w-5 h-5" />
-          <span className="hidden sm:inline">Escanear QR Turístico</span>
-        </button>
-      </div>
+
 
       {/* ── Asistente AI Multilingüe ─────────────────────────────────────── */}
       <TouristAIAssistant />
