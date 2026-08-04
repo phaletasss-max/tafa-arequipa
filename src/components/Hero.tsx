@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { Upload, Map, LayoutDashboard, Sparkles, UserCheck } from 'lucide-react'
+import { Upload, Map, LayoutDashboard, Sparkles, UserCheck, Globe } from 'lucide-react'
 import { motion } from 'framer-motion'
 import SurveyModal from './SurveyModal'
 import AuthModal from './auth/AuthModal'
@@ -102,15 +102,15 @@ export default function Hero() {
 
             <div className="flex items-center gap-4">
               {/* Language Selector */}
-              <div className="flex items-center gap-1 bg-white/80 backdrop-blur-md border border-black/10 px-3 py-1.5 rounded-full text-xs font-bold text-tafa-text shadow-sm">
-                <span className="text-sm">🌐</span>
+              <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur-md border border-black/10 px-3 py-1.5 rounded-full text-xs font-bold text-tafa-text shadow-sm">
+                <Globe className="w-3.5 h-3.5 text-tafa-text" />
                 <select
                   defaultValue="ES"
                   className="bg-transparent border-none outline-none font-bold text-xs cursor-pointer text-tafa-text uppercase"
                   onChange={(e) => {
                     const lang = e.target.value
                     if (lang !== 'ES') {
-                      alert(`Idioma cambiado a ${lang}. Contenidos traducidos en tiempo real por TAFA AI.`)
+                      alert(`Idioma cambiado a ${lang}. Contenidos traducidos por TAFA AI.`)
                     }
                   }}
                 >

@@ -107,7 +107,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
             activeAccFilter === 'motriz' ? 'bg-tafa-andino text-white ring-2 ring-white' : 'bg-white/10 hover:bg-white/20 text-white/80'
           }`}
         >
-          ♿ Motriz
+          Motriz
         </button>
 
         <button
@@ -118,7 +118,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
             activeAccFilter === 'auditiva' ? 'bg-tafa-cielo text-white ring-2 ring-white' : 'bg-white/10 hover:bg-white/20 text-white/80'
           }`}
         >
-          🧏 Auditiva
+          Auditiva
         </button>
 
         <button
@@ -129,7 +129,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
             activeAccFilter === 'visual' ? 'bg-purple-600 text-white ring-2 ring-white' : 'bg-white/10 hover:bg-white/20 text-white/80'
           }`}
         >
-          👁️ Audiorutas
+          Audiorutas
         </button>
       </div>
     </aside>

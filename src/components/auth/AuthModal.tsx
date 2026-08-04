@@ -150,21 +150,21 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                   onClick={() => { setDocType('DNI'); setValidation(null); }}
                   className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${docType === 'DNI' ? 'bg-tafa-volcán text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
                 >
-                  🇵🇪 DNI (Perú)
+                  DNI (Perú)
                 </button>
                 <button
                   type="button"
                   onClick={() => { setDocType('PASSPORT'); setValidation(null); }}
                   className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${docType === 'PASSPORT' ? 'bg-tafa-volcán text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
                 >
-                  ✈️ Pasaporte
+                  Pasaporte
                 </button>
                 <button
                   type="button"
                   onClick={() => { setDocType('CE'); setValidation(null); }}
                   className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${docType === 'CE' ? 'bg-tafa-volcán text-white shadow-md' : 'text-gray-400 hover:text-white'}`}
                 >
-                  🪪 CE Extranjería
+                  CE Extranjería
                 </button>
               </div>
 
