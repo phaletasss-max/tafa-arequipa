@@ -26,10 +26,20 @@ export function getStoredProfile(): TAFAProfile | null {
 
 export function saveProfileSession(profile: TAFAProfile): void {
   localStorage.setItem(SESSION_KEY, JSON.stringify(profile))
+  localStorage.setItem('tafa_tourist_user', JSON.stringify({
+    nombre: profile.full_name,
+    email: profile.email,
+    docType: profile.doc_type,
+    docNum: profile.doc_number,
+    profile,
+  }))
+  window.dispatchEvent(new Event('tafa_auth_changed'))
 }
 
 export function clearProfileSession(): void {
   localStorage.removeItem(SESSION_KEY)
+  localStorage.removeItem('tafa_tourist_user')
+  window.dispatchEvent(new Event('tafa_auth_changed'))
 }
 
 export function setPendingQRCheckIn(slug: string): void {

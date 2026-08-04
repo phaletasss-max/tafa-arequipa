@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
   QrCode, MapPin, Clock, Ticket, Phone, Globe, Sparkles,
-  ShieldCheck, LogIn, CheckCircle2, AlertCircle, ArrowLeft,
+  ShieldCheck, LogIn, CheckCircle2, AlertCircle, ArrowLeft, ExternalLink, MessageCircle, Compass, Utensils, Award
 } from 'lucide-react'
 import AuthModal from '@/components/auth/AuthModal'
 import {
@@ -17,6 +17,42 @@ import {
 import { getQRLanding, registerQRCheckIn, type QRLandingData, type CheckInResult } from '@/services/checkInService'
 
 type PageState = 'loading' | 'not_found' | 'ready' | 'checking_in' | 'checked_in' | 'error'
+
+// Catálogo de Recomendaciones Cercanas
+const NEARBY_RECOMMENDATIONS = [
+  {
+    slug: 'la-nueva-palomino',
+    name: 'Picantería La Nueva Palomino',
+    category: 'Gastronomía Arequipeña',
+    district: 'Yanahuara',
+    points: '+50 PTS',
+    image: '/images/places/mirador-yanahuara.jpg',
+  },
+  {
+    slug: 'sol-de-mayo',
+    name: 'Restaurante Sol de Mayo (1903)',
+    category: 'Picantería Tradicional',
+    district: 'Yanahuara',
+    points: '+50 PTS',
+    image: '/images/places/plaza-de-armas.jpg',
+  },
+  {
+    slug: 'canteras-anashuayco',
+    name: 'Canteras de Añashuayco — Ruta del Sillar',
+    category: 'Artesanía en Sillar',
+    district: 'Cerro Colorado',
+    points: '+50 PTS',
+    image: '/images/places/ruta-sillar.jpg',
+  },
+  {
+    slug: 'monasterio-santa-catalina',
+    name: 'Monasterio de Santa Catalina',
+    category: 'Patrimonio Histórico',
+    district: 'Cercado',
+    points: '+50 PTS',
+    image: '/images/places/monasterio-santa-catalina.webp',
+  },
+]
 
 export default function QRCheckInPage() {
   const { slug = '' } = useParams<{ slug: string }>()
@@ -97,18 +133,21 @@ export default function QRCheckInPage() {
   if (pageState === 'loading') {
     return (
       <div className="min-h-screen bg-tafa-dark flex items-center justify-center">
-        <div className="text-white text-sm animate-pulse">Cargando sitio TAFA...</div>
+        <div className="text-white text-sm animate-pulse flex items-center gap-2">
+          <div className="w-5 h-5 border-2 border-tafa-volcán border-t-transparent rounded-full animate-spin" />
+          Cargando información del socio TAFA...
+        </div>
       </div>
     )
   }
 
   if (pageState === 'not_found') {
     return (
-      <div className="min-h-screen bg-tafa-dark flex flex-col items-center justify-center p-6 text-white">
+      <div className="min-h-screen bg-tafa-dark flex flex-col items-center justify-center p-6 text-white text-center">
         <AlertCircle className="w-12 h-12 text-tafa-volcán mb-4" />
         <h1 className="text-2xl font-bold mb-2">QR no encontrado</h1>
-        <p className="text-gray-400 text-sm mb-6">El código QR escaneado no corresponde a un sitio registrado en TAFA.</p>
-        <Link to="/" className="flex items-center gap-2 text-tafa-volcán hover:underline text-sm">
+        <p className="text-gray-400 text-sm mb-6 max-w-sm">El código QR escaneado no corresponde a un sitio o aliado registrado en TAFA.</p>
+        <Link to="/" className="flex items-center gap-2 bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors">
           <ArrowLeft className="w-4 h-4" /> Volver al inicio
         </Link>
       </div>
@@ -120,135 +159,174 @@ export default function QRCheckInPage() {
   const description = isPlace ? landing!.place_description : landing!.business_description
   const address = isPlace ? landing!.place_address : landing!.business_address
   const category = isPlace ? landing!.place_category : landing!.business_category
+  const nearby = NEARBY_RECOMMENDATIONS.filter(r => r.slug !== slug).slice(0, 3)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-tafa-dark via-[#1a1025] to-tafa-dark text-white">
-      <header className="border-b border-white/10 px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-gray-400 hover:text-white text-xs transition-colors">
-          <ArrowLeft className="w-4 h-4" /> TAFA Arequipa
+    <div className="min-h-screen bg-gradient-to-b from-tafa-dark via-[#1a1025] to-tafa-dark text-white pb-16">
+      <header className="border-b border-white/10 px-6 py-4 flex items-center justify-between backdrop-blur-md sticky top-0 z-40 bg-tafa-dark/80">
+        <Link to="/" className="flex items-center gap-2 text-gray-300 hover:text-white text-xs font-bold tracking-wider transition-colors">
+          <ArrowLeft className="w-4 h-4 text-tafa-volcán" /> TAFA AREQUIPA
         </Link>
         {profile && (
-          <div className="flex items-center gap-2 bg-tafa-volcán/20 border border-tafa-volcán/40 px-3 py-1 rounded-full text-xs">
-            <Sparkles className="w-3 h-3 text-tafa-volcán" />
+          <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/40 px-3.5 py-1 rounded-full text-xs font-bold text-emerald-300">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
             <span>{profile.points_earned} pts</span>
           </div>
         )}
       </header>
 
-      <main className="max-w-lg mx-auto p-6">
+      <main className="max-w-xl mx-auto px-6 pt-8 space-y-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
-          {/* Badge QR */}
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-2xl bg-tafa-volcán/20 border border-tafa-volcán/40 flex items-center justify-center">
-              <QrCode className="w-7 h-7 text-tafa-volcán" />
+          {/* Header del Sitio / Socio */}
+          <div className="bg-white/5 border border-white/15 rounded-[28px] p-6 backdrop-blur-md space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-tafa-volcán/20 border border-tafa-volcán/40 flex items-center justify-center shrink-0">
+                <QrCode className="w-7 h-7 text-tafa-volcán" />
+              </div>
+              <div className="space-y-1">
+                <span className="text-[11px] font-extrabold uppercase tracking-wider text-tafa-volcán flex items-center gap-1.5 bg-tafa-volcán/10 border border-tafa-volcán/30 px-3 py-0.5 rounded-full w-fit">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  {isPlace ? 'Atractivo Oficial DIRCETUR' : 'Aliado Turístico & Gastronómico'}
+                </span>
+                <h1 className="text-2xl font-extrabold font-outfit text-white leading-tight">{name}</h1>
+                {category && <p className="text-amber-400 text-xs font-semibold">{category}</p>}
+              </div>
             </div>
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-tafa-volcán flex items-center gap-1">
-                <ShieldCheck className="w-3 h-3" />
-                {isPlace ? 'Sitio Turístico Verificado' : 'Aliado TAFA Verificado'}
-              </span>
-              <h1 className="text-2xl font-bold font-outfit">{name}</h1>
-              {category && <p className="text-gray-400 text-xs">{category}</p>}
+
+            {/* Descripción Completa de Referencia */}
+            {description && (
+              <p className="text-gray-200 text-xs md:text-sm leading-relaxed bg-black/30 p-4 rounded-2xl border border-white/10">
+                {description}
+              </p>
+            )}
+
+            {/* Ficha de Detalles y Contacto */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs pt-1">
+              {address && (
+                <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                  <MapPin className="w-4 h-4 text-tafa-volcán shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Ubicación / Dirección</span>
+                    <span className="text-gray-200 font-medium">{address}</span>
+                  </div>
+                </div>
+              )}
+
+              {isPlace && landing!.place_hours && (
+                <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                  <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Horario Oficial</span>
+                    <span className="text-gray-200 font-medium">{landing!.place_hours}</span>
+                  </div>
+                </div>
+              )}
+
+              {isPlace && landing!.place_fee && (
+                <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                  <Ticket className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Tarifa de Ingreso</span>
+                    <span className="text-gray-200 font-medium">{landing!.place_fee}</span>
+                  </div>
+                </div>
+              )}
+
+              {!isPlace && landing!.business_phone && (
+                <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
+                  <Phone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Teléfono de Reserva</span>
+                    <span className="text-gray-200 font-medium">{landing!.business_phone}</span>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
 
-          {/* Descripción */}
-          {description && (
-            <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
-          )}
-
-          {/* Detalles */}
-          <div className="space-y-3 bg-white/5 rounded-2xl p-4 border border-white/10">
-            {address && (
-              <div className="flex items-start gap-3 text-sm">
-                <MapPin className="w-4 h-4 text-tafa-volcán mt-0.5 shrink-0" />
-                <span className="text-gray-300">{address}</span>
-              </div>
-            )}
-            {isPlace && landing!.place_hours && (
-              <div className="flex items-start gap-3 text-sm">
-                <Clock className="w-4 h-4 text-tafa-volcán mt-0.5 shrink-0" />
-                <span className="text-gray-300">{landing!.place_hours}</span>
-              </div>
-            )}
-            {isPlace && landing!.place_fee && (
-              <div className="flex items-start gap-3 text-sm">
-                <Ticket className="w-4 h-4 text-tafa-volcán mt-0.5 shrink-0" />
-                <span className="text-gray-300">{landing!.place_fee}</span>
-              </div>
-            )}
-            {!isPlace && landing!.business_phone && (
-              <div className="flex items-start gap-3 text-sm">
-                <Phone className="w-4 h-4 text-tafa-volcán mt-0.5 shrink-0" />
-                <span className="text-gray-300">{landing!.business_phone}</span>
-              </div>
-            )}
-            {!isPlace && landing!.business_website && (
-              <div className="flex items-start gap-3 text-sm">
-                <Globe className="w-4 h-4 text-tafa-volcán mt-0.5 shrink-0" />
-                <a href={landing!.business_website} target="_blank" rel="noopener noreferrer" className="text-tafa-volcán hover:underline">
-                  {landing!.business_website}
+            {/* Enlaces de Acción Externa (Google Maps & WhatsApp) */}
+            <div className="flex items-center gap-2 pt-2">
+              {address && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' ' + address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-1.5 no-underline border border-white/15"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Cómo llegar (Maps)</span>
                 </a>
-              </div>
-            )}
+              )}
+              <a
+                href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20información%20u%20orientación%20sobre:%20${encodeURIComponent(name || '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 text-xs font-semibold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-1.5 no-underline"
+              >
+                <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Consulta WhatsApp</span>
+              </a>
+            </div>
           </div>
 
-          {/* Puntos */}
-          <div className="bg-gradient-to-r from-tafa-volcán/20 to-tafa-lava/10 border border-tafa-volcán/30 rounded-2xl p-5 text-center">
-            <Sparkles className="w-6 h-6 text-tafa-volcán mx-auto mb-2" />
-            <p className="text-3xl font-bold text-tafa-volcán">+{landing!.effective_points} PTS</p>
-            <p className="text-gray-400 text-xs mt-1">Puntos TAFA por confirmar tu visita</p>
+          {/* Tarjeta de Recompensa Puntos TAFA */}
+          <div className="bg-gradient-to-r from-tafa-volcán/25 via-amber-500/10 to-tafa-lava/20 border border-tafa-volcán/40 rounded-[28px] p-6 text-center shadow-xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Award className="w-32 h-32 text-white" />
+            </div>
+            <Sparkles className="w-7 h-7 text-amber-400 mx-auto mb-2" />
+            <p className="text-4xl font-extrabold font-outfit text-amber-300">+{landing!.effective_points} PTS TAFA</p>
+            <p className="text-gray-300 text-xs mt-1">Recompensa oficial por validar tu visita en el lugar</p>
           </div>
 
-          {/* Estado check-in */}
+          {/* Resultado de Confirmación de Asistencia */}
           {pageState === 'checked_in' && checkInResult && (
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-green-500/10 border border-green-500/30 rounded-2xl p-5 text-center"
+              className="bg-emerald-500/15 border border-emerald-500/40 rounded-[28px] p-6 text-center space-y-2 shadow-2xl"
             >
-              <CheckCircle2 className="w-10 h-10 text-green-400 mx-auto mb-3" />
-              {checkInResult.already_visited ? (
-                <p className="text-green-300 text-sm">Ya registraste tu visita hoy. ¡Gracias por volver!</p>
-              ) : (
-                <p className="text-green-300 text-sm">
-                  ¡Visita confirmada en <strong>{checkInResult.entity_name}</strong>!
-                  Ganaste <strong>+{checkInResult.points_awarded} pts</strong>.
-                </p>
-              )}
-              <p className="text-gray-400 text-xs mt-2">Total acumulado: {checkInResult.total_points} pts TAFA</p>
+              <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
+              <h3 className="text-xl font-bold text-white">¡Visita Confirmada con Éxito!</h3>
+              <p className="text-emerald-300 text-xs leading-relaxed max-w-sm mx-auto">
+                {checkInResult.already_visited
+                  ? `Ya habías registrado tu visita hoy a ${checkInResult.entity_name}. ¡Gracias por seguir explorando Arequipa!`
+                  : `Se han añadido +${checkInResult.points_awarded} Puntos TAFA a tu perfil por visitar ${checkInResult.entity_name}.`}
+              </p>
+              <div className="pt-2 text-xs font-bold text-amber-300">
+                Puntos Acumulados: {checkInResult.total_points} PTS TAFA
+              </div>
             </motion.div>
           )}
 
           {pageState === 'error' && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 text-center">
+            <div className="bg-red-500/15 border border-red-500/40 rounded-2xl p-4 text-center">
               <AlertCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-              <p className="text-red-300 text-sm">{errorMsg}</p>
+              <p className="text-red-300 text-xs">{errorMsg}</p>
             </div>
           )}
 
-          {/* CTA */}
+          {/* Botón CTA de Confirmación */}
           {pageState !== 'checked_in' && pageState !== 'checking_in' && (
             profile ? (
               <button
                 onClick={handleCheckInClick}
-                className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <CheckCircle2 className="w-5 h-5" />
-                Confirmar mi visita
+                Confirmar mi visita y Reclamar +50 PTS
               </button>
             ) : (
-              <div className="space-y-3">
-                <p className="text-center text-gray-400 text-xs">
-                  Para registrar esta experiencia y recibir puntos TAFA, inicia sesión o regístrate.
+              <div className="space-y-3 bg-white/5 p-5 rounded-2xl border border-white/10 text-center">
+                <p className="text-gray-300 text-xs">
+                  Inicia sesión o regístrate para confirmar tu asistencia y añadir los <strong>+{landing!.effective_points} PTS TAFA</strong> a tu Pase Turístico.
                 </p>
                 <button
                   onClick={handleLoginClick}
-                  className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-semibold text-sm uppercase tracking-wider transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                   <LogIn className="w-5 h-5" />
                   Iniciar sesión / Registrarse
@@ -258,10 +336,47 @@ export default function QRCheckInPage() {
           )}
 
           {pageState === 'checking_in' && (
-            <div className="text-center text-gray-400 text-sm animate-pulse py-4">
-              Registrando tu visita...
+            <div className="text-center text-gray-300 text-xs animate-pulse py-4 font-semibold">
+              Registrando tu visita en la red oficial de Arequipa...
             </div>
           )}
+
+          {/* ── SECCIÓN DE RECOMENDACIONES CERCANAS ──────────────────────────── */}
+          <div className="pt-8 border-t border-white/10 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-white font-bold font-outfit text-lg">
+                <Compass className="w-5 h-5 text-tafa-volcán" />
+                <span>Lugares y Aliados Cercanos</span>
+              </div>
+              <span className="text-xs text-gray-400">Arequipa Tradicional</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {nearby.map((rec) => (
+                <Link
+                  key={rec.slug}
+                  to={`/qr/${rec.slug}`}
+                  className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tafa-volcán/50 rounded-2xl p-4 transition-all no-underline flex flex-col justify-between"
+                >
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
+                      {rec.category}
+                    </span>
+                    <h4 className="text-xs font-bold text-white group-hover:text-tafa-volcán transition-colors line-clamp-2">
+                      {rec.name}
+                    </h4>
+                    <p className="text-[11px] text-gray-400 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-tafa-volcán" /> {rec.district}
+                    </p>
+                  </div>
+                  <div className="pt-3 text-[10px] font-bold text-emerald-400 flex items-center justify-between border-t border-white/10 mt-3">
+                    <span>Ver info & QR</span>
+                    <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">{rec.points}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </motion.div>
       </main>
 
