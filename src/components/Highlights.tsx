@@ -88,14 +88,41 @@ export default function Highlights() {
       return l.verificado === 1 || (l.verificado as any) === true
     }
     if (activeQuickFilter === 'explorer:free_access') {
-      return l.precio_entrada?.toLowerCase().includes('libre') || l.precio_entrada?.toLowerCase().includes('gratuito')
+      return (l.precio_entrada || '').toLowerCase().includes('libre') || (l.precio_entrada || '').toLowerCase().includes('gratuito')
     }
-    if (activeQuickFilter === 'Cercado de Arequipa') return l.distrito === 'Cercado'
-    if (activeQuickFilter === 'Yanahuara') return l.distrito === 'Yanahuara'
-    if (activeQuickFilter === 'Cañón del Colca') return l.nombre.includes('Colca') || l.distrito === 'Chivay'
-    if (activeQuickFilter === 'Ruta del Sillar') return l.nombre.includes('Sillar') || l.nombre.includes('Añashuayco')
+    if (activeQuickFilter === 'Cercado de Arequipa') {
+      return (l.distrito || '').toLowerCase().includes('cercado') || (l.nombre || '').toLowerCase().includes('arequipa')
+    }
+    if (activeQuickFilter === 'Yanahuara') {
+      return (l.distrito || '').toLowerCase().includes('yanahuara') || (l.nombre || '').toLowerCase().includes('yanahuara')
+    }
+    if (activeQuickFilter === 'Cañón del Colca') {
+      return (l.nombre || '').toLowerCase().includes('colca') || (l.distrito || '').toLowerCase().includes('caylloma') || (l.distrito || '').toLowerCase().includes('chivay')
+    }
+    if (activeQuickFilter === 'Ruta del Sillar') {
+      return (l.nombre || '').toLowerCase().includes('sillar') || (l.nombre || '').toLowerCase().includes('añashuayco') || (l.distrito || '').toLowerCase().includes('cerro colorado')
+    }
     return true
   })
+
+  function getWhatsAppUrl(placeName: string) {
+    const currentLang = (i18n.language || 'es').toLowerCase().split('-')[0]
+    const langNames: Record<string, string> = {
+      es: 'Español',
+      en: 'Inglés (English)',
+      fr: 'Francés (Français)',
+      ja: 'Japonés (日本語)',
+      pt: 'Portugués (Português)',
+      de: 'Alemán (Deutsch)',
+      it: 'Italiano (Italiano)',
+      zh: 'Chino (中文)',
+      ko: 'Coreano (한국어)',
+      nl: 'Holandés (Nederlands)',
+    }
+    const langLabel = langNames[currentLang] || currentLang
+    const msg = `Hola TAFA Arequipa, deseo consultar o reservar mi visita para: ${placeName}.\n\n(Nota institucional: El turista prefiere atención en ${langLabel} / Preference: ${langLabel})`
+    return `https://wa.me/51921378349?text=${encodeURIComponent(msg)}`
+  }
 
   const renderCategoryIcon = (cat: string) => {
     switch (cat) {
@@ -134,6 +161,16 @@ export default function Highlights() {
     }
     return precio
   }
+
+  const [isPartnerModalOpen, setIsPartnerModalOpen] = useState(false)
+  const [partnerFormData, setPartnerFormData] = useState({
+    nombreEstablecimiento: '',
+    rubro: 'Picantería / Gastronomía',
+    distrito: 'Yanahuara',
+    contacto: '',
+    telefono: '',
+  })
+  const [partnerSuccess, setPartnerSuccess] = useState(false)
 
   return (
     <section id="explorar" className="bg-[#f8f9fa] py-28 px-6 border-t border-gray-200" ref={ref}>
@@ -461,12 +498,9 @@ export default function Highlights() {
                   </span>
                   <div className="flex items-center gap-2 w-full sm:w-auto">
                     <a
-                      href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20reservar%20mi%20visita%20o%20tour%20para:%20${encodeURIComponent(selectedLugar.nombre)}`}
+                      href={getWhatsAppUrl(selectedLugar.nombre)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => {
-                        alert('¡Ganaste +100 PTS TAFA por consultar reserva oficial al WhatsApp 921 378 349!')
-                      }}
                       className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 no-underline"
                     >
                       <PhoneCall className="w-4 h-4 text-white" />
@@ -485,6 +519,135 @@ export default function Highlights() {
           </div>
         )
       })()}
+
+      {/* Banner Institucional de Incorporación de Socios y Aliados */}
+      <div className="max-w-[1200px] mx-auto mt-20 bg-gradient-to-r from-slate-900 via-[#1d122b] to-slate-900 text-white rounded-[32px] p-8 md:p-12 border border-white/20 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+        <div className="space-y-3 max-w-xl text-center md:text-left z-10">
+          <span className="inline-flex items-center gap-2 bg-amber-400/20 text-amber-300 border border-amber-400/40 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+            <Award className="w-3.5 h-3.5 text-amber-400" /> Ecosistema de Aliados Turísticos
+          </span>
+          <h3 className="font-outfit text-2xl md:text-4xl font-extrabold text-white leading-tight">
+            ¿Tienes una Picantería, Hospedaje, Bodega o Taller en Arequipa?
+          </h3>
+          <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
+            Únete a la red oficial de QR TAFA Arequipa. Conecta tu establecimiento con turistas nacionales e internacionales y promueve la excelencia en servicios regionales.
+          </p>
+        </div>
+
+        <div className="shrink-0 z-10">
+          <button
+            onClick={() => setIsPartnerModalOpen(true)}
+            className="bg-tafa-volcán hover:bg-tafa-lava text-white font-bold text-xs uppercase tracking-wider px-8 py-4 rounded-full shadow-2xl transition-all hover:scale-105"
+          >
+            Registrar Mi Establecimiento
+          </button>
+        </div>
+      </div>
+
+      {/* Modal de Registro de Establecimiento / Socio Aliado */}
+      {isPartnerModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-slate-900 border border-white/20 rounded-[32px] max-w-md w-full p-8 text-white relative shadow-2xl">
+            <button
+              onClick={() => { setIsPartnerModalOpen(false); setPartnerSuccess(false); }}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-gray-300 hover:text-white transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {partnerSuccess ? (
+              <div className="py-8 text-center space-y-4">
+                <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto text-3xl">
+                  ✓
+                </div>
+                <h3 className="text-2xl font-bold font-outfit text-white">¡Solicitud Recibida!</h3>
+                <p className="text-gray-300 text-xs leading-relaxed max-w-xs mx-auto">
+                  Gracias por unirte al Ecosistema TAFA Arequipa. Evaluaremos tu información para generar el código QR oficial de tu establecimiento.
+                </p>
+                <button
+                  onClick={() => { setIsPartnerModalOpen(false); setPartnerSuccess(false); }}
+                  className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors"
+                >
+                  Cerrar
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  setPartnerSuccess(true)
+                }}
+                className="space-y-4"
+              >
+                <div>
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-1">Registro de Aliado TAFA</span>
+                  <h3 className="text-2xl font-bold font-outfit text-white">Unirse al Ecosistema</h3>
+                  <p className="text-gray-400 text-xs mt-1">Completa los datos de tu empresa o servicio turístico.</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">Nombre del Establecimiento</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Ej: Picantería Tradicional Don Pedro"
+                    value={partnerFormData.nombreEstablecimiento}
+                    onChange={(e) => setPartnerFormData({ ...partnerFormData, nombreEstablecimiento: e.target.value })}
+                    className="w-full bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Rubro Turístico</label>
+                    <select
+                      value={partnerFormData.rubro}
+                      onChange={(e) => setPartnerFormData({ ...partnerFormData, rubro: e.target.value })}
+                      className="w-full bg-slate-800 border border-white/20 rounded-2xl px-3 py-3 text-xs text-white focus:outline-none focus:border-tafa-volcán"
+                    >
+                      <option value="Picantería / Gastronomía">Picantería / Gastronomía</option>
+                      <option value="Hospedaje / Hotel">Hospedaje / Hotel</option>
+                      <option value="Bodega Pisquera">Bodega Pisquera</option>
+                      <option value="Taller de Artesanía">Taller de Artesanía</option>
+                      <option value="Guía / Agencia Tour">Guía / Agencia Tour</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Distrito</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ej: Yanahuara"
+                      value={partnerFormData.distrito}
+                      onChange={(e) => setPartnerFormData({ ...partnerFormData, distrito: e.target.value })}
+                      className="w-full bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">Teléfono o WhatsApp de Contacto</label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="Ej: 959 123 456"
+                    value={partnerFormData.telefono}
+                    onChange={(e) => setPartnerFormData({ ...partnerFormData, telefono: e.target.value })}
+                    className="w-full bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white font-bold py-3.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-lg mt-2"
+                >
+                  Enviar Solicitud de Registro
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   )
 }

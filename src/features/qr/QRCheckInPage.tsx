@@ -161,6 +161,15 @@ export default function QRCheckInPage() {
   const category = isPlace ? landing!.place_category : landing!.business_category
   const nearby = NEARBY_RECOMMENDATIONS.filter(r => r.slug !== slug).slice(0, 3)
 
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [scanTimestamp, setScanTimestamp] = useState<number>(Date.now())
+
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
+  const isReviewExpired = Date.now() - scanTimestamp > SEVEN_DAYS_MS
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-tafa-dark via-[#1a1025] to-tafa-dark text-white pb-16">
       <header className="border-b border-white/10 px-6 py-4 flex items-center justify-between backdrop-blur-md sticky top-0 z-40 bg-tafa-dark/80">
@@ -287,7 +296,7 @@ export default function QRCheckInPage() {
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="bg-emerald-500/15 border border-emerald-500/40 rounded-[28px] p-6 text-center space-y-2 shadow-2xl"
+              className="bg-emerald-500/15 border border-emerald-500/40 rounded-[28px] p-6 text-center space-y-4 shadow-2xl"
             >
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
               <h3 className="text-xl font-bold text-white">¡Visita Confirmada con Éxito!</h3>
@@ -296,8 +305,92 @@ export default function QRCheckInPage() {
                   ? `Ya habías registrado tu visita hoy a ${checkInResult.entity_name}. ¡Gracias por seguir explorando Arequipa!`
                   : `Se han añadido +${checkInResult.points_awarded} Puntos TAFA a tu perfil por visitar ${checkInResult.entity_name}.`}
               </p>
-              <div className="pt-2 text-xs font-bold text-amber-300">
+              <div className="pt-1 text-xs font-bold text-amber-300">
                 Puntos Acumulados: {checkInResult.total_points} PTS TAFA
+              </div>
+
+              {/* Formulario Opcional de Calificación & Foto de Recuerdo (Plazo 7 días) */}
+              <div className="bg-black/40 border border-white/10 rounded-2xl p-5 text-left space-y-4 mt-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Opcional · Recuerdo de tu Visita</span>
+                    <h4 className="text-sm font-bold text-white">¿Qué tal tu experiencia en este lugar?</h4>
+                  </div>
+                  <span className="text-[10px] text-gray-400 bg-white/10 px-2 py-0.5 rounded-full">Plazo: 7 días</span>
+                </div>
+
+                {isReviewExpired ? (
+                  <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-center text-xs text-amber-300">
+                    El plazo de 7 días para opinar o subir foto de recuerdo ha finalizado. Tu asistencia y tus Puntos TAFA se mantienen guardados permanentemente.
+                  </div>
+                ) : reviewSubmitted ? (
+                  <div className="bg-emerald-500/20 border border-emerald-500/40 p-3 rounded-xl text-center text-xs text-emerald-300 space-y-1">
+                    <p className="font-bold">¡Reseña y foto de recuerdo guardadas!</p>
+                    <p className="text-[11px] text-gray-300">Tu opinión fortalece la calidad del turismo en Arequipa.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {/* Selector de Estrellas */}
+                    <div>
+                      <label className="block text-[11px] text-gray-300 mb-1">Calificación por Estrellas:</label>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setRating(star)}
+                            className="text-xl transition-transform hover:scale-125 focus:outline-none"
+                          >
+                            {star <= rating ? '⭐' : '☆'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Comentario */}
+                    <div>
+                      <label className="block text-[11px] text-gray-300 mb-1">Comentario (Opcional):</label>
+                      <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Ej: Excelente comida y atención tradicional..."
+                        rows={2}
+                        className="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
+                      />
+                    </div>
+
+                    {/* Foto Opcional */}
+                    <div>
+                      <label className="block text-[11px] text-gray-300 mb-1">Foto de Recuerdo (Opcional):</label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            const reader = new FileReader()
+                            reader.onloadend = () => setMemoryPhoto(reader.result as string)
+                            reader.readAsDataURL(file)
+                          }
+                        }}
+                        className="block w-full text-xs text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-[11px] file:font-bold file:bg-tafa-volcán file:text-white hover:file:bg-tafa-lava cursor-pointer"
+                      />
+                      {memoryPhoto && (
+                        <div className="mt-2 relative w-24 h-24 rounded-xl overflow-hidden border border-white/20">
+                          <img src={memoryPhoto} alt="Recuerdo de visita" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setReviewSubmitted(true)}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all"
+                    >
+                      Guardar Reseña & Foto de Recuerdo
+                    </button>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
