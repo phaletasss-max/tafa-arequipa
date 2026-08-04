@@ -12,7 +12,7 @@ const DESPEGAR_TABS = [
   { id: 'Naturaleza', label: 'Naturaleza & Cañones', icon: TreePine, color: 'bg-emerald-600 text-white' },
   { id: 'Centro Histórico', label: 'Centro Histórico', icon: Castle, color: 'bg-red-600 text-white' },
   { id: 'Cultural', label: 'Cultura & Rutas', icon: Compass, color: 'bg-amber-600 text-white' },
-  { id: 'Planes', label: 'Proyectos & Planes de Innovación', icon: Award, color: 'bg-blue-600 text-white' },
+  { id: 'Proyectos', label: 'Proyectos Estratégicos (10)', icon: Award, color: 'bg-blue-600 text-white' },
 ]
 
 // Quick Filters Despegar Style
@@ -23,6 +23,159 @@ const QUICK_FILTERS = [
   'Yanahuara',
   'Cañón del Colca',
   'Ruta del Sillar',
+]
+
+const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
+  {
+    id: 101,
+    nombre: 'Valle de los Volcanes de Andagua',
+    categoria: 'Proyectos',
+    distrito: 'Castilla · Andagua',
+    descripcion: 'Campo volcánico fascinante único en Sudamérica con más de 80 conitos volcánicos extintos de baja altura (de 50 a 300 metros). Vuelos panorámicos, miradores de cristal y observatorio astroturístico.',
+    lat: -15.4900,
+    lng: -72.3500,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 102,
+    nombre: 'Petroglifos de Toro Muerto y Valle de Majes',
+    categoria: 'Proyectos',
+    distrito: 'Castilla · Corire',
+    descripcion: 'Uno de los campos de arte rupestre más extensos del mundo con más de 5,000 grabados en rocas volcánicas. App AR 3D, canotaje en río Majes y hoteles en bodegas pisqueras.',
+    lat: -16.2234,
+    lng: -72.4831,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 103,
+    nombre: 'Cañón del Cotahuasi',
+    categoria: 'Proyectos',
+    distrito: 'La Unión · Cotahuasi',
+    descripcion: 'El cañón más profundo de la tierra (3,535 m). Santuario virgen de cataratas como Sipia, bosques de puyas Raimondi y complejas termas de Luicho.',
+    lat: -15.2100,
+    lng: -72.8900,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 104,
+    nombre: 'Cataratas de Pillones e Imata',
+    categoria: 'Proyectos',
+    distrito: 'Caylloma · San Antonio de Chuca',
+    descripcion: 'Impresionante caída de agua rodeada de gigantescas columnas de piedra talladas por la erosión eólica. Parador térmico, puentes colgantes y trekking inclusivo.',
+    lat: -15.8600,
+    lng: -71.1900,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 105,
+    nombre: 'Puerto Inka y Quebrada de la Waca',
+    categoria: 'Proyectos',
+    distrito: 'Caravelí · Atiquipa',
+    descripcion: 'Antiguo puerto Inca donde se extraían mariscos para el Inca en Cusco. Puesta en valor del Camino Inca costero, muelle de kayak y ecolodges.',
+    lat: -15.8450,
+    lng: -74.3460,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 106,
+    nombre: 'Caleta de Quilca y Puerto Matarani',
+    categoria: 'Proyectos',
+    distrito: 'Camaná e Islay',
+    descripcion: 'Bahías históricas con rica biodiversidad marina, acantilados escarpados y gastronomía de pesca fresca. Circuito de lobos/pingüinos y buceo.',
+    lat: -16.7150,
+    lng: -72.4280,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 107,
+    nombre: 'Laguna y Reserva de Salinas',
+    categoria: 'Proyectos',
+    distrito: 'San Juan de Tarucani',
+    descripcion: 'Santuario de flamencos y espejos de sal a más de 4,300 msnm. Miradores de aves, glamping con domos solares y bus turístico.',
+    lat: -16.3700,
+    lng: -71.1400,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 108,
+    nombre: 'Bosque de Piedras de Choqolaqa',
+    categoria: 'Proyectos',
+    distrito: 'Caylloma · Tisco',
+    descripcion: 'Paisaje surrealista de torres rocosas blancas que simulan una ciudadela antigua petrificada. Campamento fotográfico y albergues comunales.',
+    lat: -15.3500,
+    lng: -71.4500,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 109,
+    nombre: 'Represa de San José de Uzuña',
+    categoria: 'Proyectos',
+    distrito: 'Arequipa · Polobaya',
+    descripcion: 'Espejo de agua rodeado de montañas ideal para deportes náuticos ecológicos, picnics familiares, kayaks y patio gastronómico de trucha frita.',
+    lat: -16.5700,
+    lng: -71.3800,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=800&auto=format&fit=crop',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
+  {
+    id: 110,
+    nombre: 'Quebrada de Culebrillas y Canteras de Sillar',
+    categoria: 'Proyectos',
+    distrito: 'Uchumayo / Yura / Cerro Colorado',
+    descripcion: 'Cañones serpenteantes de sillar blanco con petroglifos preincas y canteras vivas. Centro de interpretación, senderos nocturnos y esculpido en vivo.',
+    lat: -16.3572,
+    lng: -71.5908,
+    horario: 'Proyecto TAFA 2026',
+    precio_entrada: 'Plan Regional',
+    imagen_url: '/correcion-imagenes/ruta-del-sillar.jpg',
+    fuente: 'Gobierno Regional / TAFA',
+    verificado: 1,
+    estado: 'activo',
+  },
 ]
 
 export default function Highlights() {
@@ -43,8 +196,16 @@ export default function Highlights() {
   async function loadData() {
     try {
       setLoading(true)
-      const data = await getLugaresSupabase(categoria || undefined, search || undefined)
-      setLugares(data)
+      const data = await getLugaresSupabase(categoria === 'Proyectos' ? undefined : (categoria || undefined), search || undefined)
+      let combined = [...data, ...STRATEGIC_PROJECTS_CARDS]
+
+      if (categoria === 'Proyectos') {
+        combined = combined.filter(l => l.categoria === 'Proyectos')
+      } else if (categoria) {
+        combined = combined.filter(l => l.categoria === categoria)
+      }
+
+      setLugares(combined)
     } catch (e) {
       console.error(e)
     } finally {

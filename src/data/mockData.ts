@@ -13,7 +13,7 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Corazón del centro histórico de Arequipa, construido íntegramente en sillar blanco. Destaca su imponente Catedral neoclásica de 70 metros de frente, piletas de bronce del siglo XIX y arquerías de granito. Al fondo se recorta la silueta simétrica del volcán Misti.',
     lat: -16.3988, lng: -71.5369,
     horario: '24 horas / Museo 10:00 - 17:00', precio_entrada: 'Acceso Libre (Museo S/ 15)',
-    imagen_url: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=800&auto=format&fit=crop',
+    imagen_url: '/correcion-imagenes/plaza-armas-arequipa.jpg',
     fuente: 'Pejman Afrakhteh / 500px / Getty Images', verificado: 1, estado: 'activo',
   },
   {
@@ -22,7 +22,7 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Ciudadela conventual fundada en 1579 de más de 20,000 m². Cuenta con claustros pintados en rojo óxido y azul cobalto, calles de piedra, patios floridos y cocinas históricas esculpidas en sillar volcánico.',
     lat: -16.3953, lng: -71.5367,
     horario: '09:00 - 17:00', precio_entrada: 'S/ 45.00',
-    imagen_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=800&auto=format&fit=crop',
+    imagen_url: '/correcion-imagenes/monaterio-santa-catalina.webp',
     fuente: 'marktucan / Getty Images', verificado: 1, estado: 'activo',
   },
   {
@@ -31,16 +31,16 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Mirador construido en el siglo XIX compuesto por arcos de sillar con grabados de poetas y pensadores arequipeños. Ofrece la vista panorámica más famosa de la ciudad hacia los tres volcanes: Misti, Chachani y Pichu Pichu.',
     lat: -16.3881, lng: -71.5422,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
-    imagen_url: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=800&auto=format&fit=crop',
+    imagen_url: '/correcion-imagenes/mirador-yanahuara.jpg',
     fuente: 'Jorge Choroco / Getty Images', verificado: 1, estado: 'activo',
   },
   {
     id: 4, nombre: 'Ruta del Sillar (Canteras de Añashuayco)',
     categoria: 'Cultural', distrito: 'Cerro Colorado',
-    descripcion: 'Canteras vivas en el quebrada de Añashuayco donde los artesanos extraen y tallan el sillar blanco a comba y cincel. Incluye megagrabados en roca volcánica y replicas de fachadas barrocas en tamaño real.',
+    descripcion: 'Canteras vivas en la quebrada de Añashuayco donde los artesanos extraen y tallan el sillar blanco a comba y cincel. Incluye megagrabados en roca volcánica y réplicas de fachadas barrocas en tamaño real.',
     lat: -16.3572, lng: -71.5908,
     horario: '08:00 - 16:30', precio_entrada: 'S/ 5.00',
-    imagen_url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop',
+    imagen_url: '/correcion-imagenes/ruta-del-sillar.jpg',
     fuente: 'Caroline Brundle Bugge / Getty Images', verificado: 1, estado: 'activo',
   },
   {
@@ -49,7 +49,7 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Uno de los cañones más profundos del mundo (más de 4,160 metros). El punto emblemático es la Cruz del Cóndor, desde donde se observa el vuelo del cóndor andino en su hábitat natural sobre andenes preincas.',
     lat: -15.6386, lng: -71.9022,
     horario: '05:00 - 17:00', precio_entrada: 'Boleto Turístico S/ 70',
-    imagen_url: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=800&auto=format&fit=crop',
+    imagen_url: '/correcion-imagenes/canon-colca-condor.jpg',
     fuente: 'Donyanedomam / Getty Images', verificado: 1, estado: 'activo',
   },
 
