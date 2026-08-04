@@ -9,7 +9,7 @@ const chapters = [
     subtitle: 'Corazón del Centro Histórico de Arequipa',
     desc: 'Construido íntegramente en sillar blanco con su imponente Catedral neoclásica de 70 metros de frente y arquerías de granito sobre el fondo del volcán Misti.',
     video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop',
+    poster: '/correcion-imagenes/plaza-armas-arequipa.jpg',
     location: 'Plaza de Armas · Cercado de Arequipa',
     tag: 'Patrimonio Cultural UNESCO',
   },

@@ -9,7 +9,7 @@ const regionalProjects = [
     provincia: 'Castilla · Andagua',
     distancia: 'A 7 horas de Arequipa',
     desc: 'Campo volcánico fascinante único en Sudamérica con más de 80 conitos volcánicos extintos de baja altura (de 50 a 300 metros).',
-    imagen: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/valle-volcanes-andagua.jpg',
     tag: 'Geoparque UNESCO · Maravilla Geológica',
     pilares: [
       'Vuelos panorámicos sobre conos volcánicos',
@@ -23,7 +23,7 @@ const regionalProjects = [
     provincia: 'Castilla · Corire',
     distancia: 'A 3 horas de Arequipa',
     desc: 'Uno de los campos de arte rupestre más extensos del mundo con más de 5,000 grabados en rocas volcánicas realizados por culturas preincas.',
-    imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/petroglifos-toro-muerto.jpg',
     tag: 'Arte Rupestre · Arqueología AR 3D',
     pilares: [
       'App de Realidad Aumentada 3D para grabados',
@@ -37,7 +37,7 @@ const regionalProjects = [
     provincia: 'La Unión · Cotahuasi',
     distancia: 'A 9 horas de Arequipa',
     desc: 'El cañón más profundo de la tierra (3,535 m). Un santuario virgen de cataratas como Sipia, bosques de puyas Raimondi y aguas termales de Luicho.',
-    imagen: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/canon-cotahuasi.jpg',
     tag: 'Eco-Aventura · Récord Mundial',
     pilares: [
       'Teleférico panorámico sobre Catarata de Sipia',
@@ -51,7 +51,7 @@ const regionalProjects = [
     provincia: 'Caylloma · San Antonio de Chuca',
     distancia: 'A 2.5 horas de Arequipa',
     desc: 'Impresionante caída de agua rodeada de gigantescas columnas de piedra talladas por la erosión eólica en la meseta andina.',
-    imagen: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/cataratas-pillones.jpg',
     tag: 'Eco-Turismo · Formaciones Líticas',
     pilares: [
       'Parador de carretera con calefacción y ropa térmica',
@@ -65,7 +65,7 @@ const regionalProjects = [
     provincia: 'Caravelí · Atiquipa',
     distancia: 'Km 603 Panamericana Sur',
     desc: 'Antiguo puerto Inca donde se extraían mariscos para el Inca en Cusco. Combinación única de costa pacífica y patrimonio Qhapaq Ñan.',
-    imagen: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/puerto-inka.jpg',
     tag: 'Qhapaq Ñan · Costa Inca',
     pilares: [
       'Puesta en valor del Camino Inca costero',
@@ -79,7 +79,7 @@ const regionalProjects = [
     provincia: 'Camaná e Islay',
     distancia: 'A 2 horas de Arequipa',
     desc: 'Bahías históricas con rica biodiversidad marina, acantilados escarpados y gastronomía de pesca fresca del día.',
-    imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/quilca-matarani.jpg',
     tag: 'Biodiversidad Marina & Mar',
     pilares: [
       'Circuito náutico de lobos y pingüinos',
@@ -93,7 +93,7 @@ const regionalProjects = [
     provincia: 'Arequipa · San Juan de Tarucani',
     distancia: 'A 3 horas de Arequipa',
     desc: 'Santuario de flamencos y espejos de sal a más de 4,300 msnm a los pies del volcán Pichu Pichu.',
-    imagen: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/reserva-salinas.jpg',
     tag: 'Reserva Nacional · Avistamiento',
     pilares: [
       'Miradores camuflados para observación de aves',
@@ -107,7 +107,7 @@ const regionalProjects = [
     provincia: 'Caylloma · Tisco',
     distancia: 'A 5 horas de Arequipa',
     desc: 'Paisaje surrealista de torres rocosas blancas que simulan una ciudadela antigua petrificada bajo cielos andinos.',
-    imagen: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/choqolaqa.jpg',
     tag: 'Ciudadela Lítica · Astroturismo',
     pilares: [
       'Campamento fotográfico y nocturno',
@@ -121,7 +121,7 @@ const regionalProjects = [
     provincia: 'Arequipa · Polobaya',
     distancia: 'A 1.5 horas de Arequipa',
     desc: 'Hermoso espejo de agua rodeado de montañas ideal para la práctica de deportes náuticos ecológicos y picnics familiares.',
-    imagen: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=800&auto=format&fit=crop',
+    imagen: '/images/attractions/represa-uzuna.jpg',
     tag: 'Ecoturismo Náutico · Campiña',
     pilares: [
       'Muelle deportivo para kayaks y paddle board',
@@ -135,7 +135,7 @@ const regionalProjects = [
     provincia: 'Uchumayo / Yura / Cerro Colorado',
     distancia: 'A 45 min del Centro',
     desc: 'Cañones serpenteantes de sillar blanco con petroglifos preincas y canteras vivas donde se extrae la piedra de Arequipa.',
-    imagen: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=800&auto=format&fit=crop',
+    imagen: '/correcion-imagenes/ruta-del-sillar.jpg',
     tag: 'Sillar Volcánico · Geología Viva',
     pilares: [
       'Centro de interpretación interactivo del sillar',

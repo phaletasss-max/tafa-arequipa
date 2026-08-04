@@ -28,7 +28,7 @@ const historicStories: HistoricStory[] = [
     hours: '24 Horas / Museo 10:00 - 17:00',
     fee: 'Acceso Libre',
     accessibility: 'Rampas de acceso motriz 100% integradas (WCAG AAA)',
-    image: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1200&auto=format&fit=crop',
+    image: '/correcion-imagenes/plaza-armas-arequipa.jpg',
     points: 50,
   },
   {
@@ -41,7 +41,7 @@ const historicStories: HistoricStory[] = [
     hours: '09:00 - 17:00',
     fee: 'S/ 45.00 General',
     accessibility: 'Audiorutas de voz e itinerario plano sin escalones',
-    image: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1200&auto=format&fit=crop',
+    image: '/correcion-imagenes/monaterio-santa-catalina.webp',
     points: 80,
   },
   {
@@ -54,8 +54,8 @@ const historicStories: HistoricStory[] = [
     hours: '24 Horas',
     fee: 'Acceso Libre',
     accessibility: 'Señalética digital QR y rampa de acceso',
-    image: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1200&auto=format&fit=crop',
-    points: 60,
+    image: '/correcion-imagenes/mirador-yanahuara.jpg',
+    points: 40,
   },
   {
     id: 's4',
@@ -67,7 +67,7 @@ const historicStories: HistoricStory[] = [
     hours: '08:00 - 16:30',
     fee: 'S/ 5.00 Ingreso',
     accessibility: 'Camino llano con asistencia para movilidad reducida',
-    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop',
+    image: '/correcion-imagenes/ruta-del-sillar.jpg',
     points: 70,
   },
   {
@@ -80,7 +80,7 @@ const historicStories: HistoricStory[] = [
     hours: '05:00 - 17:00',
     fee: 'Boleto Turístico (S/ 70)',
     accessibility: 'Miradores equipados con barandas y señalética QR',
-    image: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=1200&auto=format&fit=crop',
+    image: '/correcion-imagenes/canon-colca-condor.jpg',
     points: 100,
   },
 ]
