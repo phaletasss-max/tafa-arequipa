@@ -1,207 +1,257 @@
-import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { ArrowDown, Sparkles, Compass } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ArrowRight, ChevronLeft, ChevronRight, Compass, MapPin, Play, Pause, Sparkles } from 'lucide-react'
 
 const chapters = [
   {
     id: 1,
-    title: 'Welcome to Arequipa',
-    subtitle: 'Chapter I — The Gateway to Southern Peru',
-    desc: 'Surrounded by three majestic volcanoes and built with white volcanic stone, Arequipa opens its gates to culture and history.',
+    title: 'Bienvenidos a Arequipa',
+    subtitle: 'Capítulo I — La Puerta al Sur del Perú',
+    desc: 'Rodeada por tres majestuosos volcanes y construida con piedra sillar blanca volcánica, Arequipa abre sus puertas a la cultura, la gastronomía y la historia.',
     video: '/video/caratula.mp4',
-    location: 'Plaza de Armas',
+    poster: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop',
+    location: 'Plaza de Armas · Cercado',
+    tag: 'Patrimonio Cultural UNESCO',
   },
   {
     id: 2,
-    title: 'The White City awaits.',
-    subtitle: 'Chapter II — Sillar Architecture & Sunlight',
-    desc: 'Walk through colonial arcades, heritage plazas and sunlit courtyards crafted by master artisans over four centuries.',
-    video: 'https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4',
-    location: 'Misti Volcano & City View',
+    title: 'La Ciudad Blanca te espera',
+    subtitle: 'Capítulo II — Arquitectura de Sillar y Sol',
+    desc: 'Recorre arquerías coloniales, plazas patrimoniales y patios iluminados por el sol tallados por maestros artesanos a lo largo de cuatro siglos.',
+    video: '/video/caratula.mp4',
+    poster: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1600&auto=format&fit=crop',
+    location: 'Mirador de Yanahuara & Vista del Misti',
+    tag: 'Sillar Volcánico & Vistas',
   },
   {
     id: 3,
-    title: 'Discover thousands of ancient petroglyphs.',
-    subtitle: 'Chapter III — Toro Muerto Heritage Site',
-    desc: 'Over 5,000 carved volcanic boulders revealing pre-Inca worldviews, astronomy and wildlife in the desert valley.',
+    title: 'Descubre miles de petroglifos milenarios',
+    subtitle: 'Capítulo III — Arte Rupestre de Toro Muerto',
+    desc: 'Más de 5,000 bloques de piedra volcánica grabados que revelan la cosmovisión pre-inca, astronomía y fauna en el valle desértico.',
     video: '/video/caratula.mp4',
-    location: 'Corire · Castilla',
+    poster: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1600&auto=format&fit=crop',
+    location: 'Corire · Valle de Majes',
+    tag: 'Arqueología Pre-Inca',
   },
   {
     id: 4,
-    title: 'Witness the flight of the Andean Condor.',
-    subtitle: 'Chapter IV — Colca Canyon Altitude',
-    desc: 'Rise above 3,200 meters into one of the deepest canyons on Earth as giant wings glide across the morning thermal currents.',
-    video: 'https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4',
+    title: 'Presencia el majestuoso vuelo del Cóndor Andino',
+    subtitle: 'Capítulo IV — La Profundidad del Cañón del Colca',
+    desc: 'Eleva tu mirada a más de 3,200 metros en uno de los cañones más profundos de la Tierra mientras enormes alas planean sobre las corrientes térmicas.',
+    video: '/video/caratula.mp4',
+    poster: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=1600&auto=format&fit=crop',
     location: 'Cruz del Cóndor · Caylloma',
+    tag: 'Maravilla Natural del Perú',
   },
   {
     id: 5,
-    title: 'Walk through centuries of history.',
-    subtitle: 'Chapter V — Santa Catalina Citadel',
-    desc: 'A 20,000 square meter cloistered citadel of indigo blue and terracotta passages tucked inside the city heart.',
+    title: 'Camina a través de siglos de historia',
+    subtitle: 'Capítulo V — Ciudadela Monástica de Santa Catalina',
+    desc: 'Una ciudadela amurallada de 20,000 metros cuadrados con pasajes de azul añil y rojo terracota resguardados en el corazón de la ciudad.',
     video: '/video/caratula.mp4',
-    location: 'Monasterio de Santa Catalina',
+    poster: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1600&auto=format&fit=crop',
+    location: 'Monasterio de Santa Catalina · Cercado',
+    tag: 'Joya Colonial de 1579',
   },
   {
     id: 6,
-    title: 'Nature beyond imagination.',
-    subtitle: 'Chapter VI — Salinas & Aguada Blanca Reserve',
-    desc: 'High-altitude salt lagoons, wild vicuñas and volcanic reflections under crystal clear Andean skies.',
-    video: 'https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4',
-    location: 'Salinas Salt Flat',
+    title: 'Naturaleza más allá de la imaginación',
+    subtitle: 'Capítulo VI — Reserva Salinas y Aguada Blanca',
+    desc: 'Lagunas saladas de gran altitud, vicuñas silvestres y reflejos volcánicos bajo cielos andinos cristalinos.',
+    video: '/video/caratula.mp4',
+    poster: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600&auto=format&fit=crop',
+    location: 'Santuario Salinas & Vicuñas',
+    tag: 'Biodiversidad Altoandina',
   },
   {
     id: 7,
-    title: 'Discover the stone that built the White City.',
-    subtitle: 'Chapter VII — Añashuayco Quarries',
-    desc: 'Witness live stonemasonry inside white volcanic canyons carved by generations of artisan quarrymen.',
+    title: 'Descubre la piedra con la que se construyó Arequipa',
+    subtitle: 'Capítulo VII — Canteras Vivas de Añashuayco',
+    desc: 'Sé testigo del esculpido artesanal en vivo dentro de canteras de sillar blanco labradas por generaciones de maestros canteros.',
     video: '/video/caratula.mp4',
+    poster: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1600&auto=format&fit=crop',
     location: 'Ruta del Sillar · Cerro Colorado',
+    tag: 'Cultura Viva & Canteros',
   },
   {
     id: 8,
-    title: 'Taste traditions recognized around the world.',
-    subtitle: 'Chapter VIII — Authentic Picantería Culinary Heritage',
-    desc: 'Savory Rocoto Relleno, Sunday Adobo and wood-fired stews celebrating regional ingredients and community warmth.',
-    video: 'https://pollen-batch-41236914.figma.site/_components/v2/f0ee2dae7671c170c34f12e31c4cb41418976c98/769c564298c132f7919405cd9f17c1b1231f341d.769c5642.mp4',
-    location: 'Yanahuara & Traditional Districts',
+    title: 'Saborea tradiciones reconocidas internacionalmente',
+    subtitle: 'Capítulo VIII — Herencia Gastronómica de Picantería',
+    desc: 'Rocoto Relleno, Adobo de Domingo y guisos a la leña celebrando insumos regionales y la calidez comunitaria.',
+    video: '/video/caratula.mp4',
+    poster: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1600&auto=format&fit=crop',
+    location: 'Yanahuara & Distritos Tradicionales',
+    tag: 'Gastronomía Tradicional',
   },
   {
     id: 9,
-    title: 'Start your journey.',
-    subtitle: 'Chapter IX — Discover More with TAFA',
-    desc: 'Unlock unique experiences, accessible routes and rewards while exploring Arequipa.',
+    title: 'Comienza tu viaje con TAFA',
+    subtitle: 'Capítulo IX — Turismo Inteligente e Inclusivo',
+    desc: 'Desbloquea experiencias únicas, rutas totalmente accesibles con audio y señalética digital mientras exploras la Ciudad Blanca.',
     video: '/video/caratula.mp4',
-    location: 'TAFA National Ecosystem',
+    poster: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop',
+    location: 'Ecosistema Turístico Arequipa',
+    tag: 'Accesibilidad WCAG 2.1',
   },
 ]
 
 export default function CinematicStoryteller() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [currentChapterIndex, setCurrentChapterIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  })
-
+  // Auto-play cada 6 segundos si no está pausado
   useEffect(() => {
-    return scrollYProgress.on('change', (latest) => {
-      const idx = Math.min(
-        Math.floor(latest * chapters.length),
-        chapters.length - 1
-      )
-      setCurrentChapterIndex(Math.max(0, idx))
-    })
-  }, [scrollYProgress])
+    if (isPaused) return
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % chapters.length)
+    }, 6500)
+    return () => clearInterval(timer)
+  }, [isPaused])
 
-  const chapter = chapters[currentChapterIndex]
+  const chapter = chapters[currentIndex]
 
-  function scrollToAI() {
-    const el = document.getElementById('ia-conversacion')
+  function scrollToSection(id: string) {
+    const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <section ref={containerRef} className="relative bg-[#0a0a0a] text-white min-h-[700vh]">
-      {/* Sticky Viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between p-6 md:p-14">
+    <section className="relative w-full h-[88vh] min-h-[580px] max-h-[850px] bg-black text-white overflow-hidden flex flex-col justify-between p-6 md:p-12">
 
-        {/* Dynamic Background Video with Blur & Zoom transitions */}
+      {/* Background Media (Video + Fallback Poster HD) */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={chapter.id}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.75, ease: [0.4, 0, 0.2, 1] }}
+          className="absolute inset-0 z-0 overflow-hidden"
+        >
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={chapter.poster}
+          >
+            <source src={chapter.video} type="video/mp4" />
+          </video>
+          {/* Overlay de gradientes para garantizar contraste de texto perfecto */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/40 to-black/50" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Top Bar Header */}
+      <div className="relative z-10 max-w-[1200px] mx-auto w-full flex items-center justify-between">
+        <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/15">
+          <span className="w-2.5 h-2.5 rounded-full bg-tafa-volcán animate-pulse" />
+          <span className="text-xs font-bold uppercase tracking-wider text-white">
+            TAFA Cinematic Storytelling
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsPaused(!isPaused)}
+            className="p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
+            title={isPaused ? 'Reanudar reproducción automática' : 'Pausar'}
+          >
+            {isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+          </button>
+          <div className="text-xs font-mono bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white">
+            {chapter.id} / {chapters.length}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="relative z-10 max-w-[900px] mx-auto w-full text-center space-y-5 px-4 my-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={chapter.id}
-            initial={{ opacity: 0, scale: 1.08, filter: 'blur(10px)' }}
-            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, scale: 0.96, filter: 'blur(6px)' }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-            className="absolute inset-0 z-0 overflow-hidden"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+            className="space-y-4"
           >
-            <video
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
-              <source src={chapter.video} type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/30" />
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-amber-300 bg-black/60 backdrop-blur-md border border-amber-400/30 px-4 py-1.5 rounded-full shadow-lg">
+              <Compass className="w-3.5 h-3.5 text-amber-400" /> {chapter.subtitle}
+            </div>
+
+            <h1 className="font-outfit text-3xl md:text-6xl font-extrabold tracking-tight leading-[1.08] text-white drop-shadow-2xl">
+              {chapter.title}
+            </h1>
+
+            <p className="font-outfit text-sm md:text-lg font-normal text-gray-200 leading-relaxed max-w-[680px] mx-auto drop-shadow">
+              {chapter.desc}
+            </p>
+
+            <div className="flex items-center justify-center gap-3 text-xs text-emerald-300 font-semibold pt-1">
+              <span className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" /> {chapter.location}
+              </span>
+              <span className="bg-emerald-500/20 text-emerald-300 px-3 py-1 rounded-full border border-emerald-500/30">
+                {chapter.tag}
+              </span>
+            </div>
+
+            <div className="pt-4 flex items-center justify-center gap-3 flex-wrap">
+              <button
+                onClick={() => scrollToSection('explorar')}
+                className="bg-tafa-volcán hover:bg-tafa-lava text-white text-xs uppercase font-bold tracking-wider px-7 py-3.5 rounded-full shadow-2xl transition-all hover:scale-105 flex items-center gap-2"
+              >
+                Explorar Atractivos
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => scrollToSection('ia-conversacion')}
+                className="bg-white/15 hover:bg-white/25 text-white border border-white/25 text-xs uppercase font-semibold tracking-wider px-6 py-3.5 rounded-full backdrop-blur-md transition-all"
+              >
+                Consultar Asistente AI
+              </button>
+            </div>
           </motion.div>
         </AnimatePresence>
-
-        {/* Top Header Controls */}
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full flex items-center justify-between pt-2">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-tafa-volcán animate-pulse" />
-            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-white/90">
-              TAFA Cinematic Storytelling
-            </span>
-          </div>
-
-          <div className="text-xs font-mono bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white/90">
-            Chapter 0{chapter.id} / 0{chapters.length}
-          </div>
-        </div>
-
-        {/* Center Chapter Content */}
-        <div className="relative z-10 max-w-[900px] mx-auto w-full my-auto text-center space-y-6 px-4">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={chapter.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -30 }}
-              transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-              className="space-y-4"
-            >
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-tafa-volcán bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg">
-                <Compass className="w-3.5 h-3.5" /> {chapter.subtitle}
-              </div>
-
-              <h1 className="font-outfit text-4xl md:text-7xl font-bold tracking-tight leading-[1.05] text-white drop-shadow-2xl">
-                {chapter.title}
-              </h1>
-
-              <p className="font-outfit text-base md:text-xl font-medium text-gray-200 leading-relaxed max-w-[680px] mx-auto drop-shadow-md">
-                {chapter.desc}
-              </p>
-
-              <div className="pt-2 text-xs text-gray-300 font-semibold tracking-wider uppercase">
-                Location: {chapter.location}
-              </div>
-
-              {chapter.id === 9 && (
-                <div className="pt-6">
-                  <button
-                    onClick={scrollToAI}
-                    className="bg-tafa-volcán hover:bg-tafa-lava text-white text-xs uppercase font-bold tracking-widest px-8 py-4 rounded-full shadow-2xl transition-all hover:scale-105"
-                  >
-                    Start Your Journey With TAFA AI
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Bottom Progress Bar & Scroll Indicator */}
-        <div className="relative z-10 max-w-[1200px] mx-auto w-full space-y-3 pb-2">
-          <div className="flex items-center justify-between text-xs text-white/70">
-            <span>Scroll down to experience Arequipa</span>
-            <ArrowDown className="w-4 h-4 animate-bounce" />
-          </div>
-
-          <div className="h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-tafa-volcán"
-              style={{ scaleX: scrollYProgress, transformOrigin: '0%' }}
-            />
-          </div>
-        </div>
-
       </div>
+
+      {/* Bottom Controls & Chapter Selector Indicators */}
+      <div className="relative z-10 max-w-[1200px] mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Navigation Arrows */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev - 1 + chapters.length) % chapters.length)}
+            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110"
+            title="Capítulo Anterior"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setCurrentIndex((prev) => (prev + 1) % chapters.length)}
+            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110"
+            title="Capítulo Siguiente"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Chapter Dots Navigation */}
+        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 overflow-x-auto max-w-[100%]">
+          {chapters.map((c, i) => (
+            <button
+              key={c.id}
+              onClick={() => setCurrentIndex(i)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === currentIndex ? 'w-8 bg-tafa-volcán' : 'w-2 bg-white/30 hover:bg-white/60'
+              }`}
+              title={`Ver ${c.subtitle}`}
+            />
+          ))}
+        </div>
+      </div>
+
     </section>
   )
 }

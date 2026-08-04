@@ -56,7 +56,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
   return (
     <aside
       aria-label="Barra de Accesibilidad Universal WCAG 2.1"
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-tafa-dark/95 backdrop-blur-xl text-white p-2.5 rounded-full border border-white/20 shadow-2xl transition-all hover:border-tafa-volcán"
+      className="fixed bottom-6 right-6 z-40 flex items-center gap-1.5 bg-tafa-dark/95 backdrop-blur-xl text-white p-2 rounded-full border border-white/20 shadow-2xl transition-all hover:border-tafa-volcán max-w-[calc(100vw-120px)] overflow-x-auto"
     >
       {/* Botón Lector de Pantalla / Audio Resumen */}
       <button

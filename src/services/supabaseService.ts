@@ -1,25 +1,24 @@
 import { supabase } from '@/lib/supabase'
 import { Lugar, Gastronomia, Evento, DashboardResumen } from './api'
+import { MOCK_LUGARES, MOCK_GASTRONOMIA, MOCK_STATS } from '@/data/mockData'
 
 /**
- * Servicio Supabase Cloud Native para el Portal del Turista y Ecosistema
+ * Servicio Supabase Cloud Native — con fallback robusto a mockData
  */
 
 export async function getLugaresSupabase(categoria?: string, search?: string): Promise<Lugar[]> {
+  // Intento 1: tabla lugares_turisticos
   try {
     let query = supabase.from('lugares_turisticos').select('*')
-
     if (categoria) query = query.eq('categoria', categoria)
     if (search) query = query.ilike('nombre', `%${search}%`)
-
     const { data, error } = await query.order('nombre', { ascending: true })
-
     if (!error && data && data.length > 0) return data as Lugar[]
   } catch (e) {
-    console.warn('Consulta Supabase lugares_turisticos fallback local:', e)
+    console.warn('Supabase lugares_turisticos no disponible, intentando places...')
   }
 
-  // Intentar tabla places
+  // Intento 2: tabla places (schema nuevo)
   try {
     let query2 = supabase.from('places').select('*')
     if (search) query2 = query2.ilike('name', `%${search}%`)
@@ -38,23 +37,16 @@ export async function getLugaresSupabase(categoria?: string, search?: string): P
         precio_entrada: p.admission_fee,
         fuente: p.official_source || 'MINCETUR',
         verificado: p.is_verified ? 1 : 0,
-        es_inexplorado: p.is_unexplored ? 1 : 0,
         estado: 'activo',
       })) as Lugar[]
     }
-  } catch (e2) {}
+  } catch (e2) { /* silencioso */ }
 
-  // Fallback a API local
-  try {
-    const params = new URLSearchParams()
-    if (categoria) params.append('categoria', categoria)
-    if (search) params.append('search', search)
-    const res = await fetch(`/api/lugares?${params.toString()}`)
-    const json = await res.json()
-    return json.data || []
-  } catch (err) {
-    return []
-  }
+  // Fallback final: mockData (sin dependencia de Express)
+  let result = MOCK_LUGARES
+  if (categoria) result = result.filter(l => l.categoria === categoria)
+  if (search) result = result.filter(l => l.nombre.toLowerCase().includes(search.toLowerCase()))
+  return result
 }
 
 export async function getGastronomiaSupabase(): Promise<Gastronomia[]> {
@@ -65,30 +57,17 @@ export async function getGastronomiaSupabase(): Promise<Gastronomia[]> {
     console.warn('Fallback a API local gastronomía:', e)
   }
 
-  try {
-    const res = await fetch('/api/gastronomia')
-    const json = await res.json()
-    return json.data || []
-  } catch (err) {
-    return []
-  }
+  // Fallback final: mockData
+  return MOCK_GASTRONOMIA
 }
 
 export async function getEventosSupabase(): Promise<Evento[]> {
   try {
     const { data, error } = await supabase.from('eventos').select('*').order('fecha_inicio', { ascending: true })
     if (!error && data && data.length > 0) return data as Evento[]
-  } catch (e) {
-    console.warn('Fallback a API local eventos:', e)
-  }
-
-  try {
-    const res = await fetch('/api/eventos')
-    const json = await res.json()
-    return json.data || []
-  } catch (err) {
-    return []
-  }
+  } catch (e) { /* silencioso */ }
+  // Sin eventos en mock — retornar vacío
+  return []
 }
 
 export async function submitEncuestaSupabase(encuesta: {
@@ -105,16 +84,13 @@ export async function submitEncuestaSupabase(encuesta: {
     console.warn('Fallback enviando encuesta local:', e)
   }
 
+  // Sin backend local — guardar en localStorage como respaldo
   try {
-    const res = await fetch('/api/encuestas', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(encuesta),
-    })
-    return res.ok
-  } catch (err) {
-    return false
-  }
+    const prev = JSON.parse(localStorage.getItem('tafa_encuestas_local') || '[]')
+    prev.push({ ...encuesta, id: Date.now(), created_at: new Date().toISOString() })
+    localStorage.setItem('tafa_encuestas_local', JSON.stringify(prev))
+  } catch (_) {}
+  return true
 }
 
 export async function getDashboardSupabase(): Promise<DashboardResumen> {
@@ -146,19 +122,11 @@ export async function getDashboardSupabase(): Promise<DashboardResumen> {
       proximos_eventos: eventos.slice(0, 5),
     }
   } catch (e) {
-    try {
-      const res = await fetch('/api/dashboard')
-      return res.json()
-    } catch (err) {
-      return {
-        totales: { lugares: 20, gastronomia: 10, eventos: 5, encuestas: 10, verificados: 18 },
-        avg_satisfaccion: 4.8,
-        por_categoria: [],
-        por_distrito: [],
-        lugares_mapa: [],
-        gastro_mapa: [],
-        proximos_eventos: [],
-      }
-    }
+    // Fallback final: mockData (sin Express)
+    return {
+      ...MOCK_STATS,
+      lugares_mapa: MOCK_LUGARES,
+      gastro_mapa: MOCK_GASTRONOMIA,
+    } as DashboardResumen
   }
 }

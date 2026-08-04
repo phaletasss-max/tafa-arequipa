@@ -4,6 +4,7 @@ import AccessibilityBar from '@/components/accessibility/AccessibilityBar'
 import CinematicStoryteller from '@/components/CinematicStoryteller'
 import DirectAIConversation from '@/components/ai/DirectAIConversation'
 import HistoricVisualStories from '@/components/stories/HistoricVisualStories'
+import Features from '@/components/Features'
 import Highlights from '@/components/Highlights'
 import MapPreview from '@/components/MapPreview'
 import UnexploredRoutes from '@/components/UnexploredRoutes'
@@ -29,42 +30,52 @@ export default function App() {
 
   return (
     <div className="w-full overflow-x-hidden bg-white text-tafa-text font-sans">
-      {/* Banner de Prevención & Emergencias Turísticas */}
+
+      {/* ── 1. Banner Seguridad & Prevención Turística ──────────────────── */}
       <EmergencyBanner />
 
-      {/* PORTAL 1: TURISTA — Storytelling Cinematográfico 9 Capítulos */}
+      {/* ── 2. PORTAL TURISTA — Storytelling Cinematográfico 9 Capítulos ── */}
       <CinematicStoryteller />
 
-      {/* Conversación Directa con IA (Inmediatamente después de la historia) */}
+      {/* ── 3. Conversación Directa con IA ─────────────────────────────── */}
       <DirectAIConversation />
 
-      {/* Visual Tourist Stories (Historias Visuales Interactivas de Lugares Históricos) */}
+      {/* ── 4. Historias Visuales Interactivas de Lugares Históricos ────── */}
       <HistoricVisualStories />
 
-      {/* Inventario Oficial & Atractivos en Supabase */}
+      {/* ── 5. 6 Servicios Principales de la Plataforma TAFA ────────────── */}
+      <Features />
+
+      {/* ── 6. Inventario Oficial de Atractivos (Supabase + mock) ────────── */}
       <Highlights />
 
-      {/* Arequipa Inexplorada (Rutas Alternativas) */}
+      {/* ── 7. Arequipa Inexplorada — Rutas Alternativas ─────────────────── */}
       <UnexploredRoutes />
 
-      {/* Mapa Interactivo con Coordenadas Reales */}
+      {/* ── 8. Mapa Interactivo con Coordenadas Reales ───────────────────── */}
       <MapPreview />
 
-      {/* PORTAL 3: ECOSISTEMA — Join TAFA Ecosystem (Postulación MYPEs & Requisitos) */}
+      {/* ── 9. ECOSISTEMA — Join TAFA (Postulación MYPEs) ───────────────── */}
       <JoinEcosystem />
 
-      {/* PORTAL 2: PROYECTO — Conoce el Proyecto TAFA (Explicación Institucional) */}
+      {/* ── 10. PROYECTO — Conoce TAFA (Explicación Institucional) ──────── */}
       <AboutProject />
 
-      {/* Métricas e Instituciones */}
+      {/* ── 11. Métricas e Instituciones ─────────────────────────────────── */}
       <Stats />
       <Institutions />
 
-      {/* Botón Flotante de Escaneo de Señalética QR */}
+      {/* ── 12. CTA & Footer ─────────────────────────────────────────────── */}
+      <CTA />
+      <Footer />
+
+      {/* ── Botón flotante de Escaneo QR ─────────────────────────────────── */}
       <div className="fixed bottom-6 left-6 z-40">
         <button
+          id="btn-scan-qr"
           onClick={() => handleOpenQR('QR-PLAZA-01')}
-          title="Escanear Señalética Digital QR"
+          title="Escanear Señalética Digital QR — Turismo para Todos"
+          aria-label="Escanear código QR turístico"
           className="bg-tafa-volcán hover:bg-tafa-lava text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 border border-white/20"
         >
           <QrCode className="w-5 h-5" />
@@ -72,17 +83,13 @@ export default function App() {
         </button>
       </div>
 
-      {/* Asistente AI Multilingüe Gemini 3.6 Flash */}
+      {/* ── Asistente AI Multilingüe ─────────────────────────────────────── */}
       <TouristAIAssistant />
 
-      {/* Llamado a la Acción & Pie de Página */}
-      <CTA />
-      <Footer />
-
-      {/* Barra de Accesibilidad Universal WCAG 2.1 */}
+      {/* ── Barra de Accesibilidad Universal WCAG 2.1 ───────────────────── */}
       <AccessibilityBar onFilterAccessibility={setAccFilter} />
 
-      {/* Modal de Señalética Digital QR */}
+      {/* ── Modal de Señalética Digital QR ──────────────────────────────── */}
       <QRModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}

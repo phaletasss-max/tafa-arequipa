@@ -108,15 +108,15 @@ export default function TouristAIAssistant() {
 
   return (
     <>
-      {/* Botón flotante Asistente AI */}
-      <div className="fixed bottom-6 left-24 z-40">
+      {/* Botón flotante Asistente AI - Ubicado arriba del botón QR para evitar colisión con AccessibilityBar */}
+      <div className="fixed bottom-20 left-6 z-40">
         <button
           onClick={() => setIsOpen(true)}
           title="Asistente de Viaje Inteligente Gemini AI"
-          className="bg-tafa-dark hover:bg-black text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 border border-white/20"
+          className="bg-tafa-dark hover:bg-black text-white px-3.5 py-2.5 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 border border-white/20"
         >
-          <Bot className="w-5 h-5 text-amber-400" />
-          <span className="hidden md:inline">Asistente AI Arequipa360°</span>
+          <Bot className="w-4 h-4 text-amber-400" />
+          <span className="hidden sm:inline">Asistente AI</span>
         </button>
       </div>
 

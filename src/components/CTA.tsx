@@ -60,23 +60,25 @@ export default function CTA() {
             </p>
 
             <div className="flex items-center justify-center gap-4 flex-wrap">
-              <button
+              <a
+                href="#explorar"
                 className="flex items-center gap-2 bg-tafa-volcán text-white border-none
                            cursor-pointer font-outfit text-[15px] font-semibold uppercase
                            tracking-[0.04em] px-7 py-4 rounded-full transition-all
-                           hover:bg-tafa-lava active:scale-95"
+                           hover:bg-tafa-lava active:scale-95 no-underline"
               >
                 Explorar Arequipa
                 <ArrowRight className="w-4 h-4" />
-              </button>
-              <button
+              </a>
+              <a
+                href="#ecosistema"
                 className="flex items-center gap-2 bg-transparent text-white border border-white/30
                            cursor-pointer font-outfit text-[15px] font-medium uppercase
                            tracking-[0.04em] px-7 py-4 rounded-full transition-all
-                           hover:border-white/60 hover:bg-white/10 active:scale-95"
+                           hover:border-white/60 hover:bg-white/10 active:scale-95 no-underline"
               >
-                Ver demo
-              </button>
+                Unirme como Aliado
+              </a>
             </div>
           </motion.div>
         </motion.div>
