@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { QrCode } from 'lucide-react'
 import { AccessibilityProvider } from '@/features/accessibility/context/AccessibilityContext'
 import QuickAccessBar from '@/features/accessibility/components/QuickAccessBar'
 import Hero from '@/components/Hero'
@@ -10,20 +11,23 @@ import TouristAIAssistant from '@/components/ai/TouristAIAssistant'
 import AuthModal from '@/components/auth/AuthModal'
 import TAFAExplorerPassModal from '@/components/rewards/TAFAExplorerPassModal'
 import QRCheckInPage from '@/features/qr/QRCheckInPage'
+import QRStudioModal from '@/features/qr/QRStudioModal'
 
 function LandingPage({
   onOpenAuth,
   onOpenSettings,
   onOpenAI,
   onOpenSignLanguage,
+  onOpenQRStudio,
 }: {
   onOpenAuth: () => void
   onOpenSettings: () => void
   onOpenAI: () => void
   onOpenSignLanguage: () => void
+  onOpenQRStudio: () => void
 }) {
   return (
-    <div className="w-full overflow-x-hidden bg-white text-tafa-text font-sans">
+    <div className="w-full overflow-x-hidden bg-white text-tafa-text font-sans relative">
       {/* Skip to Main Content Link (WCAG 2.1) */}
       <a 
         href="#main-content"
@@ -47,6 +51,18 @@ function LandingPage({
         <TouristAIAssistant />
       </main>
 
+      {/* Botón Flotante para Generador / Estudio de QRs de Socios */}
+      <div className="fixed bottom-6 left-6 z-40">
+        <button
+          onClick={onOpenQRStudio}
+          title="Generador de Códigos QR Oficiales TAFA"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-wider transition-all hover:scale-105 border border-emerald-400/40"
+        >
+          <QrCode className="w-5 h-5 text-white" />
+          <span className="hidden md:inline">Estudio QR Socios</span>
+        </button>
+      </div>
+
       <Footer />
     </div>
   )
@@ -57,6 +73,7 @@ export default function App() {
   const [isPassOpen, setIsPassOpen] = useState(false)
   const [isAIOpen, setIsAIOpen] = useState(false)
   const [isSignLanguageOpen, setIsSignLanguageOpen] = useState(false)
+  const [isQRStudioOpen, setIsQRStudioOpen] = useState(false)
   const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
 
   useEffect(() => {
@@ -78,6 +95,7 @@ export default function App() {
                 onOpenSettings={() => setIsPassOpen(true)}
                 onOpenAI={() => setIsAIOpen(true)}
                 onOpenSignLanguage={() => setIsSignLanguageOpen(true)}
+                onOpenQRStudio={() => setIsQRStudioOpen(true)}
               />
             } 
           />
@@ -91,6 +109,7 @@ export default function App() {
                 onOpenSettings={() => setIsPassOpen(true)}
                 onOpenAI={() => setIsAIOpen(true)}
                 onOpenSignLanguage={() => setIsSignLanguageOpen(true)}
+                onOpenQRStudio={() => setIsQRStudioOpen(true)}
               />
             } 
           />
@@ -106,6 +125,11 @@ export default function App() {
         <TAFAExplorerPassModal
           isOpen={isPassOpen}
           onClose={() => setIsPassOpen(false)}
+        />
+
+        <QRStudioModal
+          isOpen={isQRStudioOpen}
+          onClose={() => setIsQRStudioOpen(false)}
         />
       </BrowserRouter>
     </AccessibilityProvider>

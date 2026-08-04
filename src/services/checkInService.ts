@@ -202,5 +202,25 @@ function getMockQRLanding(slug: string): QRLandingData | null {
     },
   }
 
-  return mocks[slug] ?? null
+  if (mocks[slug]) return mocks[slug]
+
+  // Dynamic fallback generator for any custom slug
+  const title = slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+  return {
+    qr_id: `dynamic-${slug}`,
+    slug: slug,
+    entity_type: 'business',
+    effective_points: 50,
+    scan_count: 100,
+    is_active: true,
+    business_name: title,
+    business_description: `Establecimiento o atractivo turístico verificado en Arequipa. Escanea tu código QR para validar tu visita y ganar +50 Puntos TAFA.`,
+    business_address: 'Arequipa, Perú',
+    business_phone: '+51 921 378 349',
+    business_category: 'Socio Turístico & Gastronómico TAFA',
+  }
 }
