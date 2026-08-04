@@ -42,20 +42,32 @@ export default function Highlights() {
     loadData()
   }, [categoria])
 
+  function matchesCategory(placeCat: string, district: string, targetTab: string): boolean {
+    if (!targetTab) return true
+    const p = (placeCat || '').toLowerCase()
+    const d = (district || '').toLowerCase()
+    const t = (targetTab || '').toLowerCase()
+
+    if (t.includes('patrimonio') || t.includes('heritage')) {
+      return p.includes('patrimonio') || p.includes('historico') || p.includes('histórico') || p.includes('monumento')
+    }
+    if (t.includes('naturaleza') || t.includes('nature') || t.includes('cañones')) {
+      return p.includes('naturaleza') || p.includes('cañon') || p.includes('cañón') || p.includes('volcan') || p.includes('volcán') || p.includes('reserva') || p.includes('laguna') || p.includes('bosque') || p.includes('catarata')
+    }
+    if (t.includes('centro') || t.includes('historic')) {
+      return d.includes('cercado') || p.includes('centro') || p.includes('patrimonio')
+    }
+    if (t.includes('cultura') || t.includes('culture') || t.includes('ruta')) {
+      return p.includes('cultur') || p.includes('ruta') || p.includes('artesania') || p.includes('artesanía') || p.includes('museo') || p.includes('sillar') || p.includes('petroglifo')
+    }
+    return p.includes(t)
+  }
+
   async function loadData() {
     try {
       setLoading(true)
       const data = await getLugaresSupabase(undefined, search || undefined)
-      let filtered = data
-      if (categoria === 'Patrimonio Histórico') {
-        filtered = data.filter(l => l.categoria === 'Patrimonio Histórico')
-      } else if (categoria === 'Naturaleza') {
-        filtered = data.filter(l => l.categoria === 'Naturaleza')
-      } else if (categoria === 'Cultural') {
-        filtered = data.filter(l => l.categoria === 'Cultural')
-      } else if (categoria === 'Centro Histórico') {
-        filtered = data.filter(l => l.distrito === 'Cercado' || l.categoria === 'Patrimonio Histórico')
-      }
+      const filtered = data.filter(l => matchesCategory(l.categoria, l.distrito || '', categoria))
       setLugares(filtered)
     } catch (e) {
       console.error(e)
