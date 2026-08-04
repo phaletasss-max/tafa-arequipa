@@ -12,9 +12,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=800&auto=format&fit=crop',
     tag: 'Geoparque UNESCO · Maravilla Geológica',
     pilares: [
-      '✈️ Vuelos panorámicos sobre conos volcánicos',
-      '💎 Miradores de cristal volados sobre lava',
-      '🌌 Observatorio domo de astroturismo',
+      'Vuelos panorámicos sobre conos volcánicos',
+      'Miradores de cristal volados sobre lava',
+      'Observatorio domo de astroturismo',
     ],
   },
   {
@@ -26,9 +26,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop',
     tag: 'Arte Rupestre · Arqueología AR 3D',
     pilares: [
-      '📱 App de Realidad Aumentada 3D para grabados',
-      '🛶 Canotaje en río Majes y cuatrimotos',
-      '🍷 Hoteles boutique en bodegas pisqueras',
+      'App de Realidad Aumentada 3D para grabados',
+      'Canotaje en río Majes y cuatrimotos',
+      'Hoteles boutique en bodegas pisqueras',
     ],
   },
   {
@@ -40,9 +40,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=800&auto=format&fit=crop',
     tag: 'Eco-Aventura · Récord Mundial',
     pilares: [
-      '🚡 Teleférico panorámico sobre Catarata de Sipia',
-      '♨️ Complejo termal y spa de lujo en Luicho',
-      '🛣️ Vías de acceso rápido e infraestructura vial',
+      'Teleférico panorámico sobre Catarata de Sipia',
+      'Complejo termal y spa de lujo en Luicho',
+      'Vías de acceso rápido e infraestructura vial',
     ],
   },
   {
@@ -54,9 +54,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=800&auto=format&fit=crop',
     tag: 'Eco-Turismo · Formaciones Líticas',
     pilares: [
-      '🏔️ Parador de carretera con calefacción y ropa térmica',
-      '🌉 Puentes colgantes y pasarelas fotogénicas',
-      '🥾 Ruta señalizada de trekking inclusivo',
+      'Parador de carretera con calefacción y ropa térmica',
+      'Puentes colgantes y pasarelas fotogénicas',
+      'Ruta señalizada de trekking inclusivo',
     ],
   },
   {
@@ -68,9 +68,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop',
     tag: 'Qhapaq Ñan · Costa Inca',
     pilares: [
-      '🚶‍♂️ Puesta en valor del Camino Inca costero',
-      '⛵ Muelle para deportes náuticos y kayak',
-      '🏡 Ecolodges sostenibles frente al mar',
+      'Puesta en valor del Camino Inca costero',
+      'Muelle para deportes náuticos y kayak',
+      'Ecolodges sostenibles frente al mar',
     ],
   },
   {
@@ -82,9 +82,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop',
     tag: 'Biodiversidad Marina & Mar',
     pilares: [
-      '🦭 Circuito náutico de lobos y pingüinos',
-      '🦐 Boulevard gastronómico marino en muelle',
-      '🪸 Ruta guiada de buceo y kayak de cueva',
+      'Circuito náutico de lobos y pingüinos',
+      'Boulevard gastronómico marino en muelle',
+      'Ruta guiada de buceo y kayak de cueva',
     ],
   },
   {
@@ -96,9 +96,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=800&auto=format&fit=crop',
     tag: 'Reserva Nacional · Avistamiento',
     pilares: [
-      '🦩 Miradores camuflados para observación de aves',
-      '🏕️ Glamping de montaña con domos solares',
-      '🚌 Autobús turístico con salidas fijas',
+      'Miradores camuflados para observación de aves',
+      'Glamping de montaña con domos solares',
+      'Autobús turístico con salidas fijas',
     ],
   },
   {
@@ -110,9 +110,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=800&auto=format&fit=crop',
     tag: 'Ciudadela Lítica · Astroturismo',
     pilares: [
-      '📸 Campamento fotográfico y nocturno',
-      '🏡 Albergues comunales vivenciales en Tisco',
-      '🖼️ Puntos de selfie y miradores integrados',
+      'Campamento fotográfico y nocturno',
+      'Albergues comunales vivenciales en Tisco',
+      'Puntos de selfie y miradores integrados',
     ],
   },
   {
@@ -124,9 +124,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=800&auto=format&fit=crop',
     tag: 'Ecoturismo Náutico · Campiña',
     pilares: [
-      '🛶 Muelle deportivo para kayaks y paddle board',
-      '⛺ Zona de camping equipada con duchas solares',
-      '🐟 Patio gastronómico de trucha frita local',
+      'Muelle deportivo para kayaks y paddle board',
+      'Zona de camping equipada con duchas solares',
+      'Patio gastronómico de trucha frita local',
     ],
   },
   {
@@ -138,9 +138,9 @@ const regionalProjects = [
     imagen: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=800&auto=format&fit=crop',
     tag: 'Sillar Volcánico · Geología Viva',
     pilares: [
-      '🏛️ Centro de interpretación interactivo del sillar',
-      '💡 Senderos nocturnos iluminados con proyectores',
-      '⚒️ Talleres de esculpido en vivo para turistas',
+      'Centro de interpretación interactivo del sillar',
+      'Senderos nocturnos iluminados con proyectores',
+      'Talleres de esculpido en vivo para turistas',
     ],
   },
 ]

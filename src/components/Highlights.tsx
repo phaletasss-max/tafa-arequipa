@@ -12,6 +12,7 @@ const DESPEGAR_TABS = [
   { id: 'Naturaleza', label: 'Naturaleza & Cañones', icon: TreePine, color: 'bg-emerald-600 text-white' },
   { id: 'Centro Histórico', label: 'Centro Histórico', icon: Castle, color: 'bg-red-600 text-white' },
   { id: 'Cultural', label: 'Cultura & Rutas', icon: Compass, color: 'bg-amber-600 text-white' },
+  { id: 'Planes', label: 'Proyectos & Planes de Innovación', icon: Award, color: 'bg-blue-600 text-white' },
 ]
 
 // Quick Filters Despegar Style

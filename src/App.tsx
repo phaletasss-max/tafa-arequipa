@@ -42,19 +42,17 @@ export default function App() {
       {/* ── 4. Historias Visuales Interactivas de Lugares Históricos ────── */}
       <HistoricVisualStories />
 
-      {/* ── 5. 6 Servicios Principales de la Plataforma TAFA ────────────── */}
-      <Features />
-
-      {/* ── 6. Inventario Oficial de Atractivos (Supabase + mock) ────────── */}
+      {/* ── 5. Inventario Oficial de Atractivos (Supabase + mock) ────────── */}
       <Highlights />
 
-      {/* ── 7. Arequipa Inexplorada — Rutas Alternativas ─────────────────── */}
+      {/* ── 6. Arequipa Inexplorada — 10 Proyectos de Innovación Regional ── */}
       <UnexploredRoutes />
 
-      {/* ── 8. Mapa Interactivo con Coordenadas Reales ───────────────────── */}
+      {/* ── 7. Mapa Interactivo con Coordenadas Reales ───────────────────── */}
       <MapPreview />
 
-      {/* ── 9. ECOSISTEMA — Join TAFA (Postulación MYPEs) ───────────────── */}
+      {/* ── 8. ECOSISTEMA MYPE — Servicios de Plataforma & Postulación ───── */}
+      <Features />
       <JoinEcosystem />
 
       {/* ── 10. PROYECTO — Conoce TAFA (Explicación Institucional) ──────── */}
