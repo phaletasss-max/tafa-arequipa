@@ -23,15 +23,37 @@
 
   ::selection { background: rgba(192,57,43,0.3); color: #fff; }
 
-  /* ── WCAG 2.1 — Alto Contraste (activado por AccessibilityBar) ────────── */
-  body.wcag-high-contrast {
+  /* ── WCAG 2.2 — Font Scaling (A / A+ / A++) ──────────────────────────── */
+  html.font-scale-large { font-size: 115%; }
+  html.font-scale-extralarge { font-size: 130%; }
+
+  /* ── WCAG 2.2 — Alto Contraste ────────────────────────────────────────── */
+  body.wcag-high-contrast,
+  html.wcag-high-contrast body {
     background: #000 !important;
     color: #fff !important;
     filter: contrast(1.4);
   }
   body.wcag-high-contrast a,
-  body.wcag-high-contrast button { outline: 2px solid #ffff00; }
-  body.wcag-high-contrast section { background: #111 !important; }
+  body.wcag-high-contrast button {
+    outline: 2px solid #ffff00 !important;
+  }
+  body.wcag-high-contrast section,
+  body.wcag-high-contrast div {
+    background: #050505 !important;
+    color: #ffffff !important;
+  }
+
+  /* ── WCAG 2.2 — Modo Discapacidad Visual ─────────────────────────────── */
+  html.visual-mode-active body {
+    letter-spacing: 0.03em;
+    line-height: 1.8;
+  }
+  html.visual-mode-active * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 
   /* ── WCAG 2.4.7 — Focus Visible (Keyboard Navigation) ────────────────── */
   button:focus-visible,
@@ -42,12 +64,11 @@
   [role="button"]:focus-visible,
   [role="tab"]:focus-visible,
   [role="menuitem"]:focus-visible {
-    outline: 3px solid #c0392b;
-    outline-offset: 2px;
+    outline: 3px solid #c0392b !important;
+    outline-offset: 3px !important;
     border-radius: 4px;
   }
 
-  /* Asegurar que el outline sea visible en modo alto contraste */
   body.wcag-high-contrast button:focus-visible,
   body.wcag-high-contrast a:focus-visible,
   body.wcag-high-contrast input:focus-visible {
