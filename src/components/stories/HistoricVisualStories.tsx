@@ -28,7 +28,7 @@ const historicStories: HistoricStory[] = [
     hours: '24 Horas / Museo 10:00 - 17:00',
     fee: 'Acceso Libre',
     accessibility: 'Rampas de acceso motriz 100% integradas (WCAG AAA)',
-    image: '/images/places/plaza-de-armas.webp',
+    image: '/images/places/plaza-de-armas.jpg',
     points: 50,
   },
   {
@@ -54,7 +54,7 @@ const historicStories: HistoricStory[] = [
     hours: '24 Horas',
     fee: 'Acceso Libre',
     accessibility: 'Señalética digital QR y rampa de acceso',
-    image: '/images/places/mirador-yanahuara.webp',
+    image: '/images/places/mirador-yanahuara.jpg',
     points: 40,
   },
   {
@@ -67,7 +67,7 @@ const historicStories: HistoricStory[] = [
     hours: '08:00 - 16:30',
     fee: 'S/ 5.00 Ingreso',
     accessibility: 'Camino llano con asistencia para movilidad reducida',
-    image: '/images/places/ruta-sillar.webp',
+    image: '/images/places/ruta-sillar.jpg',
     points: 70,
   },
   {
@@ -80,7 +80,7 @@ const historicStories: HistoricStory[] = [
     hours: '05:00 - 17:00',
     fee: 'Boleto Turístico (S/ 70)',
     accessibility: 'Miradores equipados con barandas y señalética QR',
-    image: '/images/places/canon-colca.webp',
+    image: '/images/places/canon-colca.jpg',
     points: 100,
   },
 ]

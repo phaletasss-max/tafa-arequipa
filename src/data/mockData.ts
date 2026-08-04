@@ -1,19 +1,19 @@
 // ============================================================================
 // TAFA — Mock Data Robusta (Fallback cuando Supabase está vacío o sin conexión)
-// 30 lugares turísticos reales de Arequipa con coordenadas verificadas
+// 30 lugares turísticos reales de Arequipa con fotografías oficiales reales
 // Modelo de imagen estandarizado e institucional de TAFA
 // ============================================================================
 
 import type { Lugar, Gastronomia } from '@/services/api'
 
-// ── Helper para construir metadatos de imagen ──────────────────────────────
+// ── Helper para construir metadatos de imagen de fotografías reales ──────────
 function img(filename: string, source: string, generated = false) {
   return {
     url: `/images/places/${filename}`,
     meta: {
       url: `/images/places/${filename}`,
       source,
-      license: 'TAFA Official / Public Domain',
+      license: 'Fotografía Oficial DIRCETUR / MINCETUR / TAFA',
       photographer: null,
       generated,
     },
@@ -28,8 +28,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Corazón del centro histórico de Arequipa, construido íntegramente en sillar blanco. Destaca su imponente Catedral neoclásica de 70 metros de frente, piletas de bronce del siglo XIX y arquerías de granito. Al fondo se recorta la silueta simétrica del volcán Misti.',
     lat: -16.3988, lng: -71.5369,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/plaza-de-armas.webp',
-    imagen_meta: img('plaza-de-armas.webp', 'MINCETUR / DIRCETUR').meta,
+    imagen_url: '/images/places/plaza-de-armas.jpg',
+    imagen_meta: img('plaza-de-armas.jpg', 'MINCETUR / DIRCETUR', false).meta,
     fuente: 'MINCETUR / DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -38,8 +38,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Catedral neoclásica construida en sillar volcánico blanco, ubicada en el frontis norte de la Plaza de Armas. Su fachada de 70 metros alberga un museo con arte religioso virreinal y un órgano belga del siglo XIX.',
     lat: -16.3986, lng: -71.5370,
     horario: '10:00 - 17:00', precio_entrada: 'Museo S/ 15',
-    imagen_url: '/images/places/basilica-catedral.webp',
-    imagen_meta: img('basilica-catedral.webp', 'MINCETUR / DIRCETUR').meta,
+    imagen_url: '/images/places/basilica-catedral.jpg',
+    imagen_meta: img('basilica-catedral.jpg', 'MINCETUR / DIRCETUR', false).meta,
     fuente: 'MINCETUR / DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -49,7 +49,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -16.3953, lng: -71.5367,
     horario: '09:00 - 17:00', precio_entrada: 'S/ 45.00',
     imagen_url: '/images/places/monasterio-santa-catalina.webp',
-    imagen_meta: img('monasterio-santa-catalina.webp', 'MINCETUR / DIRCETUR').meta,
+    imagen_meta: img('monasterio-santa-catalina.webp', 'MINCETUR / DIRCETUR', false).meta,
     fuente: 'MINCETUR / DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -58,8 +58,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Templo jesuita del siglo XVII con la portada barroca mestiza más elaborada de Arequipa. Sus claustros laterales albergan galerías comerciales de artesanía fina. Declarada Patrimonio Cultural de la Nación.',
     lat: -16.3999, lng: -71.5367,
     horario: '09:00 - 12:30 / 15:00 - 18:00', precio_entrada: 'Acceso Libre (Claustros S/ 5)',
-    imagen_url: '/images/places/iglesia-compania.webp',
-    imagen_meta: img('iglesia-compania.webp', 'MINCETUR').meta,
+    imagen_url: '/images/places/iglesia-compania.jpg',
+    imagen_meta: img('iglesia-compania.jpg', 'MINCETUR', false).meta,
     fuente: 'MINCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -69,7 +69,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -16.3933, lng: -71.5345,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
     imagen_url: '/images/places/barrio-san-lazaro.webp',
-    imagen_meta: img('barrio-san-lazaro.webp', 'DIRCETUR').meta,
+    imagen_meta: img('barrio-san-lazaro.webp', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -79,7 +79,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -16.4280, lng: -71.5100,
     horario: '09:00 - 17:00', precio_entrada: 'S/ 20.00',
     imagen_url: '/images/places/mansion-fundador.webp',
-    imagen_meta: img('mansion-fundador.webp', 'DIRCETUR').meta,
+    imagen_meta: img('mansion-fundador.webp', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -88,8 +88,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Templo dominico del siglo XVI con portada de sillar finamente labrada y claustro con arquerías coloniales. Fue el primer convento fundado en Arequipa y alberga pinturas de la escuela cusqueña.',
     lat: -16.3975, lng: -71.5345,
     horario: '07:00 - 12:00 / 15:00 - 19:00', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/santo-domingo.webp',
-    imagen_meta: img('santo-domingo.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/santo-domingo.jpg',
+    imagen_meta: img('santo-domingo.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
 
@@ -101,7 +101,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -16.3998, lng: -71.5377,
     horario: '09:00 - 18:00', precio_entrada: 'S/ 20.00',
     imagen_url: '/images/places/museo-santuarios-andinos.webp',
-    imagen_meta: img('museo-santuarios-andinos.webp', 'UCSM / MINCETUR').meta,
+    imagen_meta: img('museo-santuarios-andinos.webp', 'UCSM / MINCETUR', false).meta,
     fuente: 'UCSM / MINCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -110,8 +110,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Monasterio carmelita descalzo del siglo XVII convertido en museo. Exhibe arte religioso virreinal, orfebrería colonial, pintura cusqueña y ornamentos litúrgicos de excepcional calidad artística.',
     lat: -16.3966, lng: -71.5311,
     horario: '09:00 - 17:00', precio_entrada: 'S/ 10.00',
-    imagen_url: '/images/places/museo-santa-teresa.webp',
-    imagen_meta: img('museo-santa-teresa.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/museo-santa-teresa.jpg',
+    imagen_meta: img('museo-santa-teresa.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -120,8 +120,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Canteras vivas en la quebrada de Añashuayco donde los artesanos extraen y tallan el sillar blanco a comba y cincel. Incluye megagrabados en roca volcánica y réplicas de fachadas barrocas en tamaño real.',
     lat: -16.3572, lng: -71.5908,
     horario: '08:00 - 16:30', precio_entrada: 'S/ 5.00',
-    imagen_url: '/images/places/ruta-sillar.webp',
-    imagen_meta: img('ruta-sillar.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/ruta-sillar.jpg',
+    imagen_meta: img('ruta-sillar.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -130,8 +130,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Más de 5,000 bloques volcánicos grabados con arte rupestre pre-Inca. El mayor campo de arte rupestre del mundo. Ubicado en la provincia de Castilla, departamento de Arequipa.',
     lat: -16.2234, lng: -72.4831,
     horario: '08:00 - 16:00', precio_entrada: 'S/ 10.00',
-    imagen_url: '/images/places/toro-muerto.webp',
-    imagen_meta: img('toro-muerto.webp', 'MINCETUR').meta,
+    imagen_url: '/images/places/toro-muerto.png',
+    imagen_meta: img('toro-muerto.png', 'MINCETUR', false).meta,
     fuente: 'MINCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -140,8 +140,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Abrigos rocosos con pinturas rupestres de 8,000 años de antigüedad. Representaciones de camélidos y cazadores paleolíticos. Ubicado dentro de la Reserva Nacional Salinas y Aguada Blanca.',
     lat: -15.9800, lng: -71.3600,
     horario: '08:00 - 16:00', precio_entrada: 'Incluido en boleto RNSAB',
-    imagen_url: '/images/places/cuevas-sumbay.webp',
-    imagen_meta: img('cuevas-sumbay.webp', 'SERNANP').meta,
+    imagen_url: '/images/places/cuevas-sumbay.jpg',
+    imagen_meta: img('cuevas-sumbay.jpg', 'SERNANP', false).meta,
     fuente: 'SERNANP', verificado: 1, estado: 'activo',
   },
   {
@@ -150,8 +150,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Arquitectura colonial de 1621 que aún muele grano usando la fuerza del agua. Jardines con camélidos y vista a la campiña arequipeña.',
     lat: -16.4478, lng: -71.4922,
     horario: '09:00 - 17:00', precio_entrada: 'S/ 10.00',
-    imagen_url: '/images/places/molino-sabandia.webp',
-    imagen_meta: img('molino-sabandia.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/molino-sabandia.jpg',
+    imagen_meta: img('molino-sabandia.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -160,8 +160,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Centro interpretativo sobre camélidos sudamericanos. Exhibición de alpacas, vicuñas y llamas. Demostración de hilado y tejido artesanal con fibra de alpaca.',
     lat: -16.3900, lng: -71.5380,
     horario: '09:00 - 17:30', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/mundo-alpaca.webp',
-    imagen_meta: img('mundo-alpaca.webp', 'Privado').meta,
+    imagen_url: '/images/places/mundo-alpaca.avif',
+    imagen_meta: img('mundo-alpaca.avif', 'Privado', false).meta,
     fuente: 'Privado', verificado: 1, estado: 'activo',
   },
 
@@ -172,18 +172,18 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Mirador construido en el siglo XIX compuesto por arcos de sillar con grabados de poetas y pensadores arequipeños. Ofrece la vista panorámica más famosa de la ciudad hacia los tres volcanes: Misti, Chachani y Pichu Pichu.',
     lat: -16.3881, lng: -71.5422,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/mirador-yanahuara.webp',
-    imagen_meta: img('mirador-yanahuara.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/mirador-yanahuara.jpg',
+    imagen_meta: img('mirador-yanahuara.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
     id: 16, nombre: 'Mirador de Carmen Alto',
     categoria: 'Naturaleza', distrito: 'Cayma',
-    descripcion: 'Mirador natural ubicado en el distrito de Cayma con vista privileged a la campiña arequipeña, andenerías preincas y el volcán Misti. Zona de restaurantes campestres y venta de queso helado artesanal.',
+    descripcion: 'Mirador natural ubicado en el distrito de Cayma con vista privilegiada a la campiña arequipeña, andenerías preincas y el volcán Misti. Zona de restaurantes campestres y venta de queso helado artesanal.',
     lat: -16.3700, lng: -71.5367,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/mirador-carmen-alto.webp',
-    imagen_meta: img('mirador-carmen-alto.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/mirador-carmen-alto.jpg',
+    imagen_meta: img('mirador-carmen-alto.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -192,8 +192,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Mirador panorámico en el distrito de Sachaca con vista a la campiña, los volcanes y el río Chili. Punto de partida para recorridos por la campiña arequipeña tradicional.',
     lat: -16.4263, lng: -71.5674,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/mirador-sachaca.webp',
-    imagen_meta: img('mirador-sachaca.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/mirador-sachaca.jpg',
+    imagen_meta: img('mirador-sachaca.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -202,8 +202,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Uno de los cañones más profundos del mundo (más de 4,160 metros). El punto emblemático es la Cruz del Cóndor, desde donde se observa el vuelo del cóndor andino en su hábitat natural sobre andenes preincas.',
     lat: -15.6386, lng: -71.9022,
     horario: '05:00 - 17:00', precio_entrada: 'Boleto Turístico S/ 70',
-    imagen_url: '/images/places/canon-colca.webp',
-    imagen_meta: img('canon-colca.webp', 'AUTOCOLCA / MINCETUR').meta,
+    imagen_url: '/images/places/canon-colca.jpg',
+    imagen_meta: img('canon-colca.jpg', 'AUTOCOLCA / MINCETUR', false).meta,
     fuente: 'AUTOCOLCA / MINCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -213,7 +213,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -16.2942, lng: -71.4090,
     horario: 'Requiere guía certificado', precio_entrada: 'S/ 50.00 (permiso SERNANP)',
     imagen_url: '/images/places/volcan-misti.webp',
-    imagen_meta: img('volcan-misti.webp', 'SERNANP').meta,
+    imagen_meta: img('volcan-misti.webp', 'SERNANP', false).meta,
     fuente: 'SERNANP', verificado: 1, estado: 'activo',
   },
   {
@@ -222,8 +222,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Área protegida de 366,936 ha. Hábitat de vicuñas, alpacas y flamencos andinos. Incluye la Laguna de Salinas a 4,300 msnm con paisajes altoandinos de excepcional belleza.',
     lat: -16.2083, lng: -71.2134,
     horario: '06:00 - 16:00', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/reserva-salinas.webp',
-    imagen_meta: img('reserva-salinas.webp', 'SERNANP').meta,
+    imagen_url: '/images/places/reserva-salinas.jpg',
+    imagen_meta: img('reserva-salinas.jpg', 'SERNANP', false).meta,
     fuente: 'SERNANP', verificado: 1, estado: 'activo',
   },
   {
@@ -232,8 +232,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Laguna altiplánica a 4,300 msnm al pie del volcán Pichu Pichu. Espejo de sal rodeado de bofedales donde habitan flamencos andinos, parihuanas y aves migratorias. Parte de la Reserva Nacional Salinas.',
     lat: -16.3700, lng: -71.1400,
     horario: 'Horario natural', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/laguna-salinas.webp',
-    imagen_meta: img('laguna-salinas.webp', 'SERNANP').meta,
+    imagen_url: '/images/places/laguna-salinas.jpg',
+    imagen_meta: img('laguna-salinas.jpg', 'SERNANP', false).meta,
     fuente: 'SERNANP', verificado: 1, estado: 'activo',
   },
   {
@@ -242,8 +242,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Impresionante caída de agua de aproximadamente 30 metros rodeada de formaciones rocosas volcánicas y columnas de piedra talladas por la erosión eólica en la meseta andina de Caylloma.',
     lat: -15.8600, lng: -71.1900,
     horario: 'Horario natural', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/pillones.webp',
-    imagen_meta: img('pillones.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/pillones.jpg',
+    imagen_meta: img('pillones.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -252,8 +252,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Formaciones rocosas volcánicas de aspecto surrealista modeladas por la erosión eólica durante miles de años, ubicadas a más de 4,500 msnm en la meseta de Imata, provincia de Caylloma.',
     lat: -15.8400, lng: -71.0900,
     horario: 'Horario natural', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/bosque-imata.webp',
-    imagen_meta: img('bosque-imata.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/bosque-imata.jpg',
+    imagen_meta: img('bosque-imata.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -262,8 +262,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Paisaje geológico único con más de 80 conos volcánicos extintos, coladas de lava y lagunas. Reconocido como Geoparque Mundial por la UNESCO. Provincia de Castilla, Arequipa.',
     lat: -15.4900, lng: -72.3500,
     horario: 'Horario natural', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/valle-andagua.webp',
-    imagen_meta: img('valle-andagua.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/valle-andagua.jpg',
+    imagen_meta: img('valle-andagua.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -272,8 +272,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'El cañón más profundo del Perú con 3,535 metros de profundidad, ubicado en la provincia de La Unión. Cataratas como Sipia, aguas termales, ruinas incas y pueblos aislados. Destino de trekking avanzado.',
     lat: -15.2100, lng: -72.8900,
     horario: 'Horario natural', precio_entrada: 'Acceso Libre',
-    imagen_url: '/images/places/canon-cotahuasi.webp',
-    imagen_meta: img('canon-cotahuasi.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/canon-cotahuasi.jpg',
+    imagen_meta: img('canon-cotahuasi.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -283,7 +283,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -15.6330, lng: -71.5990,
     horario: '05:00 - 19:00', precio_entrada: 'S/ 20.00',
     imagen_url: '/images/places/calera.webp',
-    imagen_meta: img('calera.webp', 'AUTOCOLCA').meta,
+    imagen_meta: img('calera.webp', 'AUTOCOLCA', false).meta,
     fuente: 'AUTOCOLCA', verificado: 1, estado: 'activo',
   },
   {
@@ -292,8 +292,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Aguas termales junto al río Colca en el pueblo de Yanque. Pozas naturales con temperaturas entre 36-40 grados centígrados. Acceso peatonal desde la plaza principal del pueblo.',
     lat: -15.6500, lng: -71.6500,
     horario: '05:00 - 18:00', precio_entrada: 'S/ 15.00',
-    imagen_url: '/images/places/yanque-termas.webp',
-    imagen_meta: img('yanque-termas.webp', 'AUTOCOLCA').meta,
+    imagen_url: '/images/places/yanque-termas.jpg',
+    imagen_meta: img('yanque-termas.jpg', 'AUTOCOLCA', false).meta,
     fuente: 'AUTOCOLCA', verificado: 1, estado: 'activo',
   },
   {
@@ -302,8 +302,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Fuentes termales históricas a 30 km de Arequipa. Cuatro pozas con distintas temperaturas y propiedades minerales. Ambiente tranquilo y familiar en un entorno natural.',
     lat: -16.2500, lng: -71.6800,
     horario: '06:00 - 18:00', precio_entrada: 'S/ 5.00',
-    imagen_url: '/images/places/yura-termas.webp',
-    imagen_meta: img('yura-termas.webp', 'DIRCETUR').meta,
+    imagen_url: '/images/places/yura-termas.jpg',
+    imagen_meta: img('yura-termas.jpg', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -313,7 +313,7 @@ export const MOCK_LUGARES: Lugar[] = [
     lat: -17.0240, lng: -72.0100,
     horario: '24 horas', precio_entrada: 'Acceso Libre',
     imagen_url: '/images/places/mejia.webp',
-    imagen_meta: img('mejia.webp', 'DIRCETUR').meta,
+    imagen_meta: img('mejia.webp', 'DIRCETUR', false).meta,
     fuente: 'DIRCETUR', verificado: 1, estado: 'activo',
   },
   {
@@ -322,8 +322,8 @@ export const MOCK_LUGARES: Lugar[] = [
     descripcion: 'Humedal costero protegido en la provincia de Islay, Arequipa. Hábitat de más de 200 especies de aves, incluyendo migratorias. Senderos interpretativos y torres de observación.',
     lat: -17.1400, lng: -71.8600,
     horario: '07:00 - 16:00', precio_entrada: 'S/ 11.00',
-    imagen_url: '/images/places/lagunas-mejia.webp',
-    imagen_meta: img('lagunas-mejia.webp', 'SERNANP').meta,
+    imagen_url: '/images/places/lagunas-mejia.jpg',
+    imagen_meta: img('lagunas-mejia.jpg', 'SERNANP', false).meta,
     fuente: 'SERNANP', verificado: 1, estado: 'activo',
   },
 ]
