@@ -227,44 +227,70 @@ export default function Highlights() {
                   onClick={() => setSelectedLugar(l)}
                   className="group bg-white rounded-[24px] border border-gray-200 hover:border-tafa-volcán/40 transition-all duration-300 cursor-pointer overflow-hidden shadow-sm hover:shadow-xl flex flex-col justify-between"
                 >
-                  {/* Top Bar Accent */}
                   <div>
-                    <div className="h-2 w-full" style={{ background: color }} />
-
-                    <div className="p-6 space-y-3">
-                      {/* Badge Header: Category + Verification Status */}
-                      <div className="flex items-center justify-between gap-2">
-                        <span
-                          className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5"
-                          style={{ background: `${color}15`, color }}
-                        >
-                          {renderCategoryIcon(l.categoria)}
-                          {l.categoria}
-                        </span>
-
-                        {l.verificado === 1 || (l.verificado as any) === true ? (
-                          <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> DIRCETUR
+                    {/* Image Header si existe */}
+                    {l.imagen_url ? (
+                      <div className="relative h-[180px] w-full overflow-hidden bg-gray-100">
+                        <img
+                          src={l.imagen_url}
+                          alt={l.nombre}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        
+                        <div className="absolute top-3 left-3">
+                          <span
+                            className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md backdrop-blur-md"
+                            style={{ background: `${color}ea`, color: '#ffffff' }}
+                          >
+                            {renderCategoryIcon(l.categoria)}
+                            {l.categoria}
                           </span>
-                        ) : (
-                          <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                            Revisión
-                          </span>
-                        )}
+                        </div>
+
+                        <div className="absolute top-3 right-3">
+                          {l.verificado === 1 || (l.verificado as any) === true ? (
+                            <span className="flex items-center gap-1 text-[10px] font-bold text-white bg-emerald-600/90 backdrop-blur-md px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                              <CheckCircle2 className="w-3 h-3 text-white" /> DIRCETUR
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold text-white bg-amber-600/90 backdrop-blur-md px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                              Revisión
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="absolute bottom-3 left-3 text-white text-xs font-semibold flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                          {l.distrito || 'Arequipa'}
+                        </div>
                       </div>
+                    ) : (
+                      <>
+                        <div className="h-2 w-full" style={{ background: color }} />
+                        <div className="p-4 border-b border-gray-100 flex justify-between">
+                          <span
+                            className="text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5"
+                            style={{ background: `${color}15`, color }}
+                          >
+                            {renderCategoryIcon(l.categoria)}
+                            {l.categoria}
+                          </span>
+                        </div>
+                      </>
+                    )}
 
-                      {/* Title & Location */}
+                    <div className="p-6 space-y-2">
                       <div>
                         <h3 className="font-outfit font-extrabold text-xl text-tafa-text leading-tight group-hover:text-tafa-volcán transition-colors">
                           {l.nombre}
                         </h3>
                         <div className="text-xs text-gray-500 flex items-center gap-1 mt-1 font-medium">
-                          <MapPin className="w-3.5 h-3.5 text-tafa-volcán shrink-0" />
-                          {l.distrito || 'Arequipa'} · {l.fuente}
+                          <Landmark className="w-3.5 h-3.5 text-tafa-volcán shrink-0" />
+                          Fuente: {l.fuente}
                         </div>
                       </div>
 
-                      {/* Description */}
                       <p className="text-gray-600 text-xs line-clamp-2 leading-relaxed">
                         {l.descripcion || 'Atractivo turístico verificado en el catálogo regional de Arequipa.'}
                       </p>
@@ -294,60 +320,92 @@ export default function Highlights() {
       {/* Detail Modal */}
       {selectedLugar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white border border-gray-200 rounded-[32px] max-w-lg w-full p-8 relative shadow-2xl animate-scale-up">
-            <button
-              onClick={() => setSelectedLugar(null)}
-              className="absolute top-6 right-6 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div
-                className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                style={{ background: `${getColor(selectedLugar.categoria)}18` }}
-              >
-                {renderCategoryIcon(selectedLugar.categoria)}
+          <div className="bg-white border border-gray-200 rounded-[32px] max-w-lg w-full overflow-hidden relative shadow-2xl animate-scale-up">
+            
+            {/* Modal Image Header */}
+            {selectedLugar.imagen_url && (
+              <div className="relative h-[220px] w-full">
+                <img
+                  src={selectedLugar.imagen_url}
+                  alt={selectedLugar.nombre}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <button
+                  onClick={() => setSelectedLugar(null)}
+                  className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white transition-colors border border-white/20"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div className="absolute bottom-4 left-6 right-6 text-white">
+                  <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
+                    {selectedLugar.categoria} · {selectedLugar.distrito}
+                  </span>
+                  <h3 className="text-2xl font-extrabold font-outfit leading-tight drop-shadow-md">
+                    {selectedLugar.nombre}
+                  </h3>
+                </div>
               </div>
-              <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                  {selectedLugar.categoria} · {selectedLugar.distrito}
+            )}
+
+            <div className="p-7 space-y-5">
+              {!selectedLugar.imagen_url && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center"
+                      style={{ background: `${getColor(selectedLugar.categoria)}18` }}
+                    >
+                      {renderCategoryIcon(selectedLugar.categoria)}
+                    </div>
+                    <div>
+                      <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+                        {selectedLugar.categoria} · {selectedLugar.distrito}
+                      </span>
+                      <h3 className="text-2xl font-extrabold font-outfit text-tafa-text leading-tight">
+                        {selectedLugar.nombre}
+                      </h3>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedLugar(null)}
+                    className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              <p className="text-tafa-text text-sm leading-relaxed bg-gray-50 p-4 rounded-2xl border border-gray-100">
+                {selectedLugar.descripcion}
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                  <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
+                    <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> Horario Oficial
+                  </div>
+                  <div className="font-bold text-tafa-text">{selectedLugar.horario || 'No especificado'}</div>
+                </div>
+                <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
+                  <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
+                    <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> Tarifa Ingreso
+                  </div>
+                  <div className="font-bold text-tafa-andino">{selectedLugar.precio_entrada || 'Gratuito'}</div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                <span className="text-xs text-gray-500 font-medium">
+                  Fuente oficial: <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
                 </span>
-                <h3 className="text-2xl font-extrabold font-outfit text-tafa-text leading-tight">
-                  {selectedLugar.nombre}
-                </h3>
+                <button
+                  onClick={() => setSelectedLugar(null)}
+                  className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors shadow-md"
+                >
+                  Entendido
+                </button>
               </div>
-            </div>
-
-            <p className="text-tafa-text text-sm leading-relaxed mb-6 bg-gray-50 p-4 rounded-2xl border border-gray-100">
-              {selectedLugar.descripcion}
-            </p>
-
-            <div className="grid grid-cols-2 gap-3 mb-6 text-xs">
-              <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
-                <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                  <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> Horario Oficial
-                </div>
-                <div className="font-bold text-tafa-text">{selectedLugar.horario || 'No especificado'}</div>
-              </div>
-              <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
-                <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                  <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> Tarifa Ingreso
-                </div>
-                <div className="font-bold text-tafa-andino">{selectedLugar.precio_entrada || 'Gratuito'}</div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <span className="text-xs text-gray-500 font-medium">
-                Fuente oficial: <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
-              </span>
-              <button
-                onClick={() => setSelectedLugar(null)}
-                className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors shadow-md"
-              >
-                Entendido
-              </button>
             </div>
           </div>
         </div>
