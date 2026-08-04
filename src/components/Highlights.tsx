@@ -94,6 +94,24 @@ export default function Highlights() {
     }
   }
 
+  function translateCategory(cat: string) {
+    switch (cat) {
+      case 'Patrimonio Histórico': return t('explorer:tab_heritage')
+      case 'Naturaleza': return t('explorer:tab_nature')
+      case 'Centro Histórico': return t('explorer:tab_historic')
+      case 'Cultural': return t('explorer:tab_culture')
+      default: return cat
+    }
+  }
+
+  function translatePrice(precio?: string) {
+    if (!precio) return t('explorer:free_access')
+    if (precio.toLowerCase().includes('libre') || precio.toLowerCase().includes('gratuito')) {
+      return t('explorer:free_access')
+    }
+    return precio
+  }
+
   return (
     <section id="explorar" className="bg-[#f8f9fa] py-28 px-6 border-t border-gray-200" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
@@ -185,7 +203,7 @@ export default function Highlights() {
             </button>
           </form>
 
-          {/* Quick Filter Tags (Chips estilo Despegar) */}
+          {/* Quick Filter Chips */}
           <div className="flex items-center gap-2 flex-wrap pt-1 text-xs">
             <span className="text-gray-400 font-semibold uppercase text-[11px] mr-1 flex items-center gap-1">
               <Filter className="w-3.5 h-3.5" aria-hidden="true" /> {t('explorer:filter_label')}
@@ -260,7 +278,7 @@ export default function Highlights() {
                             style={{ background: `${color}ea`, color: '#ffffff' }}
                           >
                             {renderCategoryIcon(l.categoria)}
-                            {l.categoria}
+                            {translateCategory(l.categoria)}
                           </span>
                         </div>
 
@@ -290,7 +308,7 @@ export default function Highlights() {
                             style={{ background: `${color}15`, color }}
                           >
                             {renderCategoryIcon(l.categoria)}
-                            {l.categoria}
+                            {translateCategory(l.categoria)}
                           </span>
                         </div>
                       </>
@@ -303,7 +321,7 @@ export default function Highlights() {
                         </h3>
                         <div className="text-xs text-gray-500 flex items-center gap-1 mt-1 font-medium">
                           <Landmark className="w-3.5 h-3.5 text-tafa-volcán shrink-0" />
-                          Fuente: {l.fuente}
+                          {t('explorer:source_label')} {l.fuente}
                         </div>
                       </div>
 
@@ -317,7 +335,7 @@ export default function Highlights() {
                   <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
                     <div>
                       <span className="text-[10px] text-gray-400 font-semibold uppercase block">{t('explorer:fee_label')}</span>
-                      <span className="font-bold text-tafa-andino text-sm">{l.precio_entrada || 'Consultar'}</span>
+                      <span className="font-bold text-tafa-andino text-sm">{translatePrice(l.precio_entrada)}</span>
                     </div>
 
                     <div className="flex items-center gap-1.5 bg-amber-400/20 text-amber-800 border border-amber-400/40 px-3 py-1 rounded-full text-[11px] font-bold">
@@ -355,7 +373,7 @@ export default function Highlights() {
                 </button>
                 <div className="absolute bottom-4 left-6 right-6 text-white">
                   <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
-                    {selectedLugar.categoria} · {selectedLugar.distrito}
+                    {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
                   </span>
                   <h3 className="text-2xl font-extrabold font-outfit leading-tight drop-shadow-md">
                     {selectedLugar.nombre}
@@ -376,7 +394,7 @@ export default function Highlights() {
                     </div>
                     <div>
                       <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                        {selectedLugar.categoria} · {selectedLugar.distrito}
+                        {translateCategory(selectedLugar.categoria)} · {selectedLugar.distrito}
                       </span>
                       <h3 className="text-2xl font-extrabold font-outfit text-tafa-text leading-tight">
                         {selectedLugar.nombre}
@@ -399,15 +417,15 @@ export default function Highlights() {
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
                   <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                    <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> Horario Oficial
+                    <Clock className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:hours_label', 'Horario Oficial')}
                   </div>
                   <div className="font-bold text-tafa-text">{selectedLugar.horario || 'No especificado'}</div>
                 </div>
                 <div className="bg-gray-50 p-3.5 rounded-2xl border border-gray-100">
                   <div className="text-gray-400 font-semibold mb-1 flex items-center gap-1.5 uppercase text-[10px]">
-                    <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> Tarifa Ingreso
+                    <Tag className="w-3.5 h-3.5 text-tafa-volcán" /> {t('explorer:fee_label')}
                   </div>
-                  <div className="font-bold text-tafa-andino">{selectedLugar.precio_entrada || 'Gratuito'}</div>
+                  <div className="font-bold text-tafa-andino">{translatePrice(selectedLugar.precio_entrada)}</div>
                 </div>
               </div>
 

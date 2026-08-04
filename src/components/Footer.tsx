@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 export default function Footer() {
   const { t } = useTranslation(['common'])
+
   return (
     <footer className="bg-[#050505] border-t border-white/[0.06] text-white py-20 px-6">
       <div className="max-w-[1200px] mx-auto">
@@ -13,12 +14,10 @@ export default function Footer() {
           <div className="md:col-span-2">
             <img src="/img/logo.png" alt="TAFA Logo" className="h-12 w-auto object-contain mb-4" />
             <p className="text-[#8b949e] text-[14px] leading-relaxed max-w-[340px] mb-4">
-              Turismo Arequipa: Fragmentado → Accesible.
-              Plataforma digital de centralización de datos turísticos
-              oficiales para la región Arequipa, Perú.
+              {t('common:footer_tagline')}
             </p>
             <p className="text-[12px] text-white/25 mb-5 leading-relaxed max-w-[320px]">
-              Metodología Design Thinking · 5 Whys · TURISTÓN 2026<br />
+              {t('common:footer_methodology')}<br />
               <span className="text-white/40">Frank J. Mendoza F. — NovaAsh</span>
             </p>
             <div className="flex items-center gap-4">
@@ -27,24 +26,21 @@ export default function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Repositorio GitHub TAFA"
-                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center
-                           text-white/50 hover:text-white hover:border-white/50 transition-all"
+                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all"
               >
                 <Github className="w-4 h-4" />
               </a>
               <a
                 href="mailto:soporte@tafa.pe"
                 aria-label="Email soporte TAFA"
-                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center
-                           text-white/50 hover:text-white hover:border-white/50 transition-all"
+                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all"
               >
                 <Mail className="w-4 h-4" />
               </a>
               <a
                 href="#sobre-proyecto"
                 aria-label="Acerca del proyecto TAFA"
-                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center
-                           text-white/50 hover:text-white hover:border-white/50 transition-all"
+                className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all"
               >
                 <ExternalLink className="w-4 h-4" />
               </a>
@@ -54,16 +50,16 @@ export default function Footer() {
           {/* Nav */}
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/30 mb-5">
-              Plataforma
+              {t('common:footer_platform_title')}
             </div>
             <ul className="space-y-3">
               {[
-                { label: 'Explorar atractivos', href: '#explorar' },
-                { label: 'Mapa interactivo', href: '#mapa' },
-                { label: 'Rutas inexploradas', href: '#inexplorada' },
-                { label: 'Ecosistema MYPE', href: '#ecosistema' },
-                { label: 'Sobre TAFA', href: '#sobre-proyecto' },
-                { label: 'Señalética QR', href: '#' },
+                { label: t('common:nav_explore'), href: '#explorar' },
+                { label: t('common:nav_map'), href: '#mapa' },
+                { label: t('common:nav_routes'), href: '#inexplorada' },
+                { label: t('common:nav_mype'), href: '#ecosistema' },
+                { label: t('common:nav_about'), href: '#sobre-proyecto' },
+                { label: t('common:nav_qr'), href: '#' },
               ].map(({ label, href }) => (
                 <li key={label}>
                   <a href={href} className="text-[14px] text-[#8b949e] hover:text-white transition-colors no-underline">
@@ -77,7 +73,7 @@ export default function Footer() {
           {/* Fuentes */}
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/30 mb-5">
-              Fuentes de datos
+              {t('common:footer_sources_title')}
             </div>
             <ul className="space-y-3">
               {[
@@ -107,13 +103,10 @@ export default function Footer() {
             </span>
           </div>
           <div className="text-[12px] text-[#8b949e]">
-            Datos protegidos bajo{' '}
-            <span className="text-white/60 font-medium">Ley N° 29733</span>
-            {' '}· Accesibilidad <span className="text-white/60 font-medium">WCAG 2.1</span>
+            {t('common:official_data')} · <span className="text-white/60 font-medium">WCAG 2.2 AA</span>
           </div>
         </div>
       </div>
     </footer>
   )
 }
-

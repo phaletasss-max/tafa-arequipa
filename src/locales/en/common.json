@@ -4,5 +4,15 @@
   "official_data": "Tourism data verified by DIRCETUR / MINCETUR",
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "footer_tagline": "Arequipa Tourism: Fragmented → Accessible. Digital platform for centralizing official tourism data for the Arequipa region, Peru.",
+  "footer_methodology": "Design Thinking Methodology · 5 Whys · TURISTÓN 2026",
+  "footer_platform_title": "Platform",
+  "footer_sources_title": "Data Sources",
+  "nav_explore": "Explore Attractions",
+  "nav_map": "Interactive Map",
+  "nav_routes": "Unexplored Routes",
+  "nav_mype": "MSME Ecosystem",
+  "nav_about": "About TAFA",
+  "nav_qr": "QR Signage"
 }

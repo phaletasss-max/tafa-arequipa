@@ -1,8 +1,18 @@
 {
-  "ai_assistant": "AI Assistant",
+  "ai_assistant": "Asistente IA",
   "footer_rights": "Todos los derechos reservados",
   "official_data": "Datos turísticos verificados por DIRCETUR / MINCETUR",
   "cancel": "Cancelar",
   "confirm": "Confirmar",
-  "loading": "Cargando..."
+  "loading": "Cargando...",
+  "footer_tagline": "Turismo Arequipa: Fragmentado → Accesible. Plataforma digital de centralización de datos turísticos oficiales para la región Arequipa, Perú.",
+  "footer_methodology": "Metodología Design Thinking · 5 Whys · TURISTÓN 2026",
+  "footer_platform_title": "Plataforma",
+  "footer_sources_title": "Fuentes de datos",
+  "nav_explore": "Explorar atractivos",
+  "nav_map": "Mapa interactivo",
+  "nav_routes": "Rutas inexploradas",
+  "nav_mype": "Ecosistema MYPE",
+  "nav_about": "Sobre TAFA",
+  "nav_qr": "Señalética QR"
 }
