@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import EmergencyBanner from '@/components/safety/EmergencyBanner'
-import AccessibilityBar from '@/components/accessibility/AccessibilityBar'
 import CinematicStoryteller from '@/components/CinematicStoryteller'
 import DirectAIConversation from '@/components/ai/DirectAIConversation'
 import HistoricVisualStories from '@/components/stories/HistoricVisualStories'
@@ -85,9 +84,6 @@ export default function App() {
 
       {/* ── Asistente AI Multilingüe ─────────────────────────────────────── */}
       <TouristAIAssistant />
-
-      {/* ── Barra de Accesibilidad Universal WCAG 2.1 ───────────────────── */}
-      <AccessibilityBar onFilterAccessibility={setAccFilter} />
 
       {/* ── Modal de Señalética Digital QR ──────────────────────────────── */}
       <QRModal

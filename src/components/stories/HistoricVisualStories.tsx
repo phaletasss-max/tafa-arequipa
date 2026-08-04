@@ -159,23 +159,11 @@ export default function HistoricVisualStories() {
               transition={{ duration: 0.5 }}
               className="absolute inset-0 z-0"
             >
-              {current.videoUrl && currentIndex === 0 ? (
-                <video
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                >
-                  <source src={current.videoUrl} type="video/mp4" />
-                </video>
-              ) : (
-                <img
-                  src={current.image}
-                  alt={current.title}
-                  className="w-full h-full object-cover"
-                />
-              )}
+              <img
+                src={current.image}
+                alt={current.title}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/30" />
             </motion.div>
           </AnimatePresence>
