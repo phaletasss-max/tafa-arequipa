@@ -29,10 +29,9 @@ export default function App() {
         {/* ── Barra Superior de Configuración Institucional (WCAG 2.2 AA) ─── */}
         <QuickAccessBar
           onOpenAuth={() => setIsAuthOpen(true)}
-          onOpenPass={() => setIsPassOpen(true)}
+          onOpenSettings={() => setIsPassOpen(true)}
           onOpenAI={() => setIsAIOpen(true)}
           onOpenSignLanguage={() => setIsSignLanguageOpen(true)}
-          touristUser={touristUser}
         />
 
         {/* ── 1. Hero Principal Cinematográfico ───────────────────────────── */}

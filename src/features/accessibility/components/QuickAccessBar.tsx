@@ -7,18 +7,16 @@ import UserMenu from './UserMenu'
 
 interface QuickAccessBarProps {
   onOpenAuth?: () => void
-  onOpenPass?: () => void
+  onOpenSettings?: () => void
   onOpenAI?: () => void
   onOpenSignLanguage?: () => void
-  touristUser?: { nombre: string; docType: string; docNum: string } | null
 }
 
 export default function QuickAccessBar({
   onOpenAuth,
-  onOpenPass,
+  onOpenSettings,
   onOpenAI,
   onOpenSignLanguage,
-  touristUser,
 }: QuickAccessBarProps) {
   return (
     <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 text-slate-200 text-xs py-2.5 px-4 md:px-8 shadow-md">
@@ -29,7 +27,7 @@ export default function QuickAccessBar({
 
       <div className="max-w-[1360px] mx-auto flex items-center justify-between gap-4 flex-wrap">
         
-        {/* Left Panel: Modular Accessibility & Language Controls */}
+        {/* Left Container: Independent Accessibility & Language Controls */}
         <div className="flex items-center gap-2.5 flex-wrap">
           <LanguageSelector />
           <AccessibilitySettings />
@@ -37,13 +35,12 @@ export default function QuickAccessBar({
           <SignLanguageButton onOpenSignLanguage={onOpenSignLanguage} />
         </div>
 
-        {/* Right Panel: AI & User Account Menu */}
+        {/* Right Container: AI & User Account Controls */}
         <div className="flex items-center gap-2.5">
           <AIAccessButton onOpenAI={onOpenAI} />
           <UserMenu
-            touristUser={touristUser}
             onOpenAuth={onOpenAuth}
-            onOpenPass={onOpenPass}
+            onOpenSettings={onOpenSettings}
           />
         </div>
 

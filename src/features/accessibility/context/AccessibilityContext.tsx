@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 import type { AccessibilitySettings, AccessibilityContextType, FontScale } from '../types/accessibility'
 
 const defaultSettings: AccessibilitySettings = {
@@ -14,34 +14,6 @@ const AccessibilityContext = createContext<AccessibilityContextType | undefined>
 
 export function AccessibilityProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<AccessibilitySettings>(defaultSettings)
-
-  // Apply high contrast CSS class to DOM body
-  useEffect(() => {
-    if (settings.highContrast) {
-      document.body.classList.add('wcag-high-contrast')
-    } else {
-      document.body.classList.remove('wcag-high-contrast')
-    }
-  }, [settings.highContrast])
-
-  // Apply visual impairment mode CSS class to DOM body
-  useEffect(() => {
-    if (settings.visualMode) {
-      document.body.classList.add('wcag-visual-mode')
-    } else {
-      document.body.classList.remove('wcag-visual-mode')
-    }
-  }, [settings.visualMode])
-
-  // Apply font scale to document element
-  useEffect(() => {
-    const fontScaleMap: Record<FontScale, string> = {
-      normal: '100%',
-      large: '115%',
-      extralarge: '130%',
-    }
-    document.documentElement.style.fontSize = fontScaleMap[settings.fontScale]
-  }, [settings.fontScale])
 
   const setLanguage = (language: string) => {
     setSettings(prev => ({ ...prev, language }))
