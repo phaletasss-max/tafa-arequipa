@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import type { AccessibilitySettings, AccessibilityContextType, FontScale } from '../types/accessibility'
 import { useTranslation } from 'react-i18next'
 import { setAppLanguage } from '@/lib/i18n'
+import BlindModeModal from '../components/BlindModeModal'
 
 const STORAGE_KEY = 'tafa_accessibility_settings'
 
@@ -147,10 +148,13 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     })
   }
 
+  const [isBlindModalOpen, setIsBlindModalOpen] = useState(false)
+
   const toggleVisualMode = () => {
     setSettings(prev => {
       const next = !prev.visualMode
       announce(next ? 'Modo Discapacidad Visual activado' : 'Modo Discapacidad Visual desactivado')
+      if (next) setIsBlindModalOpen(true)
       return { ...prev, visualMode: next }
     })
   }
@@ -199,6 +203,11 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       </div>
 
       {children}
+
+      <BlindModeModal
+        isOpen={isBlindModalOpen}
+        onClose={() => setIsBlindModalOpen(false)}
+      />
     </AccessibilityContext.Provider>
   )
 }
