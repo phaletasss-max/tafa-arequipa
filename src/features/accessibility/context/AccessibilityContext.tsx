@@ -66,9 +66,47 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
     // 4. Web Speech API Speech Synthesis for audio route / screen reader
     if ('speechSynthesis' in window) {
       if (settings.screenReaderActive) {
-        const textToRead = 'Bienvenido al Explorador Turístico TAFA Arequipa. Descubre la Plaza de Armas, el Monasterio de Santa Catalina, el Cañón del Colca y el Volcán Misti.'
+        const langCode = (settings.language || 'ES').toUpperCase()
+        
+        const SPEECH_LANG_MAP: Record<string, string> = {
+          ES: 'es-PE',
+          EN: 'en-US',
+          JA: 'ja-JP',
+          PT: 'pt-BR',
+          FR: 'fr-FR',
+          DE: 'de-DE',
+          IT: 'it-IT',
+          ZH: 'zh-CN',
+          KO: 'ko-KR',
+          NL: 'nl-NL',
+        }
+
+        const SPEECH_TEXT_MAP: Record<string, string> = {
+          ES: 'Bienvenido al Explorador Turístico TAFA Arequipa. Descubre la Plaza de Armas, el Monasterio de Santa Catalina, el Cañón del Colca y el Volcán Misti.',
+          EN: 'Welcome to the TAFA Arequipa Official Tourism Explorer. Discover Plaza de Armas, Santa Catalina Monastery, Colca Canyon, and Misti Volcano.',
+          JA: 'TAFAアレキパ公式観光エクスプローラーへようこそ。アルマス広場、サンタ・カタリナ修道院、コルカ渓谷、ミスティ火山を探索できます。',
+          PT: 'Bem-vindo ao Explorador Turístico Oficial TAFA Arequipa. Descubra a Praça de Armas, o Monastério de Santa Catalina, o Cânion do Colca e o Vulcão Misti.',
+          FR: 'Bienvenue sur l\'Explorateur Touristique Officiel TAFA Arequipa. Découvrez la Place d\'Armes, le Monastère de Sainte-Catherine, le Canyon de Colca et le Volcan Misti.',
+          DE: 'Willkommen beim offiziellen Tourismus-Explorer TAFA Arequipa. Entdecken Sie die Plaza de Armas, das Kloster Santa Catalina, den Colca-Canyon und den Vulkan Misti.',
+          IT: 'Benvenuto nell\'Esploratore Turistico Ufficiale TAFA Arequipa. Scopri la Plaza de Armas, il Monastero di Santa Catalina, il Canyon del Colca e il Vulcano Misti.',
+          ZH: '欢迎使用TAFA阿雷基帕官方旅游探索器。探索武器广场、圣卡塔利娜修道院、科尔卡大峡谷和米斯蒂火山。',
+          KO: 'TAFA 아레키파 공식 관광 탐색기에 오신 것을 환영합니다. 아르마스 광장, 산타 카탈리나 수녀원, 콜카 계곡, 미스티 화산을 탐험해보세요.',
+          NL: 'Welkom bij de officiële toeristische verkenner TAFA Arequipa. Ontdek de Plaza de Armas, het Santa Catalina-klooster, de Colca Canyon en de Misti-vulkaan.',
+        }
+
+        const targetLang = SPEECH_LANG_MAP[langCode] || 'es-PE'
+        const textToRead = SPEECH_TEXT_MAP[langCode] || SPEECH_TEXT_MAP.ES
+
         const utterance = new SpeechSynthesisUtterance(textToRead)
-        utterance.lang = settings.language === 'EN' ? 'en-US' : 'es-PE'
+        utterance.lang = targetLang
+
+        // Intentar seleccionar voz nativa disponible en el navegador para ese idioma
+        const voices = window.speechSynthesis.getVoices()
+        const matchingVoice = voices.find(v => v.lang.toLowerCase().startsWith(targetLang.split('-')[0]))
+        if (matchingVoice) {
+          utterance.voice = matchingVoice
+        }
+
         window.speechSynthesis.cancel()
         window.speechSynthesis.speak(utterance)
       } else {

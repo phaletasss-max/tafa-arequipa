@@ -3,16 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { X, ShieldCheck, UserCheck, Globe, Lock, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { validateIdentityDocument, ValidationResult } from '@/utils/identityValidator'
-import { supabase } from '@/lib/supabase'
+import { registerOrLoginProfile, type TAFAProfile } from '@/services/authService'
 import { useFocusTrap } from '@/features/accessibility/hooks/useFocusTrap'
+import { supabase } from '@/lib/supabase'
 
 interface AuthModalProps {
   isOpen: boolean
   onClose: () => void
-  onAuthSuccess?: (user: { nombre: string; docType: string; docNum: string }) => void
+  onAuthSuccess?: (user: { nombre: string; docType: string; docNum: string; profile?: TAFAProfile }) => void
+  pendingQRSlug?: string
 }
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlug }: AuthModalProps) {
   const { t } = useTranslation(['common', 'hero'])
   const [docType, setDocType] = useState<'DNI' | 'PASSPORT' | 'CE'>('DNI')
   const [docNumber, setDocNumber] = useState('')
