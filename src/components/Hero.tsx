@@ -100,7 +100,27 @@ export default function Hero() {
               <NavButton href="http://localhost:3000/admin.html">Admin</NavButton>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
+              {/* Language Selector */}
+              <div className="flex items-center gap-1 bg-white/80 backdrop-blur-md border border-black/10 px-3 py-1.5 rounded-full text-xs font-bold text-tafa-text shadow-sm">
+                <span className="text-sm">🌐</span>
+                <select
+                  defaultValue="ES"
+                  className="bg-transparent border-none outline-none font-bold text-xs cursor-pointer text-tafa-text uppercase"
+                  onChange={(e) => {
+                    const lang = e.target.value
+                    if (lang !== 'ES') {
+                      alert(`Idioma cambiado a ${lang}. Contenidos traducidos en tiempo real por TAFA AI.`)
+                    }
+                  }}
+                >
+                  <option value="ES">ES (Español)</option>
+                  <option value="EN">EN (English)</option>
+                  <option value="QUE">QUE (Runasimi)</option>
+                  <option value="DE">DE (Deutsch)</option>
+                </select>
+              </div>
+
               <button
                 onClick={() => setIsPassModalOpen(true)}
                 className="bg-amber-400 hover:bg-amber-500 text-black border-none cursor-pointer font-outfit text-[14px]

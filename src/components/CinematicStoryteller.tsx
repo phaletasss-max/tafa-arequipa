@@ -5,108 +5,66 @@ import { ArrowRight, ChevronLeft, ChevronRight, Compass, MapPin, Play, Pause, Sp
 const chapters = [
   {
     id: 1,
-    title: 'Bienvenidos a Arequipa',
-    subtitle: 'Capítulo I — La Puerta al Sur del Perú',
-    desc: 'Rodeada por tres majestuosos volcanes y construida con piedra sillar blanca volcánica, Arequipa abre sus puertas a la cultura, la gastronomía y la historia.',
+    title: 'Plaza de Armas y Basílica Catedrática',
+    subtitle: 'Corazón del Centro Histórico de Arequipa',
+    desc: 'Construido íntegramente en sillar blanco con su imponente Catedral neoclásica de 70 metros de frente y arquerías de granito sobre el fondo del volcán Misti.',
     video: '/video/caratula.mp4',
     poster: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop',
-    location: 'Plaza de Armas · Cercado',
+    location: 'Plaza de Armas · Cercado de Arequipa',
     tag: 'Patrimonio Cultural UNESCO',
   },
   {
     id: 2,
-    title: 'La Ciudad Blanca te espera',
-    subtitle: 'Capítulo II — Arquitectura de Sillar y Sol',
-    desc: 'Recorre arquerías coloniales, plazas patrimoniales y patios iluminados por el sol tallados por maestros artesanos a lo largo de cuatro siglos.',
-    video: '/video/caratula.mp4',
+    title: 'Monasterio de Santa Catalina',
+    subtitle: 'Ciudadela Conventual de 1579',
+    desc: 'Ciudadela monástica de más de 20,000 m² con claustros pintados en azul añil y rojo terracota, calles de piedra y patios floridos esculpidos en sillar.',
+    video: '',
     poster: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1600&auto=format&fit=crop',
-    location: 'Mirador de Yanahuara & Vista del Misti',
-    tag: 'Sillar Volcánico & Vistas',
-  },
-  {
-    id: 3,
-    title: 'Descubre miles de petroglifos milenarios',
-    subtitle: 'Capítulo III — Arte Rupestre de Toro Muerto',
-    desc: 'Más de 5,000 bloques de piedra volcánica grabados que revelan la cosmovisión pre-inca, astronomía y fauna en el valle desértico.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=1600&auto=format&fit=crop',
-    location: 'Corire · Valle de Majes',
-    tag: 'Arqueología Pre-Inca',
-  },
-  {
-    id: 4,
-    title: 'Presencia el majestuoso vuelo del Cóndor Andino',
-    subtitle: 'Capítulo IV — La Profundidad del Cañón del Colca',
-    desc: 'Eleva tu mirada a más de 3,200 metros en uno de los cañones más profundos de la Tierra mientras enormes alas planean sobre las corrientes térmicas.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=1600&auto=format&fit=crop',
-    location: 'Cruz del Cóndor · Caylloma',
-    tag: 'Maravilla Natural del Perú',
-  },
-  {
-    id: 5,
-    title: 'Camina a través de siglos de historia',
-    subtitle: 'Capítulo V — Ciudadela Monástica de Santa Catalina',
-    desc: 'Una ciudadela amurallada de 20,000 metros cuadrados con pasajes de azul añil y rojo terracota resguardados en el corazón de la ciudad.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1600&auto=format&fit=crop',
-    location: 'Monasterio de Santa Catalina · Cercado',
+    location: 'Calle Santa Catalina 301 · Cercado',
     tag: 'Joya Colonial de 1579',
   },
   {
-    id: 6,
-    title: 'Naturaleza más allá de la imaginación',
-    subtitle: 'Capítulo VI — Reserva Salinas y Aguada Blanca',
-    desc: 'Lagunas saladas de gran altitud, vicuñas silvestres y reflejos volcánicos bajo cielos andinos cristalinos.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?q=80&w=1600&auto=format&fit=crop',
-    location: 'Santuario Salinas & Vicuñas',
-    tag: 'Biodiversidad Altoandina',
+    id: 3,
+    title: 'Mirador de Yanahuara',
+    subtitle: 'Vista Panorámica a los 3 Volcanes',
+    desc: 'Arcos de sillar construidos en el siglo XIX grabados con versos de poetas arequipeños y la vista más famosa hacia el Misti, Chachani y Pichu Pichu.',
+    video: '',
+    poster: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?q=80&w=1600&auto=format&fit=crop',
+    location: 'Plaza de Yanahuara · Yanahuara',
+    tag: 'Sillar Volcánico & Mirador',
   },
   {
-    id: 7,
-    title: 'Descubre la piedra con la que se construyó Arequipa',
-    subtitle: 'Capítulo VII — Canteras Vivas de Añashuayco',
-    desc: 'Sé testigo del esculpido artesanal en vivo dentro de canteras de sillar blanco labradas por generaciones de maestros canteros.',
-    video: '/video/caratula.mp4',
+    id: 4,
+    title: 'Ruta del Sillar — Canteras de Añashuayco',
+    subtitle: 'Esculpido en Vivo en Piedra Volcánica',
+    desc: 'Canteras vivas donde maestros canteros labran la piedra sillar a comba y cincel en megagrabados de roca volcánica y fachadas barrocas a tamaño real.',
+    video: '',
     poster: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1600&auto=format&fit=crop',
-    location: 'Ruta del Sillar · Cerro Colorado',
+    location: 'Quebrada Añashuayco · Cerro Colorado',
     tag: 'Cultura Viva & Canteros',
   },
   {
-    id: 8,
-    title: 'Saborea tradiciones reconocidas internacionalmente',
-    subtitle: 'Capítulo VIII — Herencia Gastronómica de Picantería',
-    desc: 'Rocoto Relleno, Adobo de Domingo y guisos a la leña celebrando insumos regionales y la calidez comunitaria.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=1600&auto=format&fit=crop',
-    location: 'Yanahuara & Distritos Tradicionales',
-    tag: 'Gastronomía Tradicional',
-  },
-  {
-    id: 9,
-    title: 'Comienza tu viaje con TAFA',
-    subtitle: 'Capítulo IX — Turismo Inteligente e Inclusivo',
-    desc: 'Desbloquea experiencias únicas, rutas totalmente accesibles con audio y señalética digital mientras exploras la Ciudad Blanca.',
-    video: '/video/caratula.mp4',
-    poster: 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?q=80&w=1600&auto=format&fit=crop',
-    location: 'Ecosistema Turístico Arequipa',
-    tag: 'Accesibilidad WCAG 2.1',
+    id: 5,
+    title: 'Cañón del Colca & Cruz del Cóndor',
+    subtitle: 'Vuelo del Cóndor Andino en su Hábitat',
+    desc: 'Uno de los cañones más profundos del planeta (más de 4,160 m) con planeo de cóndores andinos sobre terrazas y andenes preincas.',
+    video: '',
+    poster: 'https://images.unsplash.com/photo-1531968455001-5c5272a41129?q=80&w=1600&auto=format&fit=crop',
+    location: 'Mirador Cruz del Cóndor · Caylloma',
+    tag: 'Maravilla Natural del Perú',
   },
 ]
 
 export default function CinematicStoryteller() {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
 
-  // Auto-play cada 6 segundos si no está pausado
+  // Auto-play cada 6.5 segundos
   useEffect(() => {
-    if (isPaused) return
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % chapters.length)
     }, 6500)
     return () => clearInterval(timer)
-  }, [isPaused])
+  }, [])
 
   const chapter = chapters[currentIndex]
 
@@ -118,7 +76,7 @@ export default function CinematicStoryteller() {
   return (
     <section className="relative w-full h-[88vh] min-h-[580px] max-h-[850px] bg-black text-white overflow-hidden flex flex-col justify-between p-6 md:p-12">
 
-      {/* Background Media: Video MP4 para el Capítulo I (Volcán Misti & Plaza de Armas), e Imagen HD para los demás capítulos */}
+      {/* Background Media */}
       <AnimatePresence mode="wait">
         <motion.div
           key={chapter.id}
@@ -146,33 +104,9 @@ export default function CinematicStoryteller() {
               className="w-full h-full object-cover transition-transform duration-1000 scale-105"
             />
           )}
-          {/* Overlay de gradientes cinemáticos para legibilidad del texto */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-black/45 to-black/50" />
         </motion.div>
       </AnimatePresence>
-
-      {/* Top Bar Header */}
-      <div className="relative z-10 max-w-[1200px] mx-auto w-full flex items-center justify-between">
-        <div className="flex items-center gap-2 bg-black/50 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/15">
-          <span className="w-2.5 h-2.5 rounded-full bg-tafa-volcán animate-pulse" />
-          <span className="text-xs font-bold uppercase tracking-wider text-white">
-            TAFA Cinematic Storytelling
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsPaused(!isPaused)}
-            className="p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
-            title={isPaused ? 'Reanudar reproducción automática' : 'Pausar'}
-          >
-            {isPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
-          </button>
-          <div className="text-xs font-mono bg-black/50 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white">
-            {chapter.id} / {chapters.length}
-          </div>
-        </div>
-      </div>
 
       {/* Main Content Area */}
       <div className="relative z-10 max-w-[900px] mx-auto w-full text-center space-y-5 px-4 my-auto">
