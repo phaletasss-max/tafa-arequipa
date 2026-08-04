@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Eye, Type, Volume2, ShieldAlert, Sparkles } from 'lucide-react'
 
 interface AccessibilityBarProps {
@@ -6,6 +7,7 @@ interface AccessibilityBarProps {
 }
 
 export default function AccessibilityBar({ onFilterAccessibility }: AccessibilityBarProps) {
+  const { t } = useTranslation(['accessibility'])
   const [highContrast, setHighContrast] = useState(false)
   const [fontSizeLevel, setFontSizeLevel] = useState(0) // 0: Normal, 1: Grande (+15%), 2: Extra grande (+30%)
   const [activeAccFilter, setActiveAccFilter] = useState<'motriz' | 'auditiva' | 'visual' | null>(null)
@@ -68,7 +70,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
         }`}
       >
         <Volume2 className="w-4 h-4" />
-        <span className="hidden md:inline">{speaking ? 'Detener Audio' : 'Audioruta'}</span>
+        <span className="hidden md:inline">{speaking ? t('accessibility:audio_route_stop') : t('accessibility:audio_route_start')}</span>
       </button>
 
       {/* Control Tamaño de Fuente */}
@@ -92,7 +94,7 @@ export default function AccessibilityBar({ onFilterAccessibility }: Accessibilit
         }`}
       >
         <Eye className="w-4 h-4" />
-        <span className="hidden md:inline">{highContrast ? 'Contraste Alto' : 'Contraste'}</span>
+        <span className="hidden md:inline">{highContrast ? t('accessibility:contrast_high') : t('accessibility:contrast_normal')}</span>
       </button>
 
       <div className="w-[1px] h-6 bg-white/20 my-auto" />

@@ -1,8 +1,10 @@
 import { Accessibility } from 'lucide-react'
 import { useAccessibility } from '../hooks/useAccessibility'
+import { useTranslation } from 'react-i18next'
 
 export default function VisualModeToggle() {
   const { settings, toggleVisualMode } = useAccessibility()
+  const { t } = useTranslation('accessibility')
 
   return (
     <button
@@ -16,7 +18,7 @@ export default function VisualModeToggle() {
       }`}
     >
       <Accessibility className="w-3.5 h-3.5 shrink-0" />
-      <span>Modo Visual</span>
+      <span>{t('visual_mode')}</span>
     </button>
   )
 }

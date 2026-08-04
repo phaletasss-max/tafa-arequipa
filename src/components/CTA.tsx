@@ -1,8 +1,10 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ArrowRight } from 'lucide-react'
 
 export default function CTA() {
+  const { t } = useTranslation(['common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -35,12 +37,12 @@ export default function CTA() {
           >
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20
                             rounded-full px-4 py-1.5 text-sm font-medium text-white/70 mb-8">
-              🌋 Hackathon Arequipa · 2026
+              🌋 {t('common:hackathon_badge')}
             </div>
 
             <h2 className="font-outfit text-[clamp(32px,5vw,60px)] font-medium text-white
                            leading-[1.1] tracking-[-0.04em] mb-5">
-              Arequipa tiene todo.
+              {t('common:cta_title_part1')}
               <br />
               <span
                 style={{
@@ -50,13 +52,12 @@ export default function CTA() {
                   backgroundClip: 'text',
                 }}
               >
-                TAFA lo hace accesible.
+                {t('common:cta_title_highlight')}
               </span>
             </h2>
 
             <p className="text-white/50 text-xl max-w-[480px] mx-auto mb-12 leading-relaxed">
-              Únete a la plataforma que centraliza el turismo de la región
-              y conecta visitantes con la riqueza auténtica de Arequipa.
+              {t('common:cta_description')}
             </p>
 
             <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -67,7 +68,7 @@ export default function CTA() {
                            tracking-[0.04em] px-7 py-4 rounded-full transition-all
                            hover:bg-tafa-lava active:scale-95 no-underline"
               >
-                Explorar Arequipa
+                {t('common:explore_arequipa_cta')}
                 <ArrowRight className="w-4 h-4" />
               </a>
               <a
@@ -77,7 +78,7 @@ export default function CTA() {
                            tracking-[0.04em] px-7 py-4 rounded-full transition-all
                            hover:border-white/60 hover:bg-white/10 active:scale-95 no-underline"
               >
-                Unirme como Aliado
+                {t('common:join_ally_cta')}
               </a>
             </div>
           </motion.div>

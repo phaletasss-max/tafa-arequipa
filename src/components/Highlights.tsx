@@ -1,24 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { CheckCircle2, Search, Filter, Clock, Tag, X, Landmark, TreePine, Castle, Compass, Utensils, Mountain, Award, MapPin, Accessibility, Sparkles, PhoneCall } from 'lucide-react'
 import { getLugaresSupabase } from '@/services/supabaseService'
 import { Lugar } from '@/services/api'
 
 // Pestañas Estilo Despegar.com para Navegación de Turismo
 const DESPEGAR_TABS = [
-  { id: '', label: 'Ver Todo Arequipa', icon: Sparkles, color: 'bg-tafa-volcán text-white' },
-  { id: 'Patrimonio', label: 'Patrimonio & Monumentos', icon: Landmark, color: 'bg-purple-600 text-white' },
-  { id: 'Naturaleza', label: 'Naturaleza & Cañones', icon: TreePine, color: 'bg-emerald-600 text-white' },
-  { id: 'Centro Histórico', label: 'Centro Histórico', icon: Castle, color: 'bg-red-600 text-white' },
-  { id: 'Cultural', label: 'Cultura & Rutas', icon: Compass, color: 'bg-amber-600 text-white' },
-  { id: 'Proyectos', label: 'Proyectos Estratégicos (10)', icon: Award, color: 'bg-blue-600 text-white' },
+  { id: '', labelKey: 'explorer:tab_all', icon: Sparkles, color: 'bg-tafa-volcán text-white' },
+  { id: 'Patrimonio', labelKey: 'explorer:tab_heritage', icon: Landmark, color: 'bg-purple-600 text-white' },
+  { id: 'Naturaleza', labelKey: 'explorer:tab_nature', icon: TreePine, color: 'bg-emerald-600 text-white' },
+  { id: 'Centro Histórico', labelKey: 'explorer:tab_historic', icon: Castle, color: 'bg-red-600 text-white' },
+  { id: 'Cultural', labelKey: 'explorer:tab_culture', icon: Compass, color: 'bg-amber-600 text-white' },
+  { id: 'Proyectos', labelKey: 'explorer:tab_projects', icon: Award, color: 'bg-blue-600 text-white' },
 ]
 
 // Quick Filters Despegar Style
 const QUICK_FILTERS = [
-  'Verificado DIRCETUR',
-  'Acceso Libre',
+  'explorer:verified_dircetur',
+  'explorer:free_access',
   'Cercado de Arequipa',
   'Yanahuara',
   'Cañón del Colca',
@@ -36,7 +37,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -72.3500,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/valle-volcanes-andagua.jpg',
+    imagen_url: '/images/places/proyecto-valle-volcanes.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -51,7 +52,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -72.4831,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/petroglifos-toro-muerto.jpg',
+    imagen_url: '/images/places/proyecto-toro-muerto.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -66,7 +67,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -72.8900,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/canon-cotahuasi.jpg',
+    imagen_url: '/images/places/proyecto-cotahuasi.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -81,7 +82,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -71.1900,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/cataratas-pillones.jpg',
+    imagen_url: '/images/places/proyecto-pillones-imata.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -96,7 +97,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -74.3460,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/puerto-inka.jpg',
+    imagen_url: '/images/places/proyecto-puerto-inka.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -111,7 +112,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -72.4280,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/quilca-matarani.jpg',
+    imagen_url: '/images/places/proyecto-quilca-matarani.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -126,7 +127,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -71.1400,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/reserva-salinas.jpg',
+    imagen_url: '/images/places/proyecto-laguna-salinas.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -141,7 +142,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -71.4500,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/choqolaqa.jpg',
+    imagen_url: '/images/places/proyecto-choqolaqa.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -156,7 +157,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -71.3800,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/images/attractions/represa-uzuna.jpg',
+    imagen_url: '/images/places/proyecto-represa-uzuna.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -171,7 +172,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
     lng: -71.5908,
     horario: 'Proyecto TAFA 2026',
     precio_entrada: 'Plan Regional',
-    imagen_url: '/correcion-imagenes/ruta-del-sillar.jpg',
+    imagen_url: '/images/places/proyecto-culebrillas-sillar.webp',
     fuente: 'Gobierno Regional / TAFA',
     verificado: 1,
     estado: 'activo',
@@ -179,6 +180,7 @@ const STRATEGIC_PROJECTS_CARDS: Lugar[] = [
 ]
 
 export default function Highlights() {
+  const { t } = useTranslation(['explorer', 'common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -221,10 +223,10 @@ export default function Highlights() {
   // Filtrado dinámico en memoria con Quick Filters
   const filteredLugares = lugares.filter(l => {
     if (!activeQuickFilter) return true
-    if (activeQuickFilter === 'Verificado DIRCETUR') {
+    if (activeQuickFilter === 'explorer:verified_dircetur') {
       return l.verificado === 1 || (l.verificado as any) === true
     }
-    if (activeQuickFilter === 'Acceso Libre') {
+    if (activeQuickFilter === 'explorer:free_access') {
       return l.precio_entrada?.toLowerCase().includes('libre') || l.precio_entrada?.toLowerCase().includes('gratuito')
     }
     if (activeQuickFilter === 'Cercado de Arequipa') return l.distrito === 'Cercado'
@@ -266,7 +268,7 @@ export default function Highlights() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 bg-tafa-volcán/10 text-tafa-volcán px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-3"
           >
-            <Sparkles className="w-3.5 h-3.5" /> Explorador Turístico Oficial · Estilo Despegar
+            <Sparkles className="w-3.5 h-3.5" /> {t('explorer:tag')}
           </motion.div>
 
           <motion.h2
@@ -275,7 +277,7 @@ export default function Highlights() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-outfit text-3xl md:text-5xl font-extrabold text-tafa-text tracking-tight leading-tight mb-4"
           >
-            Encuentra y planifica tus mejores experiencias en Arequipa
+            {t('explorer:title')}
           </motion.h2>
 
           <motion.p
@@ -284,30 +286,39 @@ export default function Highlights() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-tafa-muted text-base leading-relaxed"
           >
-            Información turística unificada de MINCETUR, DIRCETUR y AUTOCOLCA con filtros inteligentes, accesibilidad y puntos TAFA Explorer Pass.
+            {t('explorer:desc')}
           </motion.p>
         </div>
 
         {/* ── DESPEGAR-STYLE BUSCADOR & BARRA DE PESTAÑAS ───────────────── */}
         <div className="bg-white rounded-[28px] p-6 shadow-xl border border-gray-200/80 mb-12 space-y-5">
           
-          {/* Top Category Tabs (Estilo Despegar) */}
-          <div className="flex gap-2 overflow-x-auto pb-2 border-b border-gray-100 no-scrollbar">
+          {/* Top Category Tabs (Estilo Despegar) - WCAG 2.1 tablist */}
+          <div 
+            role="tablist"
+            aria-label={t('explorer:tab_navigation')}
+            className="flex gap-2 overflow-x-auto pb-2 border-b border-gray-100 no-scrollbar"
+          >
             {DESPEGAR_TABS.map(tab => {
               const Icon = tab.icon
               const isActive = categoria === tab.id
+              const tabId = `tab-${tab.id || 'all'}`
               return (
                 <button
                   key={tab.id}
+                  id={tabId}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`panel-${tab.id || 'all'}`}
                   onClick={() => setCategoria(tab.id)}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold font-outfit uppercase tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm ${
+                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold font-outfit uppercase tracking-wider transition-all whitespace-nowrap shrink-0 shadow-sm focus:outline-none ${
                     isActive
                       ? tab.color + ' ring-2 ring-offset-2 ring-tafa-volcán'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
+                  <Icon className="w-4 h-4" aria-hidden="true" />
+                  <span>{t(tab.labelKey)}</span>
                 </button>
               )
             })}
@@ -316,13 +327,14 @@ export default function Highlights() {
           {/* Search Input Bar */}
           <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" aria-hidden="true" />
               <input
                 type="text"
-                placeholder="¿Qué atractivo o lugar deseas explorar? (Ej: Catedral, Colca, Sillar)..."
+                placeholder={t('explorer:search_placeholder')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-outfit text-tafa-text outline-none focus:border-tafa-volcán focus:bg-white transition-all shadow-inner"
+                aria-label={t('explorer:search_label') || 'Buscar atractivos turísticos'}
+                className="w-full bg-gray-50 border border-gray-200 rounded-2xl pl-12 pr-4 py-3.5 text-sm font-outfit text-tafa-text outline-none transition-all shadow-inner focus:border-tafa-volcán focus:bg-white"
               />
             </div>
 
@@ -330,15 +342,15 @@ export default function Highlights() {
               type="submit"
               className="bg-tafa-volcán hover:bg-tafa-lava text-white font-bold text-xs uppercase tracking-wider px-8 py-3.5 rounded-2xl transition-all shadow-md flex items-center justify-center gap-2 shrink-0"
             >
-              <Search className="w-4 h-4" />
-              <span>Buscar Atractivos</span>
+              <Search className="w-4 h-4" aria-hidden="true" />
+              <span>{t('explorer:search_button')}</span>
             </button>
           </form>
 
           {/* Quick Filter Tags (Chips estilo Despegar) */}
           <div className="flex items-center gap-2 flex-wrap pt-1 text-xs">
             <span className="text-gray-400 font-semibold uppercase text-[11px] mr-1 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" /> Filtros rápidos:
+              <Filter className="w-3.5 h-3.5" aria-hidden="true" /> {t('explorer:filter_label')}
             </span>
             {QUICK_FILTERS.map(f => {
               const isSelected = activeQuickFilter === f
@@ -346,13 +358,14 @@ export default function Highlights() {
                 <button
                   key={f}
                   onClick={() => setActiveQuickFilter(isSelected ? null : f)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border ${
+                  aria-pressed={isSelected}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all border focus:outline-none ${
                     isSelected
                       ? 'bg-tafa-volcán text-white border-tafa-volcán shadow-sm'
                       : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
                   }`}
                 >
-                  {f} {isSelected && '✕'}
+                  {t(f)} {isSelected && '✕'}
                 </button>
               )
             })}
@@ -362,17 +375,17 @@ export default function Highlights() {
         {/* ── GRID DE RESULTADOS (DESPEGAR CARDS LAYOUT) ─────────────────── */}
         {loading ? (
           <div className="py-20 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-tafa-volcán border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-tafa-muted text-sm font-medium">Cargando inventario oficial desde Supabase PostgreSQL...</p>
+            <div className="w-10 h-10 border-4 border-tafa-volcán border-t-transparent rounded-full animate-spin mx-auto" aria-label="Cargando" />
+            <p className="text-tafa-muted text-sm font-medium">{t('common:loading')}</p>
           </div>
         ) : filteredLugares.length === 0 ? (
           <div className="py-16 text-center bg-white border border-dashed border-gray-300 rounded-[28px] p-8 shadow-sm">
             <p className="text-tafa-muted font-medium mb-3">No se encontraron atractivos que coincidan con la búsqueda o filtro seleccionado.</p>
             <button
               onClick={() => { setSearch(''); setCategoria(''); setActiveQuickFilter(null); loadData(); }}
-              className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors"
+              className="bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors focus:outline-none"
             >
-              Limpiar Filtros y Mostrar Todo
+              {t('explorer:close_modal')}
             </button>
           </div>
         ) : (
@@ -462,7 +475,7 @@ export default function Highlights() {
                   {/* Card Bottom Footer Despegar Style */}
                   <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-xs">
                     <div>
-                      <span className="text-[10px] text-gray-400 font-semibold uppercase block">Ingreso / Tarifa</span>
+                      <span className="text-[10px] text-gray-400 font-semibold uppercase block">{t('explorer:fee_label')}</span>
                       <span className="font-bold text-tafa-andino text-sm">{l.precio_entrada || 'Consultar'}</span>
                     </div>
 
@@ -559,7 +572,7 @@ export default function Highlights() {
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
                 <span className="text-xs text-gray-500 font-medium">
-                  Fuente oficial: <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
+                  {t('explorer:source_label')} <strong className="text-tafa-text">{selectedLugar.fuente}</strong>
                 </span>
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <a
@@ -572,13 +585,13 @@ export default function Highlights() {
                     className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-full text-xs uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2 no-underline"
                   >
                     <PhoneCall className="w-4 h-4 text-white" />
-                    <span>Reservar (921 378 349)</span>
+                    <span>{t('explorer:reserve_whatsapp')}</span>
                   </a>
                   <button
                     onClick={() => setSelectedLugar(null)}
                     className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-300 transition-colors"
                   >
-                    Cerrar
+                    {t('explorer:close_modal')}
                   </button>
                 </div>
               </div>

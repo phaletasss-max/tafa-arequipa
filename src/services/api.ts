@@ -1,3 +1,12 @@
+// ── Metadatos de imagen para trazabilidad y licencias ──────────────────────
+export interface ImageMeta {
+  url: string;
+  source: string;
+  license?: string;
+  photographer?: string | null;
+  generated: boolean;
+}
+
 export interface Lugar {
   id: number;
   nombre: string;
@@ -9,6 +18,7 @@ export interface Lugar {
   horario: string;
   precio_entrada: string;
   imagen_url: string;
+  imagen_meta?: ImageMeta;
   fuente: string;
   verificado: number;
   estado: string;

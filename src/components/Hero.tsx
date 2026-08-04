@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react'
 import { Upload, Map, LayoutDashboard, Sparkles, UserCheck, Globe } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import SurveyModal from './SurveyModal'
 import AuthModal from './auth/AuthModal'
 import TAFAExplorerPassModal from './rewards/TAFAExplorerPassModal'
@@ -20,13 +21,12 @@ function NavButton({ children, href = '#' }: { children: React.ReactNode; href?:
 
 export default function Hero() {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t, i18n } = useTranslation(['navigation', 'hero'])
   const [isSurveyOpen, setIsSurveyOpen] = useState(false)
   const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [isPassModalOpen, setIsPassModalOpen] = useState(false)
   const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
-  const [promptText, setPromptText] = useState(
-    "Quiero recorrer Arequipa durante cinco días. Busco lugares históricos, gastronomía tradicional, eventos culturales y rutas con información actualizada."
-  )
+  const [promptText, setPromptText] = useState('')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
   useEffect(() => {
@@ -35,6 +35,10 @@ export default function Hero() {
       try { setTouristUser(JSON.parse(saved)); } catch(e) {}
     }
   }, [])
+
+  useEffect(() => {
+    setPromptText(t('hero:prompt_placeholder'))
+  }, [i18n.resolvedLanguage, t])
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -94,10 +98,10 @@ export default function Hero() {
             </a>
 
             <div className="absolute left-1/2 -translate-x-1/2 flex gap-8 max-md:hidden">
-              <NavButton href="#explorar">Explorar</NavButton>
-              <NavButton href="#mapa">Mapa</NavButton>
-              <NavButton href="#sobre-proyecto">Acerca de</NavButton>
-              <NavButton href="http://localhost:3000/admin.html">Admin</NavButton>
+              <NavButton href="#explorar">{t('navigation:explore')}</NavButton>
+              <NavButton href="#mapa">{t('navigation:map')}</NavButton>
+              <NavButton href="#sobre-proyecto">{t('navigation:about')}</NavButton>
+              <NavButton href="http://localhost:3000/admin.html">{t('navigation:admin')}</NavButton>
             </div>
 
             <div className="flex items-center gap-4">
@@ -105,19 +109,20 @@ export default function Hero() {
               <div className="flex items-center gap-1.5 bg-white/80 backdrop-blur-md border border-black/10 px-3 py-1.5 rounded-full text-xs font-bold text-tafa-text shadow-sm">
                 <Globe className="w-3.5 h-3.5 text-tafa-text" />
                 <select
-                  defaultValue="ES"
+                  value={i18n.resolvedLanguage || 'es'}
                   className="bg-transparent border-none outline-none font-bold text-xs cursor-pointer text-tafa-text uppercase"
-                  onChange={(e) => {
-                    const lang = e.target.value
-                    if (lang !== 'ES') {
-                      alert(`Idioma cambiado a ${lang}. Contenidos traducidos por TAFA AI.`)
-                    }
-                  }}
+                  onChange={(e) => i18n.changeLanguage(e.target.value)}
                 >
-                  <option value="ES">ES (Español)</option>
-                  <option value="EN">EN (English)</option>
-                  <option value="QUE">QUE (Runasimi)</option>
-                  <option value="DE">DE (Deutsch)</option>
+                  <option value="es">ES (Español)</option>
+                  <option value="en">EN (English)</option>
+                  <option value="fr">FR (Français)</option>
+                  <option value="de">DE (Deutsch)</option>
+                  <option value="pt">PT (Português)</option>
+                  <option value="it">IT (Italiano)</option>
+                  <option value="ja">JA (日本語)</option>
+                  <option value="zh">ZH (中文)</option>
+                  <option value="ko">KO (한국어)</option>
+                  <option value="nl">NL (Nederlands)</option>
                 </select>
               </div>
 
@@ -141,7 +146,7 @@ export default function Hero() {
                              font-semibold uppercase text-[#292929] tracking-[0.04em]
                              transition-opacity hover:opacity-55 max-md:hidden"
                 >
-                  Acceder (DNI / Pasaporte)
+                  {t('navigation:sign_in')}
                 </button>
               )}
               <button
@@ -151,7 +156,7 @@ export default function Hero() {
                            transition-opacity hover:opacity-75 max-md:hidden flex items-center gap-1.5"
               >
                 <Sparkles className="w-4 h-4" />
-                Encuesta
+                {t('navigation:survey')}
               </button>
               <button
                 onClick={handleExploreClick}
@@ -159,7 +164,7 @@ export default function Hero() {
                            text-[15px] font-medium uppercase tracking-[0.04em] px-5 py-3.5
                            rounded-full transition-all hover:bg-[#333] active:scale-95 shadow-md"
               >
-                Explorar Arequipa
+                {t('hero:btn_explore')}
               </button>
             </div>
           </nav>
@@ -175,7 +180,7 @@ export default function Hero() {
                          border border-black/10 rounded-full px-4 py-1.5 text-sm font-medium text-tafa-muted shadow-sm"
             >
               <span className="w-2 h-2 rounded-full bg-tafa-volcán animate-pulse" />
-              Plataforma Oficial de Turismo — Arequipa, Perú
+              {t('hero:platform_tag')}
             </motion.div>
 
             <motion.h1
@@ -185,7 +190,7 @@ export default function Hero() {
               className="font-outfit text-[clamp(40px,6vw,72px)] font-medium text-tafa-text
                          leading-[1.05] tracking-[-0.04em] max-w-[820px] mb-5"
             >
-              Descubre Arequipa{' '}
+              {t('hero:title_part1')}{' '}
               <span
                 style={{
                   background: 'linear-gradient(135deg, #c0392b, #e74c3c)',
@@ -194,9 +199,9 @@ export default function Hero() {
                   backgroundClip: 'text',
                 }}
               >
-                desde una sola
+                {t('hero:title_highlight')}
               </span>{' '}
-              plataforma
+              {t('hero:title_part2')}
             </motion.h1>
 
             <motion.p
@@ -206,8 +211,7 @@ export default function Hero() {
               className="font-outfit text-xl font-medium text-tafa-muted leading-relaxed
                          max-w-[500px] mb-10"
             >
-              Centralizamos información turística oficial para ayudarte a descubrir
-              lugares, eventos, gastronomía y experiencias en toda la región.
+              {t('hero:subtitle')}
             </motion.p>
 
             {/* Liquid glass prompt card */}
@@ -243,7 +247,7 @@ export default function Hero() {
                            uppercase tracking-[0.02em] transition-all
                            hover:bg-[#333] active:scale-95"
               >
-                Explorar
+                {t('navigation:explore')}
               </button>
 
               <input
@@ -256,8 +260,8 @@ export default function Hero() {
 
               <button
                 onClick={() => fileInputRef.current?.click()}
-                aria-label="Subir referencia o imagen"
-                title="Subir imagen de referencia"
+                aria-label={t('hero:upload_title')}
+                title={t('hero:upload_title')}
                 className="absolute left-[21px] top-[137px] w-11 h-11
                            bg-transparent border border-white/70 rounded-full
                            cursor-pointer flex items-center justify-center
@@ -278,9 +282,9 @@ export default function Hero() {
               className="mt-8 flex items-center gap-4 flex-wrap justify-center"
             >
               {[
-                { icon: Map, label: 'Mapa Interactivo', href: '#mapa' },
+                { icon: Map, label: t('navigation:map'), href: '#mapa' },
                 { icon: LayoutDashboard, label: 'Dashboard Regional', href: 'http://localhost:3000' },
-                { icon: Sparkles, label: 'Encuesta Turística', onClick: () => setIsSurveyOpen(true) },
+                { icon: Sparkles, label: t('navigation:survey'), onClick: () => setIsSurveyOpen(true) },
               ].map(({ icon: Icon, label, href, onClick }) => (
                 onClick ? (
                   <button

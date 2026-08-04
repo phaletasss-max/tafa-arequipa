@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Puzzle, WifiOff, TrendingDown } from 'lucide-react'
 
 const problems = [
@@ -31,6 +32,7 @@ const problems = [
 ]
 
 export default function Problem() {
+  const { t } = useTranslation(['common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -47,7 +49,7 @@ export default function Problem() {
         >
           <div className="w-8 h-[2px] bg-tafa-volcán" />
           <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-volcán">
-            El Problema
+            {t('common:problem_label')}
           </span>
         </motion.div>
 
@@ -59,8 +61,8 @@ export default function Problem() {
           className="font-outfit text-[clamp(32px,4.5vw,56px)] font-medium leading-[1.1]
                      tracking-[-0.03em] max-w-[700px] mb-6"
         >
-          Arequipa tiene un ecosistema turístico{' '}
-          <span className="text-tafa-muted">rico pero invisible</span>
+          {t('common:problem_title_part1')}{' '}
+          <span className="text-tafa-muted">{t('common:problem_title_highlight')}</span>
         </motion.h2>
 
         <motion.p
@@ -69,8 +71,7 @@ export default function Problem() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-[#8b949e] text-xl max-w-[560px] mb-20 leading-relaxed"
         >
-          No existe una plataforma ni operador que articule atractivos,
-          transporte, guía y reserva en un solo flujo accesible.
+          {t('common:problem_description')}
         </motion.p>
 
         {/* Problem cards */}
@@ -107,11 +108,10 @@ export default function Problem() {
           className="mt-20 border-l-2 border-tafa-volcán pl-8 max-w-[640px]"
         >
           <p className="text-[22px] font-medium leading-relaxed text-white/80 italic">
-            "Los turistas sienten que ya vieron todo en un día, porque la oferta visible
-            se concentra en el Centro Histórico y el Monasterio de Santa Catalina."
+            "{t('common:problem_quote')}"
           </p>
           <p className="mt-4 text-sm text-tafa-muted font-medium">
-            — Diagnóstico del equipo TAFA · Arequipa, 2026
+            — {t('common:problem_quote_author')}
           </p>
         </motion.div>
       </div>

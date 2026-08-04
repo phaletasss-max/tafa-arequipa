@@ -1,0 +1,13 @@
+{
+  "screen_reader_prompt": "Verwenden Sie einen Screenreader? Aktivieren Sie den unterstützten Navigationsmodus.",
+  "language_label": "Plattformsprache auswählen",
+  "font_size_normal": "Text: A",
+  "font_size_large": "Text: A+",
+  "font_size_extralarge": "Text: A++",
+  "contrast_normal": "Kontrast",
+  "contrast_high": "Hoher Kontrast",
+  "audio_route_start": "Audioroute",
+  "audio_route_stop": "Sprache stoppen",
+  "visual_mode": "Visueller Modus",
+  "sign_language": "Gebärdensprache"
+}

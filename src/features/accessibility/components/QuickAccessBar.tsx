@@ -4,6 +4,7 @@ import VisualModeToggle from './VisualModeToggle'
 import SignLanguageButton from './SignLanguageButton'
 import AIAccessButton from './AIAccessButton'
 import UserMenu from './UserMenu'
+import { useTranslation } from 'react-i18next'
 
 interface QuickAccessBarProps {
   onOpenAuth?: () => void
@@ -18,11 +19,13 @@ export default function QuickAccessBar({
   onOpenAI,
   onOpenSignLanguage,
 }: QuickAccessBarProps) {
+  const { t } = useTranslation('accessibility')
+
   return (
     <header className="sticky top-0 z-50 bg-slate-900 border-b border-slate-800 text-slate-200 text-xs py-2.5 px-4 md:px-8 shadow-md">
       {/* Screen Reader Accessible Prompt (WCAG 2.2 AA) */}
       <div className="sr-only focus:not-sr-only focus:p-2 focus:bg-amber-400 focus:text-black font-bold">
-        ¿Utilizas un lector de pantalla? Activa el modo de navegación asistida.
+        {t('screen_reader_prompt')}
       </div>
 
       <div className="max-w-[1360px] mx-auto flex items-center justify-between gap-4 flex-wrap">

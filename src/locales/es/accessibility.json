@@ -1,0 +1,13 @@
+{
+  "screen_reader_prompt": "¿Utilizas un lector de pantalla? Activa el modo de navegación asistida.",
+  "language_label": "Seleccionar idioma de la plataforma",
+  "font_size_normal": "Texto: A",
+  "font_size_large": "Texto: A+",
+  "font_size_extralarge": "Texto: A++",
+  "contrast_normal": "Contraste",
+  "contrast_high": "Contraste Alto",
+  "audio_route_start": "Audioruta",
+  "audio_route_stop": "Detener Voz",
+  "visual_mode": "Modo Visual",
+  "sign_language": "Lengua de Señas"
+}

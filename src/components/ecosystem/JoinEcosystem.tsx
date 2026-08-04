@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Building2, ShieldCheck, Award, ArrowUpRight, Send, CheckCircle2, FileText, CheckSquare, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 
 export default function JoinEcosystem() {
+  const { t } = useTranslation(['forms', 'modals', 'common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -22,7 +24,7 @@ export default function JoinEcosystem() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!taxId.trim() || !companyName.trim() || !email.trim()) {
-      return alert('Por favor completa todos los campos requeridos.')
+      return alert(t('forms:required_fields'))
     }
 
     try {
@@ -123,26 +125,26 @@ export default function JoinEcosystem() {
               <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto text-3xl">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold font-outfit text-white">Postulación Recibida</h3>
+              <h3 className="text-2xl font-bold font-outfit text-white">{t('modals:ecosystem_success_title')}</h3>
               <p className="text-gray-300 text-sm leading-relaxed max-w-md mx-auto">
-                Tu solicitud ha ingresado a la etapa de Evaluación del Ecosistema TAFA. Nuestro equipo técnico validará tu RUC y distintivo DIRCETUR antes del alta definitiva.
+                {t('modals:ecosystem_success_body')}
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="border-b border-white/10 pb-4 mb-6">
-                <h3 className="text-2xl font-bold font-outfit text-white">Formulario de Postulación de Aliados MYPE</h3>
-                <p className="text-xs text-gray-400 mt-1">Ingresa tus datos comerciales para unirte a la red regional de turismo inteligente.</p>
+                <h3 className="text-2xl font-bold font-outfit text-white">{t('forms:ecosystem_form_title')}</h3>
+                <p className="text-xs text-gray-400 mt-1">{t('forms:ecosystem_form_body')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">RUC del Negocio (11 dígitos) *</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:business_ruc_label')}</label>
                   <input
                     type="text"
                     required
                     maxLength={11}
-                    placeholder="Ej: 20123456781"
+                    placeholder={t('forms:business_ruc_placeholder')}
                     value={taxId}
                     onChange={(e) => setTaxId(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-tafa-volcán"
@@ -150,11 +152,11 @@ export default function JoinEcosystem() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Razón Social / Nombre Comercial *</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:business_name_label')}</label>
                   <input
                     type="text"
                     required
-                    placeholder="Ej: La Nueva Palomino E.I.R.L."
+                    placeholder={t('forms:business_name_placeholder')}
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-tafa-volcán"
@@ -164,11 +166,11 @@ export default function JoinEcosystem() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Correo de Contacto Oficial *</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:contact_email_label')}</label>
                   <input
                     type="email"
                     required
-                    placeholder="contacto@empresa.com"
+                    placeholder={t('forms:contact_email_placeholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-tafa-volcán"
@@ -176,10 +178,10 @@ export default function JoinEcosystem() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Teléfono de Contacto</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:contact_phone_label')}</label>
                   <input
                     type="tel"
-                    placeholder="Ej: 954123456"
+                    placeholder={t('forms:contact_phone_placeholder')}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-tafa-volcán"
@@ -189,7 +191,7 @@ export default function JoinEcosystem() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Categoría de Servicio</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:service_category_label')}</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
@@ -204,7 +206,7 @@ export default function JoinEcosystem() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">Distrito de Ubicación</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1.5">{t('forms:district_label')}</label>
                   <select
                     value={district}
                     onChange={(e) => setDistrict(e.target.value)}
@@ -222,7 +224,7 @@ export default function JoinEcosystem() {
 
               {/* Declaración Jurada de Requisitos */}
               <div className="pt-2 border-t border-white/10 space-y-2 text-xs">
-                <div className="font-semibold text-amber-400 mb-1">Verificación de Requisitos Obligatorios:</div>
+                <div className="font-semibold text-amber-400 mb-1">{t('forms:requirements_check_title')}</div>
                 <label className="flex items-center gap-2 cursor-pointer text-gray-300">
                   <input
                     type="checkbox"
@@ -230,7 +232,7 @@ export default function JoinEcosystem() {
                     onChange={(e) => setHasRuc(e.target.checked)}
                     className="rounded bg-white/10 border-white/20 text-tafa-volcán"
                   />
-                  <span>Cuento con RUC activo y habido en SUNAT</span>
+                  <span>{t('forms:requirement_ruc')}</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer text-gray-300">
                   <input
@@ -239,7 +241,7 @@ export default function JoinEcosystem() {
                     onChange={(e) => setHasDircetur(e.target.checked)}
                     className="rounded bg-white/10 border-white/20 text-tafa-volcán"
                   />
-                  <span>Cuento con distintivo oficial o registro de prestador DIRCETUR</span>
+                  <span>{t('forms:requirement_dircetur')}</span>
                 </label>
               </div>
 
@@ -248,7 +250,7 @@ export default function JoinEcosystem() {
                 disabled={loading}
                 className="w-full py-4 rounded-full bg-tafa-volcán hover:bg-tafa-lava text-white font-bold text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-2 shadow-xl disabled:opacity-50"
               >
-                {loading ? 'Enviando Postulación...' : 'Enviar Postulación de Aliado'}
+                {loading ? t('forms:submitting_application') : t('forms:submit_application')}
                 <Send className="w-4 h-4" />
               </button>
             </form>

@@ -1,0 +1,13 @@
+{
+  "screen_reader_prompt": "您在使用屏幕阅读器吗？请开启辅助导航模式。",
+  "language_label": "选择平台语言",
+  "font_size_normal": "字体: A",
+  "font_size_large": "字体: A+",
+  "font_size_extralarge": "字体: A++",
+  "contrast_normal": "对比度",
+  "contrast_high": "高对比度",
+  "audio_route_start": "语音导览",
+  "audio_route_stop": "停止语音",
+  "visual_mode": "视觉模式",
+  "sign_language": "手语"
+}

@@ -1,0 +1,20 @@
+{
+  "tag": "Esploratore Turistico Ufficiale",
+  "title": "Trova e pianifica le tue migliori esperienze ad Arequipa",
+  "desc": "Dati turistici ufficiali unificati con filtri intelligenti e opzioni di accessibilità.",
+  "search_placeholder": "Quale attrazione desideri esplorare? (es. Cattedrale, Colca, Sillar)...",
+  "search_button": "Cerca Attrazioni",
+  "filter_label": "Filtri rapidi:",
+  "tab_all": "Vedi Tutto Arequipa",
+  "tab_heritage": "Patrimonio & Monumenti",
+  "tab_nature": "Natura & Canyon",
+  "tab_historic": "Centro Storico",
+  "tab_culture": "Cultura & Percorsi",
+  "tab_projects": "Progetti Strategici (10)",
+  "verified_dircetur": "Verificato DIRCETUR",
+  "free_access": "Ingresso Libero",
+  "fee_label": "Prezzo d'ingresso",
+  "source_label": "Fonte ufficiale:",
+  "reserve_whatsapp": "Prenota su WhatsApp (+51 921 378 349)",
+  "close_modal": "Chiudi"
+}

@@ -1,5 +1,6 @@
 import { Globe } from 'lucide-react'
 import { useAccessibility } from '../hooks/useAccessibility'
+import { useTranslation } from 'react-i18next'
 import type { LanguageOption } from '../types/accessibility'
 
 const SUPPORTED_LANGUAGES: LanguageOption[] = [
@@ -17,13 +18,19 @@ const SUPPORTED_LANGUAGES: LanguageOption[] = [
 
 export default function LanguageSelector() {
   const { settings, setLanguage } = useAccessibility()
+  const { i18n } = useTranslation()
+
+  function handleSelect(code: string) {
+    setLanguage(code)
+    i18n.changeLanguage(code.toLowerCase())
+  }
 
   return (
     <div className="flex items-center gap-1.5 bg-slate-800 border border-slate-700 rounded-full px-3 py-1 text-slate-200">
       <Globe className="w-3.5 h-3.5 text-slate-400 shrink-0" />
       <select
         value={settings.language}
-        onChange={(e) => setLanguage(e.target.value)}
+        onChange={(e) => handleSelect(e.target.value)}
         className="bg-transparent text-slate-200 font-semibold uppercase text-[11px] border-none outline-none cursor-pointer"
         aria-label="Seleccionar idioma de la plataforma"
       >

@@ -1,0 +1,20 @@
+{
+  "tag": "Offizieller Tourismus-Explorer",
+  "title": "Finden und planen Sie Ihre besten Erlebnisse in Arequipa",
+  "desc": "Vereinte offizielle Tourismusdaten von MINCETUR, DIRCETUR und AUTOCOLCA mit smarten Filtern.",
+  "search_placeholder": "Welche Sehenswürdigkeit möchten Sie erkunden? (z.B. Kathedrale, Colca, Sillar)...",
+  "search_button": "Sehenswürdigkeiten suchen",
+  "filter_label": "Schnellfilter:",
+  "tab_all": "Alle Arequipa sehen",
+  "tab_heritage": "Kulturerbe & Denkmäler",
+  "tab_nature": "Natur & Canyons",
+  "tab_historic": "Historisches Zentrum",
+  "tab_culture": "Kultur & Routen",
+  "tab_projects": "Strategische Projekte (10)",
+  "verified_dircetur": "DIRCETUR Verifiziert",
+  "free_access": "Freier Eintritt",
+  "fee_label": "Eintrittspreis",
+  "source_label": "Offizielle Quelle:",
+  "reserve_whatsapp": "Über WhatsApp buchen (+51 921 378 349)",
+  "close_modal": "Schließen"
+}

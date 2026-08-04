@@ -1,8 +1,10 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Database, ShieldCheck, Cpu, Globe, Users, ArrowUpRight, CheckCircle2 } from 'lucide-react'
 
 export default function AboutProject() {
+  const { t } = useTranslation(['common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -41,7 +43,7 @@ export default function AboutProject() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 bg-tafa-volcán/10 text-tafa-volcán px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider mb-4"
           >
-            🏛️ Sobre el Proyecto TAFA
+            🏛️ {t('common:about_project_badge')}
           </motion.div>
 
           <motion.h2
@@ -50,9 +52,9 @@ export default function AboutProject() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-outfit text-3xl md:text-5xl font-bold text-tafa-text tracking-tight leading-tight mb-6"
           >
-            Turismo Arequipa:{' '}
+            {t('common:about_project_title_part1')}{' '}
             <span style={{ background: 'linear-gradient(135deg, #c0392b, #e74c3c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-              Fragmentado → Accesible
+              {t('common:about_project_title_highlight')}
             </span>
           </motion.h2>
 
@@ -62,8 +64,7 @@ export default function AboutProject() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-tafa-muted text-lg leading-relaxed"
           >
-            TAFA nace como respuesta a la dispersión de información turística en la región.
-            Transformamos documentos aislados y datos atomizados en una plataforma abierta, rápida y accesible para visitantes y autoridades.
+            {t('common:about_project_description')}
           </motion.p>
         </div>
 
@@ -95,13 +96,13 @@ export default function AboutProject() {
         >
           <div className="space-y-3 max-w-[600px]">
             <div className="flex items-center gap-2 text-xs text-tafa-andino font-semibold">
-              <CheckCircle2 className="w-4 h-4" /> Plataforma regional abierta · Hackathon Arequipa 2026
+              <CheckCircle2 className="w-4 h-4" /> {t('common:about_project_banner_badge')}
             </div>
             <h4 className="font-outfit text-2xl font-bold">
-              ¿Eres representante de DIRCETUR o una institución pública?
+              {t('common:about_project_banner_title')}
             </h4>
             <p className="text-gray-400 text-sm leading-relaxed">
-              TAFA incluye un panel de administración con roles para verificar contenido, exportar estadísticas en CSV y sincronizar datasets oficiales.
+              {t('common:about_project_banner_body')}
             </p>
           </div>
 
@@ -112,7 +113,7 @@ export default function AboutProject() {
               rel="noreferrer"
               className="bg-tafa-volcán text-white px-6 py-3.5 rounded-full font-outfit text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-all flex items-center gap-2 no-underline shadow-lg"
             >
-              Acceso Panel Admin
+              {t('common:admin_panel_cta')}
               <ArrowUpRight className="w-4 h-4" />
             </a>
             <a
@@ -121,7 +122,7 @@ export default function AboutProject() {
               rel="noreferrer"
               className="bg-white/10 text-white border border-white/20 px-6 py-3.5 rounded-full font-outfit text-xs font-bold uppercase tracking-wider hover:bg-white/20 transition-all flex items-center gap-2 no-underline"
             >
-              API Status & JSON
+              {t('common:api_status_cta')}
               <Globe className="w-4 h-4" />
             </a>
           </div>

@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { MapPin, Sparkles, ArrowRight, ShieldCheck, Clock, Tag } from 'lucide-react'
 
 const destinations = [
@@ -10,7 +11,7 @@ const destinations = [
     desc: 'Rodeada de arquerías de sillar volcánico y con la majestuosa Catedral neoclásica del siglo XVII. Con la imponente vista al volcán Misti de fondo.',
     category: 'Centro Histórico',
     tag: 'Imperdible · Patrimonio UNESCO',
-    image: '/correcion-imagenes/plaza-armas-arequipa.jpg',
+    image: '/images/places/plaza-de-armas.webp',
     color: '#c0392b',
     price: 'Acceso Gratuito',
     verificado: true,
@@ -22,7 +23,7 @@ const destinations = [
     desc: 'Un fascinante complejo religioso de 20,000 m² repleto de callejones azul añil, terracota, patios de flores y siglos de historia mística.',
     category: 'Patrimonio Cultural',
     tag: 'Experiencia Cultural Única',
-    image: '/correcion-imagenes/monaterio-santa-catalina.webp',
+    image: '/images/places/monasterio-santa-catalina.webp',
     color: '#8e44ad',
     price: 'S/. 45 entrada',
     verificado: true,
@@ -34,7 +35,7 @@ const destinations = [
     desc: 'Avista el majestuoso vuelo del cóndor andino a primera hora del día sobre abismos de más de 3,000 metros y pueblos tradicionales del valle.',
     category: 'Naturaleza & Aventura',
     tag: 'Aventura Andina',
-    image: '/correcion-imagenes/canon-colca-condor.jpg',
+    image: '/images/places/canon-colca.webp',
     color: '#27ae60',
     price: 'Boleto Turístico S/. 70',
     verificado: true,
@@ -46,7 +47,7 @@ const destinations = [
     desc: 'Disfruta el rocoto relleno a leña, el adobo del domingo, el chupe de camarones y el solterito de queso acompañados de chicha de jora.',
     category: 'Gastronomía Tradicional',
     tag: 'Patrimonio Culinario',
-    image: '/images/attractions/gastronomia-palomino.jpg',
+    image: '/images/places/gastronomia-palomino.jpg',
     color: '#f39c12',
     price: 'S/. 25 - 60 por plato',
     verificado: true,
@@ -54,6 +55,7 @@ const destinations = [
 ]
 
 export default function ScrollyDestinations() {
+  const { t } = useTranslation(['common'])
   const containerRef = useRef<HTMLDivElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
 
@@ -85,13 +87,13 @@ export default function ScrollyDestinations() {
           <div className="flex items-center gap-3">
             <span className="w-2.5 h-2.5 rounded-full bg-tafa-volcán animate-ping" />
             <span className="text-xs font-semibold uppercase tracking-[0.15em] text-tafa-volcán">
-              Destinos Imperdibles de Arequipa
+              {t('common:destinations_label')}
             </span>
           </div>
 
           <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/15 text-xs text-white/80">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Desliza hacia abajo para recorrer</span>
+            <span>{t('common:scroll_hint')}</span>
           </div>
         </div>
 
@@ -131,7 +133,7 @@ export default function ScrollyDestinations() {
                   </span>
                   {activeDest.verificado && (
                     <span className="flex items-center gap-1 text-green-400 font-semibold">
-                      <ShieldCheck className="w-3.5 h-3.5" /> Verificado por DIRCETUR
+                      <ShieldCheck className="w-3.5 h-3.5" /> {t('common:verified_dircetur')}
                     </span>
                   )}
                 </div>
@@ -140,7 +142,7 @@ export default function ScrollyDestinations() {
                   href="#mapa"
                   className="inline-flex items-center gap-2 bg-white text-black font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full hover:bg-tafa-volcán hover:text-white transition-all shadow-lg mt-4 no-underline"
                 >
-                  Ver en el mapa interactivo
+                  {t('common:explore_map_cta')}
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </motion.div>

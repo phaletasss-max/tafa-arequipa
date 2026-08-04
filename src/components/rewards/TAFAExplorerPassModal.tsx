@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { X, Award, CheckCircle, Ticket, Gift, ShieldCheck } from 'lucide-react'
 import { registerTAFAExplorerPass, TAFAExplorerPassUser, getRecompensasCatalogo, RecompensaCatalogo } from '@/services/tafaMasterService'
 
@@ -9,6 +10,7 @@ interface TAFAExplorerPassModalProps {
 }
 
 export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerPassModalProps) {
+  const { t } = useTranslation(['forms', 'common', 'modals'])
   const [user, setUser] = useState<TAFAExplorerPassUser | null>(null)
   const [recompensas, setRecompensas] = useState<RecompensaCatalogo[]>([])
   const [activeTab, setActiveTab] = useState<'pass' | 'recompensas' | 'registro'>('pass')
@@ -42,7 +44,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
 
   async function handleRegisterPass(e: React.FormEvent) {
     e.preventDefault()
-    if (!nombre.trim() || !email.trim()) return alert('Completa tu nombre y correo.')
+    if (!nombre.trim() || !email.trim()) return alert(t('forms:required_name_email'))
 
     try {
       setLoading(true)
@@ -53,7 +55,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
       setUser(newUser)
       setActiveTab('pass')
     } catch (err) {
-      alert('Error registrando pase.')
+      alert(t('forms:pass_register_error'))
     } finally {
       setLoading(false)
     }
@@ -62,7 +64,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
   function handleRedeem(r: RecompensaCatalogo) {
     if (!user) return setActiveTab('registro')
     if (user.puntos_acumulados < r.puntos_requeridos) {
-      return alert(`Necesitas ${r.puntos_requeridos} puntos. Tienes ${user.puntos_acumulados} puntos. Completa más visitas para ganar puntos.`)
+      return alert(t('forms:pass_redeem_error', { requiredPoints: r.puntos_requeridos, currentPoints: user.puntos_acumulados }))
     }
 
     const updatedPuntos = user.puntos_acumulados - r.puntos_requeridos
@@ -70,7 +72,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
     setUser(updatedUser)
     localStorage.setItem('tafa_explorer_pass_user', JSON.stringify(updatedUser))
 
-    setRedeemSuccess(`¡Canje exitoso! Presenta el código de tu TAFA Explorer Pass (${user.tafa_explorer_pass}) en el establecimiento aliado.`)
+    setRedeemSuccess(t('forms:pass_redeem_success', { passCode: user.tafa_explorer_pass }))
   }
 
   return (
@@ -96,7 +98,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
             </div>
             <div>
               <span className="text-xs font-semibold uppercase tracking-wider text-amber-400">
-                Pase Turístico Oficial & Fidelización
+                {t('modals:explorer_pass_header')}
               </span>
               <h3 className="text-2xl font-bold font-outfit text-white">
                 TAFA Explorer Pass
@@ -110,13 +112,13 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
               onClick={() => setActiveTab(user ? 'pass' : 'registro')}
               className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${activeTab === 'pass' || activeTab === 'registro' ? 'bg-tafa-volcán text-white' : 'text-gray-400 hover:text-white'}`}
             >
-              Mi TAFA Pass
+              {t('forms:my_tafa_pass')}
             </button>
             <button
               onClick={() => setActiveTab('recompensas')}
               className={`flex-1 py-2 text-xs font-semibold rounded-xl transition-all ${activeTab === 'recompensas' ? 'bg-tafa-volcán text-white' : 'text-gray-400 hover:text-white'}`}
             >
-              Catálogo Recompensas
+              {t('forms:reward_catalog')}
             </button>
           </div>
 
@@ -132,7 +134,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                 <div className="text-xs text-amber-100">{user.nombre_completo} · {user.tipo_doc}: {user.num_doc}</div>
 
                 <div className="mt-4 pt-3 border-t border-amber-500/40 flex items-center justify-between text-xs font-bold text-amber-200">
-                  <span>Puntos Acumulados:</span>
+                  <span>{t('forms:points_accumulated')}</span>
                   <span className="text-lg text-white font-outfit">{user.puntos_acumulados} PTS</span>
                 </div>
               </div>
@@ -144,10 +146,10 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
               )}
 
               <div className="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs text-gray-300 space-y-1">
-                <div className="font-bold text-white mb-1">¿Cómo ganar más puntos?</div>
-                <div>· 50 Puntos por cada visita registrada en un Museo o Atractivo oficial.</div>
-                <div>· 30 Puntos por completar la encuesta de satisfacción del viaje.</div>
-                <div>· 20 Puntos adicionales al consumir en Picanterías y Negocios Aliados.</div>
+                <div className="font-bold text-white mb-1">{t('forms:how_to_earn_points')}</div>
+                <div>· {t('forms:earn_points_visit')}</div>
+                <div>· {t('forms:earn_points_survey')}</div>
+                <div>· {t('forms:earn_points_partner')}</div>
               </div>
             </div>
           )}
@@ -155,15 +157,15 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
           {activeTab === 'registro' && !user && (
             <form onSubmit={handleRegisterPass} className="space-y-4">
               <div className="text-xs text-gray-300">
-                Obtén tu **TAFA Explorer Pass** para acumular puntos por tus visitas y canjearlos en restaurantes y artesanías de Arequipa.
+                {t('forms:pass_intro')}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">Nombres y Apellidos *</label>
+                <label className="block text-xs font-semibold text-gray-300 mb-1">{t('forms:full_name_label')}</label>
                 <input
                   type="text"
                   required
-                  placeholder="Ej: Laura Morales"
+                  placeholder={t('forms:full_name_placeholder')}
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-amber-400"
@@ -171,11 +173,11 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico *</label>
+                <label className="block text-xs font-semibold text-gray-300 mb-1">{t('forms:email_label')}</label>
                 <input
                   type="email"
                   required
-                  placeholder="correo@ejemplo.com"
+                  placeholder={t('forms:email_placeholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none focus:border-amber-400"
@@ -184,7 +186,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">Documento</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">{t('forms:document_label')}</label>
                   <select
                     value={tipoDoc}
                     onChange={(e) => setTipoDoc(e.target.value as any)}
@@ -196,10 +198,10 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-300 mb-1">Número</label>
+                  <label className="block text-xs font-semibold text-gray-300 mb-1">{t('forms:number_label')}</label>
                   <input
                     type="text"
-                    placeholder="Número"
+                    placeholder={t('forms:number_placeholder')}
                     value={numDoc}
                     onChange={(e) => setNumDoc(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white outline-none"
@@ -208,7 +210,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
               </div>
 
               <div className="pt-2 border-t border-white/10 text-xs">
-                <div className="font-semibold text-amber-400 mb-2">Necesidades de Accesibilidad Universal (Opcional):</div>
+                <div className="font-semibold text-amber-400 mb-2">{t('forms:accessibility_needs_title')}</div>
                 <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer text-gray-300">
                     <input
@@ -217,7 +219,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                       onChange={(e) => setUsaSillaRuedas(e.target.checked)}
                       className="rounded bg-white/10 border-white/20 text-amber-500"
                     />
-                    <span>Requiero infraestructura adaptada para silla de ruedas o bastón</span>
+                    <span>{t('forms:wheelchair_need')}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer text-gray-300">
                     <input
@@ -226,7 +228,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                       onChange={(e) => setBajaVision(e.target.checked)}
                       className="rounded bg-white/10 border-white/20 text-amber-500"
                     />
-                    <span>Requiero audiorutas y asistencia para baja visión</span>
+                    <span>{t('forms:low_vision_need')}</span>
                   </label>
                 </div>
               </div>
@@ -236,7 +238,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                 disabled={loading}
                 className="w-full py-3 rounded-full bg-amber-400 hover:bg-amber-500 text-black font-bold text-xs uppercase tracking-wider transition-colors disabled:opacity-50"
               >
-                {loading ? 'Generando Pase...' : 'Generar mi TAFA Explorer Pass (+100 PTS)'}
+                {loading ? t('forms:generating_pass') : t('forms:create_pass_button')}
               </button>
             </form>
           )}
@@ -255,7 +257,7 @@ export default function TAFAExplorerPassModal({ isOpen, onClose }: TAFAExplorerP
                     onClick={() => handleRedeem(r)}
                     className="bg-amber-400 hover:bg-amber-500 text-black px-4 py-2 rounded-xl font-bold text-xs shrink-0 transition-colors"
                   >
-                    Canjear
+                    {t('forms:redeem_button')}
                   </button>
                 </div>
               ))}

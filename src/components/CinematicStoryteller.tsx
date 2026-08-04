@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { ArrowRight, ChevronLeft, ChevronRight, Compass, MapPin, Play, Pause, Sparkles } from 'lucide-react'
 
 const chapters = [
@@ -9,7 +10,7 @@ const chapters = [
     subtitle: 'Corazón del Centro Histórico de Arequipa',
     desc: 'Construido íntegramente en sillar blanco con su imponente Catedral neoclásica de 70 metros de frente y arquerías de granito sobre el fondo del volcán Misti.',
     video: '/video/caratula.mp4',
-    poster: '/correcion-imagenes/plaza-armas-arequipa.jpg',
+    poster: '/images/places/plaza-de-armas.webp',
     location: 'Plaza de Armas · Cercado de Arequipa',
     tag: 'Patrimonio Cultural UNESCO',
   },
@@ -19,7 +20,7 @@ const chapters = [
     subtitle: 'Ciudadela Conventual de 1579',
     desc: 'Ciudadela monástica de más de 20,000 m² con claustros pintados en azul añil y rojo terracota, calles de piedra y patios floridos esculpidos en sillar.',
     video: '',
-    poster: '/correcion-imagenes/monaterio-santa-catalina.webp',
+    poster: '/images/places/monasterio-santa-catalina.webp',
     location: 'Calle Santa Catalina 301 · Cercado',
     tag: 'Joya Colonial de 1579',
   },
@@ -29,7 +30,7 @@ const chapters = [
     subtitle: 'Vista Panorámica a los 3 Volcanes',
     desc: 'Arcos de sillar construidos en el siglo XIX grabados con versos de poetas arequipeños y la vista más famosa hacia el Misti, Chachani y Pichu Pichu.',
     video: '',
-    poster: '/correcion-imagenes/mirador-yanahuara.jpg',
+    poster: '/images/places/mirador-yanahuara.webp',
     location: 'Plaza de Yanahuara · Yanahuara',
     tag: 'Sillar Volcánico & Mirador',
   },
@@ -39,7 +40,7 @@ const chapters = [
     subtitle: 'Esculpido en Vivo en Piedra Volcánica',
     desc: 'Canteras vivas donde maestros canteros labran la piedra sillar a comba y cincel en megagrabados de roca volcánica y fachadas barrocas a tamaño real.',
     video: '',
-    poster: '/correcion-imagenes/ruta-del-sillar.jpg',
+    poster: '/images/places/ruta-sillar.webp',
     location: 'Quebrada Añashuayco · Cerro Colorado',
     tag: 'Cultura Viva & Canteros',
   },
@@ -49,13 +50,14 @@ const chapters = [
     subtitle: 'Vuelo del Cóndor Andino en su Hábitat',
     desc: 'Uno de los cañones más profundos del planeta (más de 4,160 m) con planeo de cóndores andinos sobre terrazas y andenes preincas.',
     video: '',
-    poster: '/correcion-imagenes/canon-colca-condor.jpg',
+    poster: '/images/places/canon-colca.webp',
     location: 'Mirador Cruz del Cóndor · Caylloma',
     tag: 'Maravilla Natural del Perú',
   },
 ]
 
 export default function CinematicStoryteller() {
+  const { t } = useTranslation(['hero', 'common'])
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // Auto-play cada 6.5 segundos
@@ -145,14 +147,14 @@ export default function CinematicStoryteller() {
                 onClick={() => scrollToSection('explorar')}
                 className="bg-tafa-volcán hover:bg-tafa-lava text-white text-xs uppercase font-bold tracking-wider px-7 py-3.5 rounded-full shadow-2xl transition-all hover:scale-105 flex items-center gap-2"
               >
-                Explorar Atractivos
+                {t('hero:btn_explore')}
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => scrollToSection('ia-conversacion')}
                 className="bg-white/15 hover:bg-white/25 text-white border border-white/25 text-xs uppercase font-semibold tracking-wider px-6 py-3.5 rounded-full backdrop-blur-md transition-all"
               >
-                Consultar Asistente AI
+                {t('common:ai_assistant')}
               </button>
             </div>
           </motion.div>
@@ -165,30 +167,36 @@ export default function CinematicStoryteller() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setCurrentIndex((prev) => (prev - 1 + chapters.length) % chapters.length)}
-            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110"
-            title="Capítulo Anterior"
+            aria-label={`Capítulo anterior (${chapters[(currentIndex - 1 + chapters.length) % chapters.length]?.subtitle || 'anterior'})`}
+            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 focus:outline-none"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => setCurrentIndex((prev) => (prev + 1) % chapters.length)}
-            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110"
-            title="Capítulo Siguiente"
+            aria-label={`Capítulo siguiente (${chapters[(currentIndex + 1) % chapters.length]?.subtitle || 'siguiente'})`}
+            className="p-2.5 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-all hover:scale-110 focus:outline-none"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
         {/* Chapter Dots Navigation */}
-        <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 overflow-x-auto max-w-[100%]">
+        <div 
+          className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/15 overflow-x-auto max-w-[100%]"
+          role="tablist"
+          aria-label="Seleccionar capítulo"
+        >
           {chapters.map((c, i) => (
             <button
               key={c.id}
               onClick={() => setCurrentIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              role="tab"
+              aria-selected={i === currentIndex}
+              aria-label={`Capítulo ${i + 1}: ${c.subtitle}`}
+              className={`h-2 rounded-full transition-all duration-300 focus:outline-none ${
                 i === currentIndex ? 'w-8 bg-tafa-volcán' : 'w-2 bg-white/30 hover:bg-white/60'
               }`}
-              title={`Ver ${c.subtitle}`}
             />
           ))}
         </div>

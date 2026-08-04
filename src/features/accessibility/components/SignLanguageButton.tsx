@@ -1,5 +1,6 @@
 import { Hand } from 'lucide-react'
 import { useAccessibility } from '../hooks/useAccessibility'
+import { useTranslation } from 'react-i18next'
 
 interface SignLanguageButtonProps {
   onOpenSignLanguage?: () => void
@@ -7,6 +8,7 @@ interface SignLanguageButtonProps {
 
 export default function SignLanguageButton({ onOpenSignLanguage }: SignLanguageButtonProps) {
   const { settings, toggleHearingMode } = useAccessibility()
+  const { t } = useTranslation('accessibility')
 
   function handleClick() {
     toggleHearingMode()
@@ -25,7 +27,7 @@ export default function SignLanguageButton({ onOpenSignLanguage }: SignLanguageB
       }`}
     >
       <Hand className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-      <span>Lengua de Señas</span>
+      <span>{t('sign_language')}</span>
     </button>
   )
 }

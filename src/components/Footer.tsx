@@ -1,6 +1,8 @@
 import { Map, Mail, Github, ExternalLink } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export default function Footer() {
+  const { t } = useTranslation(['common'])
   return (
     <footer className="bg-[#050505] border-t border-white/[0.06] text-white py-20 px-6">
       <div className="max-w-[1200px] mx-auto">

@@ -1,0 +1,20 @@
+{
+  "tag": "Explorador Turístico Oficial",
+  "title": "Encuentra y planifica tus mejores experiencias en Arequipa",
+  "desc": "Información turística unificada de MINCETUR, DIRCETUR y AUTOCOLCA con filtros inteligentes, accesibilidad y puntos.",
+  "search_placeholder": "¿Qué atractivo o lugar deseas explorar? (Ej: Catedral, Colca, Sillar)...",
+  "search_button": "Buscar Atractivos",
+  "filter_label": "Filtros rápidos:",
+  "tab_all": "Ver Todo Arequipa",
+  "tab_heritage": "Patrimonio & Monumentos",
+  "tab_nature": "Naturaleza & Cañones",
+  "tab_historic": "Centro Histórico",
+  "tab_culture": "Cultura & Rutas",
+  "tab_projects": "Proyectos Estratégicos (10)",
+  "verified_dircetur": "Verificado DIRCETUR",
+  "free_access": "Acceso Libre",
+  "fee_label": "Ingreso / Tarifa",
+  "source_label": "Fuente oficial:",
+  "reserve_whatsapp": "Reservar (921 378 349)",
+  "close_modal": "Cerrar"
+}

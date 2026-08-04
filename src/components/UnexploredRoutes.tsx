@@ -9,7 +9,7 @@ const regionalProjects = [
     provincia: 'Castilla · Andagua',
     distancia: 'A 7 horas de Arequipa',
     desc: 'Campo volcánico fascinante único en Sudamérica con más de 80 conitos volcánicos extintos de baja altura (de 50 a 300 metros).',
-    imagen: '/images/attractions/valle-volcanes-andagua.jpg',
+    imagen: '/images/places/proyecto-valle-volcanes.webp',
     tag: 'Geoparque UNESCO · Maravilla Geológica',
     pilares: [
       'Vuelos panorámicos sobre conos volcánicos',
@@ -23,7 +23,7 @@ const regionalProjects = [
     provincia: 'Castilla · Corire',
     distancia: 'A 3 horas de Arequipa',
     desc: 'Uno de los campos de arte rupestre más extensos del mundo con más de 5,000 grabados en rocas volcánicas realizados por culturas preincas.',
-    imagen: '/images/attractions/petroglifos-toro-muerto.jpg',
+    imagen: '/images/places/proyecto-toro-muerto.webp',
     tag: 'Arte Rupestre · Arqueología AR 3D',
     pilares: [
       'App de Realidad Aumentada 3D para grabados',
@@ -37,7 +37,7 @@ const regionalProjects = [
     provincia: 'La Unión · Cotahuasi',
     distancia: 'A 9 horas de Arequipa',
     desc: 'El cañón más profundo de la tierra (3,535 m). Un santuario virgen de cataratas como Sipia, bosques de puyas Raimondi y aguas termales de Luicho.',
-    imagen: '/images/attractions/canon-cotahuasi.jpg',
+    imagen: '/images/places/proyecto-cotahuasi.webp',
     tag: 'Eco-Aventura · Récord Mundial',
     pilares: [
       'Teleférico panorámico sobre Catarata de Sipia',
@@ -51,7 +51,7 @@ const regionalProjects = [
     provincia: 'Caylloma · San Antonio de Chuca',
     distancia: 'A 2.5 horas de Arequipa',
     desc: 'Impresionante caída de agua rodeada de gigantescas columnas de piedra talladas por la erosión eólica en la meseta andina.',
-    imagen: '/images/attractions/cataratas-pillones.jpg',
+    imagen: '/images/places/proyecto-pillones-imata.webp',
     tag: 'Eco-Turismo · Formaciones Líticas',
     pilares: [
       'Parador de carretera con calefacción y ropa térmica',
@@ -65,7 +65,7 @@ const regionalProjects = [
     provincia: 'Caravelí · Atiquipa',
     distancia: 'Km 603 Panamericana Sur',
     desc: 'Antiguo puerto Inca donde se extraían mariscos para el Inca en Cusco. Combinación única de costa pacífica y patrimonio Qhapaq Ñan.',
-    imagen: '/images/attractions/puerto-inka.jpg',
+    imagen: '/images/places/proyecto-puerto-inka.webp',
     tag: 'Qhapaq Ñan · Costa Inca',
     pilares: [
       'Puesta en valor del Camino Inca costero',
@@ -79,7 +79,8 @@ const regionalProjects = [
     provincia: 'Camaná e Islay',
     distancia: 'A 2 horas de Arequipa',
     desc: 'Bahías históricas con rica biodiversidad marina, acantilados escarpados y gastronomía de pesca fresca del día.',
-    imagen: '/images/attractions/quilca-matarani.jpg',
+    imagen: '/images/places/proyecto-quilca-matarani.webp',
+    imagen_url: '/images/places/proyecto-quilca-matarani.webp',
     tag: 'Biodiversidad Marina & Mar',
     pilares: [
       'Circuito náutico de lobos y pingüinos',
@@ -93,7 +94,7 @@ const regionalProjects = [
     provincia: 'Arequipa · San Juan de Tarucani',
     distancia: 'A 3 horas de Arequipa',
     desc: 'Santuario de flamencos y espejos de sal a más de 4,300 msnm a los pies del volcán Pichu Pichu.',
-    imagen: '/images/attractions/reserva-salinas.jpg',
+    imagen: '/images/places/proyecto-laguna-salinas.webp',
     tag: 'Reserva Nacional · Avistamiento',
     pilares: [
       'Miradores camuflados para observación de aves',
@@ -107,7 +108,7 @@ const regionalProjects = [
     provincia: 'Caylloma · Tisco',
     distancia: 'A 5 horas de Arequipa',
     desc: 'Paisaje surrealista de torres rocosas blancas que simulan una ciudadela antigua petrificada bajo cielos andinos.',
-    imagen: '/images/attractions/choqolaqa.jpg',
+    imagen: '/images/places/proyecto-choqolaqa.webp',
     tag: 'Ciudadela Lítica · Astroturismo',
     pilares: [
       'Campamento fotográfico y nocturno',
@@ -121,7 +122,7 @@ const regionalProjects = [
     provincia: 'Arequipa · Polobaya',
     distancia: 'A 1.5 horas de Arequipa',
     desc: 'Hermoso espejo de agua rodeado de montañas ideal para la práctica de deportes náuticos ecológicos y picnics familiares.',
-    imagen: '/images/attractions/represa-uzuna.jpg',
+    imagen: '/images/places/proyecto-represa-uzuna.webp',
     tag: 'Ecoturismo Náutico · Campiña',
     pilares: [
       'Muelle deportivo para kayaks y paddle board',
@@ -135,7 +136,7 @@ const regionalProjects = [
     provincia: 'Uchumayo / Yura / Cerro Colorado',
     distancia: 'A 45 min del Centro',
     desc: 'Cañones serpenteantes de sillar blanco con petroglifos preincas y canteras vivas donde se extrae la piedra de Arequipa.',
-    imagen: '/correcion-imagenes/ruta-del-sillar.jpg',
+    imagen: '/images/places/proyecto-culebrillas-sillar.webp',
     tag: 'Sillar Volcánico · Geología Viva',
     pilares: [
       'Centro de interpretación interactivo del sillar',

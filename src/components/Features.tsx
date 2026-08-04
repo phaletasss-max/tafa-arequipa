@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Map, BarChart3, ClipboardList, ShieldCheck, Database, Globe } from 'lucide-react'
 
 const features = [
@@ -49,6 +50,7 @@ const features = [
 ]
 
 export default function Features() {
+  const { t } = useTranslation(['common'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -64,7 +66,7 @@ export default function Features() {
         >
           <div className="w-8 h-[2px] bg-tafa-volcán" />
           <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-volcán">
-            Servicios
+            {t('common:services')}
           </span>
         </motion.div>
 
@@ -75,7 +77,7 @@ export default function Features() {
           className="font-outfit text-[clamp(32px,4.5vw,56px)] font-medium leading-[1.1]
                      tracking-[-0.03em] text-tafa-text max-w-[700px] mb-5"
         >
-          Todo lo que Arequipa tiene,{' '}
+          {t('common:features_title_part1')}{' '}
           <span
             style={{
               background: 'linear-gradient(135deg, #c0392b, #e74c3c)',
@@ -84,7 +86,7 @@ export default function Features() {
               backgroundClip: 'text',
             }}
           >
-            en un solo lugar
+            {t('common:features_title_highlight')}
           </span>
         </motion.h2>
 
@@ -94,8 +96,7 @@ export default function Features() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-tafa-muted text-xl max-w-[520px] mb-20 leading-relaxed"
         >
-          TAFA centraliza seis pilares esenciales para hacer accesible
-          el ecosistema turístico de la Ciudad Blanca.
+          {t('common:features_description')}
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

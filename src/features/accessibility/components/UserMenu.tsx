@@ -1,4 +1,5 @@
 import { User, Settings } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface UserMenuProps {
   onOpenAuth?: () => void
@@ -6,6 +7,8 @@ interface UserMenuProps {
 }
 
 export default function UserMenu({ onOpenAuth, onOpenSettings }: UserMenuProps) {
+  const { t } = useTranslation('navigation')
+
   return (
     <div className="flex items-center gap-1.5">
       <button
@@ -15,7 +18,7 @@ export default function UserMenu({ onOpenAuth, onOpenSettings }: UserMenuProps) 
         className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-full px-3.5 py-1 font-semibold text-slate-200 transition-colors"
       >
         <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-        <span>Sign In</span>
+        <span>{t('sign_in')}</span>
       </button>
 
       <button
