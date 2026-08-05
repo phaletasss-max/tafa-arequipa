@@ -1,155 +1,157 @@
 import { useState, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { Compass, MapPin, ArrowUpRight, ShieldCheck, Sparkles, Eye, CheckCircle2 } from 'lucide-react'
 
-const regionalProjects = [
-  {
-    id: 'andagua',
-    nombre: 'Valle de los Volcanes de Andagua',
-    provincia: 'Castilla · Andagua',
-    distancia: 'A 7 horas de Arequipa',
-    desc: 'Campo volcánico fascinante único en Sudamérica con más de 80 conitos volcánicos extintos de baja altura (de 50 a 300 metros).',
-    imagen: '/images/projects/valle-andagua-project.webp',
-    tag: 'Geoparque UNESCO · Maravilla Geológica',
-    pilares: [
-      'Vuelos panorámicos sobre conos volcánicos',
-      'Miradores de cristal volados sobre lava',
-      'Observatorio domo de astroturismo',
-    ],
-  },
-  {
-    id: 'toromuerto',
-    nombre: 'Petroglifos de Toro Muerto y Valle de Majes',
-    provincia: 'Castilla · Corire',
-    distancia: 'A 3 horas de Arequipa',
-    desc: 'Uno de los campos de arte rupestre más extensos del mundo con más de 5,000 grabados en rocas volcánicas realizados por culturas preincas.',
-    imagen: '/images/projects/toro-muerto-project.webp',
-    tag: 'Arte Rupestre · Arqueología AR 3D',
-    pilares: [
-      'App de Realidad Aumentada 3D para grabados',
-      'Canotaje en río Majes y cuatrimotos',
-      'Hoteles boutique en bodegas pisqueras',
-    ],
-  },
-  {
-    id: 'cotahuasi',
-    nombre: 'Cañón del Cotahuasi',
-    provincia: 'La Unión · Cotahuasi',
-    distancia: 'A 9 horas de Arequipa',
-    desc: 'El cañón más profundo de la tierra (3,535 m). Un santuario virgen de cataratas como Sipia, bosques de puyas Raimondi y aguas termales de Luicho.',
-    imagen: '/images/projects/cotahuasi-project.webp',
-    tag: 'Eco-Aventura · Récord Mundial',
-    pilares: [
-      'Teleférico panorámico sobre Catarata de Sipia',
-      'Complejo termal y spa de lujo en Luicho',
-      'Vías de acceso rápido e infraestructura vial',
-    ],
-  },
-  {
-    id: 'imata',
-    nombre: 'Cataratas de Pillones y Imata',
-    provincia: 'Caylloma · San Antonio de Chuca',
-    distancia: 'A 2.5 horas de Arequipa',
-    desc: 'Impresionante caída de agua rodeada de gigantescas columnas de piedra talladas por la erosión eólica en la meseta andina.',
-    imagen: '/images/projects/pillones-project.webp',
-    tag: 'Eco-Turismo · Formaciones Líticas',
-    pilares: [
-      'Parador de carretera con calefacción y ropa térmica',
-      'Puentes colgantes y pasarelas fotogénicas',
-      'Ruta señalizada de trekking inclusivo',
-    ],
-  },
-  {
-    id: 'puerto-inka',
-    nombre: 'Puerto Inka y Quebrada de la Waca',
-    provincia: 'Caravelí · Atiquipa',
-    distancia: 'Km 603 Panamericana Sur',
-    desc: 'Antiguo puerto Inca donde se extraían mariscos para el Inca en Cusco. Combinación única de costa pacífica y patrimonio Qhapaq Ñan.',
-    imagen: '/images/projects/puerto-inka-project.webp',
-    tag: 'Qhapaq Ñan · Costa Inca',
-    pilares: [
-      'Puesta en valor del Camino Inca costero',
-      'Muelle para deportes náuticos y kayak',
-      'Ecolodges sostenibles frente al mar',
-    ],
-  },
-  {
-    id: 'quilca-matarani',
-    nombre: 'Caleta de Quilca y Puerto Matarani',
-    provincia: 'Camaná e Islay',
-    distancia: 'A 2 horas de Arequipa',
-    desc: 'Bahías históricas con rica biodiversidad marina, acantilados escarpados y gastronomía de pesca fresca del día.',
-    imagen: '/images/projects/quilca-matarani-project.webp',
-    imagen_url: '/images/projects/quilca-matarani-project.webp',
-    tag: 'Biodiversidad Marina & Mar',
-    pilares: [
-      'Circuito náutico de lobos y pingüinos',
-      'Boulevard gastronómico marino en muelle',
-      'Ruta guiada de buceo y kayak de cueva',
-    ],
-  },
-  {
-    id: 'salinas',
-    nombre: 'Laguna y Reserva de Salinas',
-    provincia: 'Arequipa · San Juan de Tarucani',
-    distancia: 'A 3 horas de Arequipa',
-    desc: 'Santuario de flamencos y espejos de sal a más de 4,300 msnm a los pies del volcán Pichu Pichu.',
-    imagen: '/images/projects/salinas-project.webp',
-    tag: 'Reserva Nacional · Avistamiento',
-    pilares: [
-      'Miradores camuflados para observación de aves',
-      'Glamping de montaña con domos solares',
-      'Autobús turístico con salidas fijas',
-    ],
-  },
-  {
-    id: 'choqolaqa',
-    nombre: 'Bosque de Piedras de Choqolaqa',
-    provincia: 'Caylloma · Tisco',
-    distancia: 'A 5 horas de Arequipa',
-    desc: 'Paisaje surrealista de torres rocosas blancas que simulan una ciudadela antigua petrificada bajo cielos andinos.',
-    imagen: '/images/projects/choqolaqa-project.webp',
-    tag: 'Ciudadela Lítica · Astroturismo',
-    pilares: [
-      'Campamento fotográfico y nocturno',
-      'Albergues comunales vivenciales en Tisco',
-      'Puntos de selfie y miradores integrados',
-    ],
-  },
-  {
-    id: 'uzuna',
-    nombre: 'Represa de San José de Uzuña',
-    provincia: 'Arequipa · Polobaya',
-    distancia: 'A 1.5 horas de Arequipa',
-    desc: 'Hermoso espejo de agua rodeado de montañas ideal para la práctica de deportes náuticos ecológicos y picnics familiares.',
-    imagen: '/images/projects/uzuna-project.webp',
-    tag: 'Ecoturismo Náutico · Campiña',
-    pilares: [
-      'Muelle deportivo para kayaks y paddle board',
-      'Zona de camping equipada con duchas solares',
-      'Patio gastronómico de trucha frita local',
-    ],
-  },
-  {
-    id: 'culebrillas-sillar',
-    nombre: 'Quebrada de Culebrillas y Canteras',
-    provincia: 'Uchumayo / Yura / Cerro Colorado',
-    distancia: 'A 45 min del Centro',
-    desc: 'Cañones serpenteantes de sillar blanco con petroglifos preincas y canteras vivas donde se extrae la piedra de Arequipa.',
-    imagen: '/images/projects/culebrillas-project.webp',
-    tag: 'Sillar Volcánico · Geología Viva',
-    pilares: [
-      'Centro de interpretación interactivo del sillar',
-      'Senderos nocturnos iluminados con proyectores',
-      'Talleres de esculpido en vivo para turistas',
-    ],
-  },
-]
-
 export default function UnexploredRoutes() {
+  const { t } = useTranslation(['sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [activeSpot, setActiveSpot] = useState<string | null>(null)
+
+  const regionalProjects = [
+    {
+      id: 'andagua',
+      nombre: t('sections:routes_andagua_nombre'),
+      provincia: t('sections:routes_andagua_provincia'),
+      distancia: t('sections:routes_andagua_distancia'),
+      desc: t('sections:routes_andagua_desc'),
+      imagen: '/images/projects/valle-andagua-project.webp',
+      tag: t('sections:routes_andagua_tag'),
+      pilares: [
+        t('sections:routes_andagua_pilar_1'),
+        t('sections:routes_andagua_pilar_2'),
+        t('sections:routes_andagua_pilar_3'),
+      ],
+    },
+    {
+      id: 'toromuerto',
+      nombre: t('sections:routes_toromuerto_nombre'),
+      provincia: t('sections:routes_toromuerto_provincia'),
+      distancia: t('sections:routes_toromuerto_distancia'),
+      desc: t('sections:routes_toromuerto_desc'),
+      imagen: '/images/projects/toro-muerto-project.webp',
+      tag: t('sections:routes_toromuerto_tag'),
+      pilares: [
+        t('sections:routes_toromuerto_pilar_1'),
+        t('sections:routes_toromuerto_pilar_2'),
+        t('sections:routes_toromuerto_pilar_3'),
+      ],
+    },
+    {
+      id: 'cotahuasi',
+      nombre: t('sections:routes_cotahuasi_nombre'),
+      provincia: t('sections:routes_cotahuasi_provincia'),
+      distancia: t('sections:routes_cotahuasi_distancia'),
+      desc: t('sections:routes_cotahuasi_desc'),
+      imagen: '/images/projects/cotahuasi-project.webp',
+      tag: t('sections:routes_cotahuasi_tag'),
+      pilares: [
+        t('sections:routes_cotahuasi_pilar_1'),
+        t('sections:routes_cotahuasi_pilar_2'),
+        t('sections:routes_cotahuasi_pilar_3'),
+      ],
+    },
+    {
+      id: 'imata',
+      nombre: t('sections:routes_imata_nombre'),
+      provincia: t('sections:routes_imata_provincia'),
+      distancia: t('sections:routes_imata_distancia'),
+      desc: t('sections:routes_imata_desc'),
+      imagen: '/images/projects/pillones-project.webp',
+      tag: t('sections:routes_imata_tag'),
+      pilares: [
+        t('sections:routes_imata_pilar_1'),
+        t('sections:routes_imata_pilar_2'),
+        t('sections:routes_imata_pilar_3'),
+      ],
+    },
+    {
+      id: 'puerto-inka',
+      nombre: t('sections:routes_puerto_inka_nombre'),
+      provincia: t('sections:routes_puerto_inka_provincia'),
+      distancia: t('sections:routes_puerto_inka_distancia'),
+      desc: t('sections:routes_puerto_inka_desc'),
+      imagen: '/images/projects/puerto-inka-project.webp',
+      tag: t('sections:routes_puerto_inka_tag'),
+      pilares: [
+        t('sections:routes_puerto_inka_pilar_1'),
+        t('sections:routes_puerto_inka_pilar_2'),
+        t('sections:routes_puerto_inka_pilar_3'),
+      ],
+    },
+    {
+      id: 'quilca-matarani',
+      nombre: t('sections:routes_quilca_matarani_nombre'),
+      provincia: t('sections:routes_quilca_matarani_provincia'),
+      distancia: t('sections:routes_quilca_matarani_distancia'),
+      desc: t('sections:routes_quilca_matarani_desc'),
+      imagen: '/images/projects/quilca-matarani-project.webp',
+      imagen_url: '/images/projects/quilca-matarani-project.webp',
+      tag: t('sections:routes_quilca_matarani_tag'),
+      pilares: [
+        t('sections:routes_quilca_matarani_pilar_1'),
+        t('sections:routes_quilca_matarani_pilar_2'),
+        t('sections:routes_quilca_matarani_pilar_3'),
+      ],
+    },
+    {
+      id: 'salinas',
+      nombre: t('sections:routes_salinas_nombre'),
+      provincia: t('sections:routes_salinas_provincia'),
+      distancia: t('sections:routes_salinas_distancia'),
+      desc: t('sections:routes_salinas_desc'),
+      imagen: '/images/projects/salinas-project.webp',
+      tag: t('sections:routes_salinas_tag'),
+      pilares: [
+        t('sections:routes_salinas_pilar_1'),
+        t('sections:routes_salinas_pilar_2'),
+        t('sections:routes_salinas_pilar_3'),
+      ],
+    },
+    {
+      id: 'choqolaqa',
+      nombre: t('sections:routes_choqolaqa_nombre'),
+      provincia: t('sections:routes_choqolaqa_provincia'),
+      distancia: t('sections:routes_choqolaqa_distancia'),
+      desc: t('sections:routes_choqolaqa_desc'),
+      imagen: '/images/projects/choqolaqa-project.webp',
+      tag: t('sections:routes_choqolaqa_tag'),
+      pilares: [
+        t('sections:routes_choqolaqa_pilar_1'),
+        t('sections:routes_choqolaqa_pilar_2'),
+        t('sections:routes_choqolaqa_pilar_3'),
+      ],
+    },
+    {
+      id: 'uzuna',
+      nombre: t('sections:routes_uzuna_nombre'),
+      provincia: t('sections:routes_uzuna_provincia'),
+      distancia: t('sections:routes_uzuna_distancia'),
+      desc: t('sections:routes_uzuna_desc'),
+      imagen: '/images/projects/uzuna-project.webp',
+      tag: t('sections:routes_uzuna_tag'),
+      pilares: [
+        t('sections:routes_uzuna_pilar_1'),
+        t('sections:routes_uzuna_pilar_2'),
+        t('sections:routes_uzuna_pilar_3'),
+      ],
+    },
+    {
+      id: 'culebrillas-sillar',
+      nombre: t('sections:routes_culebrillas_sillar_nombre'),
+      provincia: t('sections:routes_culebrillas_sillar_provincia'),
+      distancia: t('sections:routes_culebrillas_sillar_distancia'),
+      desc: t('sections:routes_culebrillas_sillar_desc'),
+      imagen: '/images/projects/culebrillas-project.webp',
+      tag: t('sections:routes_culebrillas_sillar_tag'),
+      pilares: [
+        t('sections:routes_culebrillas_sillar_pilar_1'),
+        t('sections:routes_culebrillas_sillar_pilar_2'),
+        t('sections:routes_culebrillas_sillar_pilar_3'),
+      ],
+    },
+  ]
 
   const selectedSpotData = regionalProjects.find(p => p.id === activeSpot)
 
@@ -166,7 +168,7 @@ export default function UnexploredRoutes() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4"
             >
-              <Compass className="w-3.5 h-3.5" /> 10 Proyectos Estratégicos · Innovación Regional Arequipa
+              <Compass className="w-3.5 h-3.5" /> {t('sections:routes_badge')}
             </motion.div>
 
             <motion.h2
@@ -175,7 +177,7 @@ export default function UnexploredRoutes() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="font-outfit text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight max-w-[650px]"
             >
-              Descubre las 10 Rutas e Innovaciones del Turismo Regional
+              {t('sections:routes_title')}
             </motion.h2>
           </div>
 
@@ -185,7 +187,7 @@ export default function UnexploredRoutes() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="text-gray-400 text-sm md:text-base max-w-[440px] leading-relaxed"
           >
-            Diversificamos la oferta turística de las 8 provincias con tecnología, astroturismo, teleféricos, ecoturismo marino y rutas sostenibles.
+            {t('sections:routes_subtitle')}
           </motion.p>
         </div>
 
@@ -239,13 +241,13 @@ export default function UnexploredRoutes() {
 
                 <div className="pt-3 border-t border-white/10 flex items-center justify-between">
                   <span className="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Proyecto TAFA 2026
+                    <ShieldCheck className="w-3.5 h-3.5" /> {t('sections:routes_project_badge')}
                   </span>
                   <button
                     onClick={() => setActiveSpot(spot.id)}
                     className="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
                   >
-                    Ver Plan <ArrowUpRight className="w-4 h-4" />
+                    {t('sections:routes_view_plan')} <ArrowUpRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -287,7 +289,7 @@ export default function UnexploredRoutes() {
 
               <div className="space-y-3 bg-white/5 p-5 rounded-2xl border border-white/10">
                 <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" /> Componentes Clave del Proyecto:
+                  <Sparkles className="w-4 h-4" /> {t('sections:routes_modal_components_title')}
                 </h4>
                 <ul className="space-y-2 text-xs text-gray-200">
                   {selectedSpotData.pilares.map((p, i) => (
@@ -304,7 +306,7 @@ export default function UnexploredRoutes() {
                   onClick={() => setActiveSpot(null)}
                   className="bg-emerald-500 hover:bg-emerald-600 text-black text-xs uppercase font-bold tracking-wider px-6 py-3 rounded-full transition-all"
                 >
-                  Cerrar Vista
+                  {t('sections:routes_modal_close')}
                 </button>
               </div>
             </motion.div>
@@ -315,4 +317,3 @@ export default function UnexploredRoutes() {
     </section>
   )
 }
-

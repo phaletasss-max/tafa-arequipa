@@ -4,37 +4,37 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Puzzle, WifiOff, TrendingDown } from 'lucide-react'
 
-const problems = [
-  {
-    icon: AlertTriangle,
-    color: '#c0392b',
-    title: 'Información fragmentada',
-    desc: 'Los datos turísticos están dispersos en múltiples organismos sin integración entre sí.',
-  },
-  {
-    icon: WifiOff,
-    color: '#2980b9',
-    title: 'Sin presencia digital',
-    desc: 'La gastronomía local, picanterías y chicherías no tienen visibilidad digital estructurada.',
-  },
-  {
-    icon: Puzzle,
-    color: '#27ae60',
-    title: 'Ecosistema atomizado',
-    desc: 'MYPEs sin capacidad individual de crear paquetes integrados ni invertir en canales digitales.',
-  },
-  {
-    icon: TrendingDown,
-    color: '#f39c12',
-    title: 'Turista poco informado',
-    desc: 'El visitante siente que lo vio todo en 1 día porque la oferta visible se concentra solo en el centro.',
-  },
-]
-
 export default function Problem() {
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common', 'sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  const problems = [
+    {
+      icon: AlertTriangle,
+      color: '#c0392b',
+      title: t('sections:problem_card_fragmentada_title'),
+      desc: t('sections:problem_card_fragmentada_desc'),
+    },
+    {
+      icon: WifiOff,
+      color: '#2980b9',
+      title: t('sections:problem_card_sin_digital_title'),
+      desc: t('sections:problem_card_sin_digital_desc'),
+    },
+    {
+      icon: Puzzle,
+      color: '#27ae60',
+      title: t('sections:problem_card_atomizado_title'),
+      desc: t('sections:problem_card_atomizado_desc'),
+    },
+    {
+      icon: TrendingDown,
+      color: '#f39c12',
+      title: t('sections:problem_card_turista_title'),
+      desc: t('sections:problem_card_turista_desc'),
+    },
+  ]
 
   return (
     <section id="problema" className="bg-[#0a0a0a] text-white py-32 px-6" ref={ref}>

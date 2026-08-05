@@ -4,30 +4,30 @@ import { useTranslation } from 'react-i18next'
 import { Database, ShieldCheck, Cpu, Users } from 'lucide-react'
 
 export default function AboutProject() {
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common', 'sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   const pillars = [
     {
       icon: Database,
-      title: 'Centralización de Datos',
-      desc: 'Integramos inventarios oficiales de MINCETUR, DIRCETUR Arequipa, AUTOCOLCA e INEI en un único repositorio sin duplicidad.',
+      title: t('sections:about_pillar_data_title'),
+      desc: t('sections:about_pillar_data_desc'),
     },
     {
       icon: ShieldCheck,
-      title: 'Información Verificada',
-      desc: 'Diferenciamos fuentes gubernamentales verificadas de aportes comunitarios con moderación transparente y RLS por rol.',
+      title: t('sections:about_pillar_verified_title'),
+      desc: t('sections:about_pillar_verified_desc'),
     },
     {
       icon: Cpu,
-      title: 'Tecnología Inteligente',
-      desc: 'Infraestructura modular preparada para PostGIS, mapas de calor, analítica de flujo turístico e integración con Supabase.',
+      title: t('sections:about_pillar_tech_title'),
+      desc: t('sections:about_pillar_tech_desc'),
     },
     {
       icon: Users,
-      title: 'Protección de Datos (Ley 29733)',
-      desc: 'Toda encuesta e indicador recolectado se anonimiza automáticamente respetando la privacidad del turista.',
+      title: t('sections:about_pillar_privacy_title'),
+      desc: t('sections:about_pillar_privacy_desc'),
     },
   ]
 

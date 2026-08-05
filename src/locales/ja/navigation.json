@@ -1,10 +1,13 @@
 {
+  "about": "概要",
+  "account": "観光客アカウント",
+  "admin": "管理",
   "explore": "探索する",
   "map": "地図",
-  "about": "概要",
-  "admin": "管理",
-  "sign_in": "ログイン",
-  "account": "観光客アカウント",
+  "mype": "MYPEエコシステム",
+  "routes": "未開拓のルート",
   "settings": "設定",
+  "sign_in": "ログイン",
+  "sign_up": "新規登録",
   "survey": "アンケート"
 }

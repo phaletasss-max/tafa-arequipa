@@ -1,13 +1,14 @@
 {
-  "screen_reader_prompt": "스크린 리더를 사용 중이신가요? 보조 내비게이션 모드를 활성화하세요.",
-  "language_label": "언어 선택",
-  "font_size_normal": "텍스트: A",
-  "font_size_large": "텍스트: A+",
-  "font_size_extralarge": "텍스트: A++",
-  "contrast_normal": "대비",
-  "contrast_high": "고대비",
   "audio_route_start": "음성 투어",
   "audio_route_stop": "음성 중지",
-  "visual_mode": "시각 모드",
-  "sign_language": "수어"
+  "contrast_high": "고대비",
+  "contrast_normal": "대비",
+  "font_size_extralarge": "텍스트: A++",
+  "font_size_large": "텍스트: A+",
+  "font_size_normal": "텍스트: A",
+  "language_label": "언어 선택",
+  "screen_reader_prompt": "스크린 리더를 사용 중이신가요? 보조 내비게이션 모드를 활성화하세요.",
+  "sign_language": "수어",
+  "skip_to_content": "본문 바로가기",
+  "visual_mode": "시각 모드"
 }

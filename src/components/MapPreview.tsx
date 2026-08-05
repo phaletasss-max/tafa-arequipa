@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
 import { MapPin, Layers, Navigation, ExternalLink, Utensils } from 'lucide-react'
 import { getLugaresSupabase, getGastronomiaSupabase } from '@/services/supabaseService'
 import { MOCK_LUGARES, MOCK_GASTRONOMIA } from '@/data/mockData'
@@ -17,6 +18,7 @@ function getPosition(lat?: number, lng?: number) {
 }
 
 export default function MapPreview() {
+  const { t } = useTranslation(['sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -83,7 +85,7 @@ export default function MapPreview() {
             >
               <div className="w-8 h-[2px] bg-tafa-cielo" />
               <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-cielo">
-                Mapa Interactivo
+                {t('sections:map_badge')}
               </span>
             </motion.div>
 
@@ -94,8 +96,8 @@ export default function MapPreview() {
               className="font-outfit text-[clamp(28px,3.5vw,48px)] font-medium text-white
                          leading-[1.1] tracking-[-0.03em] mb-5"
             >
-              Toda Arequipa,{' '}
-              <span className="text-tafa-cielo">mapeada y accesible</span>
+              {t('sections:map_title_part1')}{' '}
+              <span className="text-tafa-cielo">{t('sections:map_title_highlight')}</span>
             </motion.h2>
 
             <motion.p
@@ -104,10 +106,7 @@ export default function MapPreview() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-[#8b949e] text-[17px] leading-relaxed mb-10 max-w-[440px]"
             >
-              Atractivos y picanterías geolocalizados del inventario oficial en Supabase.
-              La vista cubre el área metropolitana de Arequipa; los destinos provinciales
-              (Colca, Cotahuasi, Toro Muerto, Salinas, Mejía) se recorren más abajo.
-              Haz clic en cualquier pin para ver los detalles.
+              {t('sections:map_description')}
             </motion.p>
 
             {/* Layer toggles */}
@@ -129,10 +128,10 @@ export default function MapPreview() {
               >
                 <span className="flex items-center gap-3">
                   <Layers className="w-4 h-4 text-tafa-volcán" aria-hidden="true" />
-                  <span className="font-medium text-sm">Atractivos Turísticos</span>
+                  <span className="font-medium text-sm">{t('sections:map_layer_places')}</span>
                 </span>
                 <span className="text-xs bg-white/10 px-2.5 py-0.5 rounded-full font-semibold">
-                  {lugaresEnMapa.length} pins
+                  {t('sections:map_layer_places_count', { count: lugaresEnMapa.length })}
                 </span>
               </button>
 
@@ -146,10 +145,10 @@ export default function MapPreview() {
               >
                 <span className="flex items-center gap-3">
                   <Layers className="w-4 h-4 text-tafa-oro" aria-hidden="true" />
-                  <span className="font-medium text-sm">Picanterías & Gastronomía</span>
+                  <span className="font-medium text-sm">{t('sections:map_layer_food')}</span>
                 </span>
                 <span className="text-xs bg-white/10 px-2.5 py-0.5 rounded-full font-semibold">
-                  {gastroEnMapa.length} registros
+                  {t('sections:map_layer_food_count', { count: gastroEnMapa.length })}
                 </span>
               </button>
             </motion.div>
@@ -170,7 +169,7 @@ export default function MapPreview() {
                            hover:bg-[#2471a3] active:scale-95 no-underline"
               >
                 <Navigation className="w-4 h-4" />
-                Ver en Google Maps
+                {t('sections:map_cta_google')}
                 <ExternalLink className="w-3.5 h-3.5 ml-1 opacity-70" />
               </a>
 
@@ -182,7 +181,7 @@ export default function MapPreview() {
                 <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${
                   dataSource === 'supabase' ? 'bg-green-400' : 'bg-amber-400'
                 }`} />
-                {dataSource === 'supabase' ? 'Conectado Supabase' : 'Datos Inventario Local'}
+                {dataSource === 'supabase' ? t('sections:map_source_remote') : t('sections:map_source_local')}
               </div>
             </motion.div>
           </div>
@@ -263,18 +262,18 @@ export default function MapPreview() {
               {/* Label flotante */}
               <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-md border border-white/15 rounded-full px-3.5 py-1.5 z-20">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-white text-xs font-semibold">Arequipa · Perú</span>
+                <span className="text-white text-xs font-semibold">{t('sections:map_location')}</span>
               </div>
 
               {/* Leyenda */}
               <div className="absolute top-4 right-4 flex flex-col gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-3 z-20">
                 <div className="flex items-center gap-2 text-[10px] text-white/80">
                   <div className="w-3 h-3 rounded-full bg-tafa-volcán border border-white/60" />
-                  Atractivos
+                  {t('sections:map_legend_places')}
                 </div>
                 <div className="flex items-center gap-2 text-[10px] text-white/80">
                   <div className="w-3 h-3 rounded-full bg-tafa-oro border border-white/60" />
-                  Gastronomía
+                  {t('sections:map_legend_food')}
                 </div>
               </div>
 
@@ -305,9 +304,9 @@ export default function MapPreview() {
               {[
                 // Se cuenta lo que realmente se dibuja: el recorte del mapa deja
                 // fuera los destinos provinciales.
-                { label: 'Atractivos en el mapa', value: `${lugaresEnMapa.length}`, color: '#c0392b' },
-                { label: 'Picanterías', value: `${gastro.length}+`, color: '#f39c12' },
-                { label: 'Distritos', value: '23', color: '#2980b9' },
+                { label: t('sections:map_stat_places'), value: `${lugaresEnMapa.length}`, color: '#c0392b' },
+                { label: t('sections:map_stat_food'), value: `${gastro.length}+`, color: '#f39c12' },
+                { label: t('sections:map_stat_districts'), value: '23', color: '#2980b9' },
               ].map(({ label, value, color }) => (
                 <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-3 text-center">
                   <div className="font-outfit font-bold text-lg" style={{ color }}>{value}</div>

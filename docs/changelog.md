@@ -25,6 +25,17 @@ pendientes. Detalle y estado en `docs/plan-de-trabajo.md`.
 
 ### Añadido
 
+- **Internacionalización real de los 10 idiomas.** Se extrajeron 247 literales
+  fijos en español de los 9 componentes montados a un namespace nuevo
+  `sections`. La auditoría de paridad destapó además un hueco preexistente:
+  `forms` y `modals` solo existían en español e inglés, y a `hero` le faltaban
+  25 claves en seis idiomas —o sea, seis de los diez idiomas mostraban el
+  formulario de postulación, los modales y el hero en español—. Ahora son
+  **4.360 cadenas con paridad exacta en 10 idiomas × 8 namespaces**, sin
+  placeholders perdidos y sin alterar ninguna traducción previa.
+- `database/migrations/005_coordenadas_aliados.sql`: coordenadas de 23 de los 28
+  aliados, geocodificadas contra OpenStreetMap. Los 5 no resueltos quedan en
+  NULL a propósito y se siguen aproximando por distrito.
 - **FASE 6 — recomendaciones por cercanía real** (`features/partners/geo.ts`).
   Sustituye la lista fija de cuatro sitios. Como los aliados no tienen
   coordenadas en la base, la posición se resuelve en dos niveles: coordenadas

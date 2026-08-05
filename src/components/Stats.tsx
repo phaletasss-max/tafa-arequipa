@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useInView, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { getLugaresSupabase, getGastronomiaSupabase } from '@/services/supabaseService'
 import { fetchAlliedBusinesses } from '@/features/partners/partnersService'
 import { MOCK_STATS } from '@/data/mockData'
@@ -20,6 +21,7 @@ function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {
 }
 
 export default function Stats() {
+  const { t } = useTranslation(['sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -60,29 +62,29 @@ export default function Stats() {
     {
       value: totales.lugares,
       suffix: '+',
-      label: 'Atractivos Turísticos',
-      sub: 'inventario cargado en Supabase',
+      label: t('sections:stats_atractivos_label'),
+      sub: t('sections:stats_atractivos_sub'),
       color: '#c0392b',
     },
     {
       value: totales.verificados,
       suffix: '',
-      label: 'Verificados Oficialmente',
-      sub: 'MINCETUR / DIRCETUR / AUTOCOLCA',
+      label: t('sections:stats_verificados_label'),
+      sub: t('sections:stats_verificados_sub'),
       color: '#27ae60',
     },
     {
       value: totales.gastronomia,
       suffix: '+',
-      label: 'Picanterías & Restaurantes',
-      sub: 'patrimonio gastronómico regional',
+      label: t('sections:stats_gastronomia_label'),
+      sub: t('sections:stats_gastronomia_sub'),
       color: '#f39c12',
     },
     {
       value: aliados ?? 0,
       suffix: '',
-      label: 'Negocios Aliados MYPE',
-      sub: 'con QR activo en el directorio',
+      label: t('sections:stats_aliados_label'),
+      sub: t('sections:stats_aliados_sub'),
       color: '#2980b9',
     },
   ]
@@ -99,7 +101,7 @@ export default function Stats() {
         >
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           <span className="text-sm font-semibold uppercase tracking-[0.12em] text-tafa-muted">
-            Métricas del Ecosistema TAFA
+            {t('sections:stats_label')}
           </span>
         </motion.div>
 
@@ -109,8 +111,7 @@ export default function Stats() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center text-gray-600 text-xs mb-14 max-w-[480px] mx-auto"
         >
-          Conteos en vivo del catálogo TAFA en Supabase. Las fuentes institucionales
-          (MINCETUR, DIRCETUR, AUTOCOLCA) alimentan el inventario de atractivos.
+          {t('sections:stats_description')}
         </motion.p>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -141,8 +142,8 @@ export default function Stats() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-12 text-center text-[11px] text-tafa-muted"
         >
-          Los datos de encuestas y perfiles se tratan conforme a la
-          {' '}<strong className="text-white/70">Ley N° 29733</strong> de Protección de Datos Personales.
+          {t('sections:stats_privacidad_part1')}
+          {' '}<strong className="text-white/70">{t('sections:stats_privacidad_ley')}</strong> {t('sections:stats_privacidad_part2')}
         </motion.p>
 
       </div>

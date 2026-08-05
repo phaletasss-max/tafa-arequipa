@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ShieldAlert, PhoneCall, CloudSun, AlertTriangle, X, ChevronRight } from 'lucide-react'
 
 export default function EmergencyBanner() {
+  const { t } = useTranslation(['sections'])
   const [showModal, setShowModal] = useState(false)
   const [dismissed, setDismissed] = useState(false)
 
@@ -16,10 +18,10 @@ export default function EmergencyBanner() {
           <div className="flex items-center gap-2.5">
             <span className="flex h-2 w-2 rounded-full bg-red-500 animate-ping" />
             <span className="font-bold text-red-400 uppercase tracking-wider flex items-center gap-1">
-              <ShieldAlert className="w-3.5 h-3.5" /> Seguridad & Prevención Turística:
+              <ShieldAlert className="w-3.5 h-3.5" /> {t('sections:safety_banner_label')}
             </span>
             <span className="text-gray-200 hidden sm:inline">
-              Arequipa 2,335 msnm · Radiación UV Alta · Usa transporte empadronado por DIRCETUR
+              {t('sections:safety_banner_info')}
             </span>
           </div>
 
@@ -29,14 +31,14 @@ export default function EmergencyBanner() {
               className="bg-red-600/80 hover:bg-red-600 text-white font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 transition-all shadow-sm"
             >
               <PhoneCall className="w-3 h-3" />
-              <span>Teléfonos de Emergencia / POLTUR</span>
+              <span>{t('sections:safety_banner_cta')}</span>
               <ChevronRight className="w-3 h-3" />
             </button>
 
             <button
               onClick={() => setDismissed(true)}
               className="text-gray-400 hover:text-white p-1"
-              title="Cerrar aviso"
+              title={t('sections:safety_banner_close')}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -62,23 +64,23 @@ export default function EmergencyBanner() {
               </div>
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-red-400">
-                  Asistencia Oficial 24/7
+                  {t('sections:safety_modal_badge')}
                 </span>
                 <h3 className="text-2xl font-bold font-outfit text-white">
-                  Policía de Turismo & Emergencias
+                  {t('sections:safety_modal_title')}
                 </h3>
               </div>
             </div>
 
             <p className="text-gray-300 text-xs leading-relaxed mb-6 bg-red-950/40 p-3.5 rounded-2xl border border-red-900/30">
-              Servicios oficiales de auxilio y atención inmediata al visitante en la Región Arequipa.
+              {t('sections:safety_modal_intro')}
             </p>
 
             <div className="space-y-3 mb-6">
               <div className="bg-white/5 border border-white/10 p-3.5 rounded-2xl flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-sm text-white">Policía de Turismo (POLTUR Arequipa)</div>
-                  <div className="text-xs text-gray-400">Atención bilingüe para denuncias y resguardo</div>
+                  <div className="font-bold text-sm text-white">{t('sections:safety_contact_poltur_name')}</div>
+                  <div className="text-xs text-gray-400">{t('sections:safety_contact_poltur_desc')}</div>
                 </div>
                 <a
                   href="tel:054201258"
@@ -90,8 +92,8 @@ export default function EmergencyBanner() {
 
               <div className="bg-white/5 border border-white/10 p-3.5 rounded-2xl flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-sm text-white">Emergencias Policía Nacional (PNP)</div>
-                  <div className="text-xs text-gray-400">Central de emergencias gratuitas a nivel nacional</div>
+                  <div className="font-bold text-sm text-white">{t('sections:safety_contact_pnp_name')}</div>
+                  <div className="text-xs text-gray-400">{t('sections:safety_contact_pnp_desc')}</div>
                 </div>
                 <a
                   href="tel:105"
@@ -103,8 +105,8 @@ export default function EmergencyBanner() {
 
               <div className="bg-white/5 border border-white/10 p-3.5 rounded-2xl flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-sm text-white">Hospital Regional Goyeneche</div>
-                  <div className="text-xs text-gray-400">Atención médica de urgencia en el Cercado</div>
+                  <div className="font-bold text-sm text-white">{t('sections:safety_contact_hospital_name')}</div>
+                  <div className="text-xs text-gray-400">{t('sections:safety_contact_hospital_desc')}</div>
                 </div>
                 <a
                   href="tel:054232200"
@@ -119,8 +121,8 @@ export default function EmergencyBanner() {
             <div className="bg-yellow-500/10 border border-yellow-500/30 p-3.5 rounded-2xl text-xs text-yellow-200 flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
               <div>
-                <strong className="block text-yellow-300 mb-0.5">Recomendaciones para Soroche (Mal de Altura):</strong>
-                Reposa tus primeras 4 horas, bebe mate de coca y mantén hidratación constante antes de ascender al Colca (3,630 msnm).
+                <strong className="block text-yellow-300 mb-0.5">{t('sections:safety_soroche_title')}</strong>
+                {t('sections:safety_soroche_text')}
               </div>
             </div>
           </div>

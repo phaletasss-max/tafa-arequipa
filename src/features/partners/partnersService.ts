@@ -2,11 +2,12 @@ import { supabase } from '@/lib/supabase'
 import {
   CATEGORY_LABELS,
   GUILDS,
+  type DistanceKind,
   type NearbyPartner,
   type PartnerCategory,
   type PartnerEntry,
 } from './types'
-import { centroidFromAddress, formatDistance, haversineKm } from './geo'
+import { centroidFromAddress, formatDistanceValue, haversineKm } from './geo'
 
 /**
  * Clasificación curada por slug.
@@ -181,16 +182,17 @@ export async function fetchNearby(originSlug: string, limit = 3): Promise<Nearby
         // La distancia es aproximada si cualquiera de los dos extremos lo es.
         const approx = Boolean(origin!.coordsApproximate || p.coordsApproximate)
 
-        // Dos entidades del mismo distrito sin coordenadas reales comparten
-        // centroide y darían "0 m", que leería como "misma puerta". En ese caso
-        // se nombra el distrito en vez de fingir una precisión que no existe.
-        // (El distrito ya se muestra en la tarjeta, así que no se repite aquí.)
-        const distanceLabel =
-          approx && distanceKm < 0.15
-            ? 'Mismo distrito'
-            : formatDistance(distanceKm, approx)
+        // Dos casos en los que dar metros exactos mentiría:
+        //  · coordenadas reales que coinciden, porque la geocodificación
+        //    devuelve el eje de la calle y no el número del local;
+        //  · dos entidades del mismo distrito estimadas desde el mismo
+        //    centroide, que darían "0 m" leído como "misma puerta".
+        let distanceKind: DistanceKind
+        if (!approx && distanceKm < 0.03) distanceKind = 'very-close'
+        else if (approx && distanceKm < 0.15) distanceKind = 'same-district'
+        else distanceKind = approx ? 'approx' : 'exact'
 
-        return { ...p, distanceKm, distanceLabel }
+        return { ...p, distanceKm, distanceKind, distanceValue: formatDistanceValue(distanceKm) }
       })
       .sort((a, b) => a.distanceKm - b.distanceKm)
 
@@ -206,7 +208,8 @@ export async function fetchNearby(originSlug: string, limit = 3): Promise<Nearby
   return pool.slice(0, limit).map(p => ({
     ...p,
     distanceKm: Number.POSITIVE_INFINITY,
-    distanceLabel: p.district,
+    distanceKind: 'unknown' as DistanceKind,
+    distanceValue: '',
   }))
 }
 

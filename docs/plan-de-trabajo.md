@@ -257,13 +257,76 @@ sostenía:
 
 ---
 
+### PT-11 — Internacionalización real de los 10 idiomas · ✅ COMPLETADO
+
+El sitio ofrecía 10 idiomas, pero buena parte se mostraba en español.
+
+**Lo que se hizo**:
+1. Se extrajeron **247 literales** fijos en español de los 9 componentes montados
+   (`Problem`, `Stats`, `AboutProject`, `EmergencyBanner`, `UnexploredRoutes`,
+   `JoinEcosystem`, `PartnersDirectory`, `QRCheckInPage`, `MapPreview`) a un
+   namespace nuevo `sections`, registrado en `src/lib/i18n.ts`.
+2. Al auditar la paridad apareció un hueco **preexistente**: `forms` (62 claves)
+   y `modals` (39) solo existían en español e inglés, y a `hero` le faltaban 25
+   claves en seis idiomas. Es decir, seis de los diez idiomas mostraban el
+   formulario de postulación, los modales y el hero en español.
+3. Se completaron los 8 namespaces en los 10 idiomas.
+
+**Resultado verificado**: 4.360 cadenas, paridad exacta de claves en
+10 idiomas × 8 namespaces, sin valores vacíos, sin placeholders `{{...}}`
+perdidos y **sin una sola traducción preexistente alterada** (332 claves nuevas,
+0 modificadas).
+
+Dos detalles de diseño que se corrigieron de paso:
+
+- **La distancia se traducía en la capa de datos.** `partnersService` devolvía
+  «aprox. 2.1 km» ya en español, donde no se conoce el idioma activo. Ahora
+  devuelve `distanceKind` + magnitud, y el componente elige la frase.
+- **La categoría del aliado venía en español desde el servicio.** Ahora se
+  traduce desde su clave de enum.
+
+---
+
+### PT-12 — Coordenadas reales de los aliados · 🟡 LISTO PARA APLICAR
+
+`businesses.lat/lng` estaba vacío, así que las distancias hacia aliados se
+estimaban desde el centroide de su distrito.
+
+Se geocodificaron las 28 direcciones contra **Nominatim / OpenStreetMap**
+(© OpenStreetMap contributors, ODbL 1.0), respetando su límite de 1 petición por
+segundo: **23 resueltas**. El resultado está en
+`database/migrations/005_coordenadas_aliados.sql`.
+
+Nada se inventó:
+
+- Los **5 que Nominatim no resolvió** se dejan en NULL a propósito, y el
+  frontend los seguirá aproximando por distrito.
+- **`colonial-tours` quedó comentado**: la dirección dice Cercado pero el
+  resultado cae en Magisterial Amauta. Conviene confirmarlo antes de aplicarlo.
+- Son coordenadas **a nivel de calle**, no puntos de campo. Dos locales de la
+  misma calle reciben el mismo punto; por eso `fetchNearby` marca esos casos
+  como `very-close` («A pocos pasos») en vez de anunciar «0 m».
+
+---
+
 ## 3. Orden sugerido de lo que queda
 
 1. **PT-06 + PT-07** — aplicar las migraciones 003 y 004 en el panel de Supabase.
    Es lo único bloqueante y solo lo puede hacer el titular del proyecto.
-2. Poblar `businesses.lat/lng` para que las distancias de PT-08 dejen de ser
-   aproximadas en los aliados.
-3. Traducir a los 10 idiomas las secciones recién montadas, hoy en español fijo.
+2. **PT-12** — aplicar la migración 005 (coordenadas) y completar a mano los
+   6 aliados que quedaron sin punto.
+3. Revisar en un navegador real la animación de aparición al hacer scroll: no
+   se pudo verificar automáticamente (ver §4).
+
+## 4. Lo que no pudo verificarse
+
+La animación de entrada de las secciones (`useInView` de Framer Motion) no se
+pudo comprobar: el panel de navegador usado quedó en `visibilityState: hidden`,
+y en ese estado ni `IntersectionObserver` ni `requestAnimationFrame` se ejecutan
+—se confirmó con un observer propio, que tampoco disparó—. Afecta por igual a
+secciones que ya estaban en producción antes de estos cambios, así que **no se
+tocó ese código**: parecía roto por el entorno de medición, no por el producto.
+Conviene una mirada rápida en un navegador normal.
 
 ## 4. Regla de cierre (heredada del roadmap)
 

@@ -6,7 +6,7 @@ import { Building2, ShieldCheck, Award, ArrowUpRight, Send, CheckCircle2, FileTe
 import { supabase } from '@/lib/supabase'
 
 export default function JoinEcosystem() {
-  const { t } = useTranslation(['forms', 'modals', 'common'])
+  const { t } = useTranslation(['forms', 'modals', 'common', 'sections'])
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -48,10 +48,7 @@ export default function JoinEcosystem() {
       // registrado. Ahora un fallo se dice.
       if (error) {
         console.warn('Postulación no guardada:', error.message)
-        setSubmitError(
-          'No pudimos registrar tu postulación. Verifica tu conexión e inténtalo de nuevo, ' +
-          'o escríbenos por WhatsApp al +51 921 378 349.',
-        )
+        setSubmitError(t('sections:eco_submit_error'))
         return
       }
 
@@ -59,10 +56,7 @@ export default function JoinEcosystem() {
       setSubmitted(true)
     } catch (err) {
       console.warn('Postulación no guardada:', err)
-      setSubmitError(
-        'No pudimos registrar tu postulación. Verifica tu conexión e inténtalo de nuevo, ' +
-        'o escríbenos por WhatsApp al +51 921 378 349.',
-      )
+      setSubmitError(t('sections:eco_submit_error'))
     } finally {
       setLoading(false)
     }
@@ -80,7 +74,7 @@ export default function JoinEcosystem() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 bg-tafa-volcán/20 text-tafa-volcán border border-tafa-volcán/40 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-4"
           >
-            <Building2 className="w-4 h-4" /> Join TAFA Ecosystem
+            <Building2 className="w-4 h-4" /> {t('sections:eco_badge')}
           </motion.div>
 
           <motion.h2
@@ -89,7 +83,7 @@ export default function JoinEcosystem() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-outfit text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight mb-6"
           >
-            Forma parte del Ecosistema Nacional de Turismo Inteligente
+            {t('sections:eco_title')}
           </motion.h2>
 
           <motion.p
@@ -98,7 +92,7 @@ export default function JoinEcosystem() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-300 text-base md:text-lg leading-relaxed"
           >
-            Conectamos restaurantes tradicionales, hospedajes, artesanos y operadores turísticos formalizados con miles de visitantes a través del programa Discover More.
+            {t('sections:eco_subtitle')}
           </motion.p>
         </div>
 
@@ -108,9 +102,9 @@ export default function JoinEcosystem() {
             <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center text-xl font-bold">
               <Award className="w-6 h-6" />
             </div>
-            <h3 className="font-outfit text-xl font-bold text-white">Programa Discover More</h3>
+            <h3 className="font-outfit text-xl font-bold text-white">{t('sections:eco_card_discover_title')}</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              Integración al catálogo oficial de recompensas del TAFA Explorer Pass. Los turistas desbloquean experiencias exclusivas al visitar tu establecimiento.
+              {t('sections:eco_card_discover_desc')}
             </p>
           </div>
 
@@ -118,9 +112,9 @@ export default function JoinEcosystem() {
             <div className="w-12 h-12 rounded-2xl bg-tafa-volcán/20 text-tafa-volcán flex items-center justify-center text-xl font-bold">
               <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="font-outfit text-xl font-bold text-white">Estándares DIRCETUR</h3>
+            <h3 className="font-outfit text-xl font-bold text-white">{t('sections:eco_card_standards_title')}</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              Verificación oficial de la oferta con distintivo regional DIRCETUR / MINCETUR, garantizando la calidad y reputación de todo el ecosistema.
+              {t('sections:eco_card_standards_desc')}
             </p>
           </div>
 
@@ -128,9 +122,9 @@ export default function JoinEcosystem() {
             <div className="w-12 h-12 rounded-2xl bg-emerald-400/20 text-emerald-400 flex items-center justify-center text-xl font-bold">
               <CheckSquare className="w-6 h-6" />
             </div>
-            <h3 className="font-outfit text-xl font-bold text-white">Requisitos de Ingreso</h3>
+            <h3 className="font-outfit text-xl font-bold text-white">{t('sections:eco_card_requirements_title')}</h3>
             <p className="text-gray-300 text-xs leading-relaxed">
-              RUC activo y habido, licencia municipal de funcionamiento vigente y compromiso con infraestructura accesible WCAG 2.1.
+              {t('sections:eco_card_requirements_desc')}
             </p>
           </div>
         </div>
@@ -222,11 +216,11 @@ export default function JoinEcosystem() {
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white outline-none cursor-pointer"
                   >
-                    <option value="Picantería Tradicional">Picantería Tradicional</option>
-                    <option value="Restaurante Gourmet / Fusión">Restaurante Gourmet / Fusión</option>
-                    <option value="Taller de Artesanías & Sillar">Taller de Artesanías & Sillar</option>
-                    <option value="Hospedaje / Hotel Boutique">Hospedaje / Hotel Boutique</option>
-                    <option value="Operador Turístico / Guías">Operador Turístico / Guías</option>
+                    <option value="Picantería Tradicional">{t('sections:eco_category_picanteria')}</option>
+                    <option value="Restaurante Gourmet / Fusión">{t('sections:eco_category_gourmet')}</option>
+                    <option value="Taller de Artesanías & Sillar">{t('sections:eco_category_artesanias')}</option>
+                    <option value="Hospedaje / Hotel Boutique">{t('sections:eco_category_hospedaje')}</option>
+                    <option value="Operador Turístico / Guías">{t('sections:eco_category_operador')}</option>
                   </select>
                 </div>
 

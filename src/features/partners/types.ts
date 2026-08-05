@@ -32,11 +32,28 @@ export interface PartnerEntry {
   coordsApproximate?: boolean
 }
 
+/**
+ * Cómo debe presentarse la distancia. La capa de datos no traduce: decide el
+ * caso y el componente elige la frase en el idioma activo.
+ */
+export type DistanceKind =
+  /** Distancia calculada entre coordenadas reales de la base. */
+  | 'exact'
+  /** Alguno de los dos extremos se estimó desde el centroide de su distrito. */
+  | 'approx'
+  /** Ambos comparten centroide de distrito: dar metros sería fingir precisión. */
+  | 'same-district'
+  /** Prácticamente en el mismo punto (misma calle en la geocodificación). */
+  | 'very-close'
+  /** No hubo forma de situarlos; solo se conoce el distrito. */
+  | 'unknown'
+
 /** Aliado con la distancia calculada respecto a un punto de origen. */
 export interface NearbyPartner extends PartnerEntry {
   distanceKm: number
-  /** Distancia ya formateada para mostrar (p. ej. "a 450 m", "aprox. 2.1 km"). */
-  distanceLabel: string
+  distanceKind: DistanceKind
+  /** Magnitud ya formateada, sin preposición: "450 m", "2.1 km". */
+  distanceValue: string
 }
 
 export const CATEGORY_LABELS: Record<PartnerCategory, string> = {

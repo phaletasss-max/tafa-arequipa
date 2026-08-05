@@ -102,8 +102,11 @@ export function centroidFromAddress(address: string | null | undefined): Coords 
   return null
 }
 
-/** Formatea la distancia para mostrarla al turista. */
-export function formatDistance(km: number, approximate: boolean): string {
-  const value = km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`
-  return approximate ? `aprox. ${value}` : `a ${value}`
+/**
+ * Formatea solo la magnitud ("450 m", "2.1 km").
+ * El texto que la acompaña ("a…", "aprox…") lo pone el componente vía i18n:
+ * aquí no se puede traducir porque la capa de datos no conoce el idioma.
+ */
+export function formatDistanceValue(km: number): string {
+  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`
 }

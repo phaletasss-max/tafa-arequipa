@@ -81,8 +81,26 @@ Detalle en `docs/accessibility.md`.
 ## 6. Internacionalización
 
 `i18next` con detección de idioma del navegador y carga diferida por namespace
-(`common`, `navigation`, `hero`, `explorer`, `forms`, `modals`, `accessibility`)
 en 10 idiomas: es, en, fr, pt, de, it, ja, ko, nl, zh.
+
+| Namespace | Cubre |
+|-----------|-------|
+| `common` | Etiquetas transversales, pie de página, diagnóstico y proyecto |
+| `navigation` | Barra superior |
+| `hero` | Capítulos del hero cinematográfico |
+| `explorer` | Explorador de atractivos |
+| `forms` | Formularios (postulación de aliados, encuesta) |
+| `modals` | Diálogos |
+| `accessibility` | Controles de accesibilidad |
+| `sections` | Secciones de la landing y páginas QR (PT-11) |
+
+**Paridad**: los 8 namespaces existen completos en los 10 idiomas (4.360
+cadenas). El español es la fuente de verdad y el respaldo: si faltara una clave,
+`loadNamespaceResources` cae a `es` en vez de mostrar la clave cruda.
+
+**Regla**: el texto se traduce en la capa de presentación, no en la de datos.
+Los servicios devuelven claves o discriminantes (`distanceKind`, `category`) y
+el componente elige la frase — un servicio no conoce el idioma activo.
 
 ## 7. Configuración
 
@@ -106,10 +124,10 @@ y React la rechaza; por eso las aperturas van envueltas en `startTransition`.
 
 - Las políticas RLS de la migración 004 siguen sin aplicarse: hasta entonces los
   perfiles son legibles y modificables con la clave anónima pública (PT-06).
-- `businesses.lat/lng` está vacío, así que las distancias hacia aliados se
-  calculan desde el centroide de su distrito y se muestran como aproximadas.
-- Las secciones montadas en PT-09 (`Problem`, `Stats`, `AboutProject`,
-  `UnexploredRoutes`, `JoinEcosystem`, `EmergencyBanner`) están en español fijo,
-  mientras el resto del sitio usa i18next en 10 idiomas.
+- `businesses.lat/lng` sigue vacío en la base hasta aplicar la migración 005; con
+  ella, 23 de 28 aliados pasan a tener coordenadas reales y 5 se seguirán
+  aproximando por distrito.
 - `services/api.ts` apunta a un backend Express (`/api/...`) que no existe en
   este repositorio. `SurveyModal` depende de él y por eso no está montado.
+- No se pudo verificar la animación de entrada al hacer scroll (`useInView`):
+  ver `plan-de-trabajo.md` §4.

@@ -1,13 +1,14 @@
 {
-  "screen_reader_prompt": "スクリーンリーダーをお使いですか？支援ナビゲーションモードを有効にしてください。",
-  "language_label": "言語を選択",
-  "font_size_normal": "文字サイズ: A",
-  "font_size_large": "文字サイズ: A+",
-  "font_size_extralarge": "文字サイズ: A++",
-  "contrast_normal": "コントラスト",
-  "contrast_high": "高コントラスト",
   "audio_route_start": "音声ガイド",
   "audio_route_stop": "音声を停止",
-  "visual_mode": "視覚モード",
-  "sign_language": "手話"
+  "contrast_high": "高コントラスト",
+  "contrast_normal": "コントラスト",
+  "font_size_extralarge": "文字サイズ: A++",
+  "font_size_large": "文字サイズ: A+",
+  "font_size_normal": "文字サイズ: A",
+  "language_label": "言語を選択",
+  "screen_reader_prompt": "スクリーンリーダーをお使いですか？支援ナビゲーションモードを有効にしてください。",
+  "sign_language": "手話",
+  "skip_to_content": "メインコンテンツへスキップ",
+  "visual_mode": "視覚モード"
 }
