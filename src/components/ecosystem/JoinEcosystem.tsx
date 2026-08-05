@@ -20,6 +20,7 @@ export default function JoinEcosystem() {
   const [hasDircetur, setHasDircetur] = useState(true)
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -42,10 +43,26 @@ export default function JoinEcosystem() {
         },
       ])
 
-      if (error) console.warn('Advertencia postulación Supabase:', error.message)
+      // Antes se mostraba la pantalla de éxito aunque el insert fallara, así
+      // que las postulaciones se perdían en silencio y el aliado creía haberse
+      // registrado. Ahora un fallo se dice.
+      if (error) {
+        console.warn('Postulación no guardada:', error.message)
+        setSubmitError(
+          'No pudimos registrar tu postulación. Verifica tu conexión e inténtalo de nuevo, ' +
+          'o escríbenos por WhatsApp al +51 921 378 349.',
+        )
+        return
+      }
+
+      setSubmitError(null)
       setSubmitted(true)
     } catch (err) {
-      setSubmitted(true)
+      console.warn('Postulación no guardada:', err)
+      setSubmitError(
+        'No pudimos registrar tu postulación. Verifica tu conexión e inténtalo de nuevo, ' +
+        'o escríbenos por WhatsApp al +51 921 378 349.',
+      )
     } finally {
       setLoading(false)
     }
@@ -132,6 +149,14 @@ export default function JoinEcosystem() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">
+              {submitError && (
+                <div
+                  role="alert"
+                  className="bg-red-500/15 border border-red-500/40 rounded-2xl p-4 text-xs text-red-300"
+                >
+                  {submitError}
+                </div>
+              )}
               <div className="border-b border-white/10 pb-4 mb-6">
                 <h3 className="text-2xl font-bold font-outfit text-white">{t('forms:ecosystem_form_title')}</h3>
                 <p className="text-xs text-gray-400 mt-1">{t('forms:ecosystem_form_body')}</p>

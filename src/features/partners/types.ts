@@ -25,6 +25,18 @@ export interface PartnerEntry {
   points: number
   /** Gremio o asociación que agrupa al aliado (roadmap FASE 5). */
   guild?: string
+  /** Latitud: de la base si existe, si no del centroide del distrito. */
+  lat?: number
+  lng?: number
+  /** true si `lat`/`lng` provienen del centroide del distrito y no de la base. */
+  coordsApproximate?: boolean
+}
+
+/** Aliado con la distancia calculada respecto a un punto de origen. */
+export interface NearbyPartner extends PartnerEntry {
+  distanceKm: number
+  /** Distancia ya formateada para mostrar (p. ej. "a 450 m", "aprox. 2.1 km"). */
+  distanceLabel: string
 }
 
 export const CATEGORY_LABELS: Record<PartnerCategory, string> = {

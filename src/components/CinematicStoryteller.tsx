@@ -150,7 +150,7 @@ export default function CinematicStoryteller() {
                 <ArrowRight className="w-4 h-4" />
               </button>
               <button
-                onClick={() => scrollToSection('ia-conversacion')}
+                onClick={() => window.dispatchEvent(new Event('tafa_open_ai'))}
                 className="bg-white/15 hover:bg-white/25 text-white border border-white/25 text-xs uppercase font-semibold tracking-wider px-6 py-3.5 rounded-full backdrop-blur-md transition-all"
               >
                 {t('common:ai_assistant')}

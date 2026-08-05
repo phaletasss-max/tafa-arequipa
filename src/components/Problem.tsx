@@ -37,7 +37,7 @@ export default function Problem() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section id="acerca" className="bg-[#0a0a0a] text-white py-32 px-6" ref={ref}>
+    <section id="problema" className="bg-[#0a0a0a] text-white py-32 px-6" ref={ref}>
       <div className="max-w-[1200px] mx-auto">
 
         {/* Label */}

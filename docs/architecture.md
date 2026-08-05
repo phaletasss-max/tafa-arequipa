@@ -27,13 +27,11 @@ de Supabase** — ver `docs/database-schema.md` §4 y el PT-06 del plan de traba
 src/
 ├── App.tsx                 Router + modales globales
 ├── components/             Secciones de la landing
-│   ├── ai/                 Asistente turístico (Gemini) y conversación directa
+│   ├── ai/                 Asistente turístico (Gemini)
 │   ├── auth/               AuthModal
-│   ├── accessibility/      Barra heredada
-│   ├── ecosystem/          Adhesión de aliados
+│   ├── ecosystem/          Adhesión de aliados (JoinEcosystem)
 │   ├── rewards/            Pase Explorador TAFA
-│   ├── safety/             Banner de emergencia
-│   └── stories/            Relatos visuales históricos
+│   └── safety/             Banner de seguridad al visitante
 ├── features/               Módulos por dominio
 │   ├── accessibility/      Contexto WCAG, síntesis de voz, modo no visual
 │   ├── partners/           FASE 5 — directorio de aliados
@@ -63,7 +61,7 @@ crecer el producto.
 |----------|----------------|
 | `checkInService` | Resolución de slug, ficha del QR y registro de visita |
 | `authService` | Sesión del turista (hoy en `localStorage` — ver PT-06) |
-| `partnersService` | Directorio de aliados desde `qr_landing` |
+| `partnersService` | Directorio de aliados desde `qr_landing` y cercanía (`fetchNearby`) |
 | `tafaMasterService` | Catálogos maestros y recompensas |
 | `placeTranslationService` | Traducción de atractivos a 10 idiomas |
 | `supabaseService` | Consultas genéricas |
@@ -92,10 +90,26 @@ Variables `VITE_*` (ver `.env.example`). Se incrustan en el bundle del navegador
 nunca deben contener secretos de servidor. La `service_role` key de Supabase no
 debe aparecer jamás en este repositorio.
 
-## 8. Deuda técnica conocida
+## 8. Carga diferida
 
-- Bundle principal ≈ 744 kB (sobre el umbral de 500 kB): falta code-splitting por
-  ruta y hay 16 componentes construidos pero nunca montados (PT-09).
+El bundle principal quedó en ~113 kB (antes 744 kB):
+
+- `React.lazy` para la ruta `/qr/:slug`, para las secciones por debajo del primer
+  pantallazo y para los modales, que solo se montan al abrirse.
+- `manualChunks` en `vite.config.ts` separa las librerías (React, Framer Motion,
+  Supabase, i18next, lucide) para que se cacheen entre despliegues.
+
+Abrir un modal diferido desde un clic es una actualización síncrona que suspende,
+y React la rechaza; por eso las aperturas van envueltas en `startTransition`.
+
+## 9. Deuda técnica conocida
+
 - Las políticas RLS de la migración 004 siguen sin aplicarse: hasta entonces los
   perfiles son legibles y modificables con la clave anónima pública (PT-06).
-- Las recomendaciones cercanas son estáticas pese a existir coordenadas (PT-08).
+- `businesses.lat/lng` está vacío, así que las distancias hacia aliados se
+  calculan desde el centroide de su distrito y se muestran como aproximadas.
+- Las secciones montadas en PT-09 (`Problem`, `Stats`, `AboutProject`,
+  `UnexploredRoutes`, `JoinEcosystem`, `EmergencyBanner`) están en español fijo,
+  mientras el resto del sitio usa i18next en 10 idiomas.
+- `services/api.ts` apunta a un backend Express (`/api/...`) que no existe en
+  este repositorio. `SurveyModal` depende de él y por eso no está montado.

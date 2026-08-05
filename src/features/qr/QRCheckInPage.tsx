@@ -14,45 +14,11 @@ import {
   clearPendingQRCheckIn,
   type TAFAProfile,
 } from '@/services/authService'
-import { getQRLanding, registerQRCheckIn, type QRLandingData, type CheckInResult } from '@/services/checkInService'
+import { getQRLanding, registerQRCheckIn, resolveSlug, type QRLandingData, type CheckInResult } from '@/services/checkInService'
+import { fetchNearby } from '@/features/partners/partnersService'
+import type { NearbyPartner } from '@/features/partners/types'
 
 type PageState = 'loading' | 'not_found' | 'ready' | 'checking_in' | 'checked_in' | 'error'
-
-// Catálogo de Recomendaciones Cercanas
-const NEARBY_RECOMMENDATIONS = [
-  {
-    slug: 'aliado-la-nueva-palomino',
-    name: 'Picantería La Nueva Palomino',
-    category: 'Gastronomía Arequipeña',
-    district: 'Yanahuara',
-    points: '+50 PTS',
-    image: '/images/places/mirador-yanahuara.jpg',
-  },
-  {
-    slug: 'aliado-sol-de-mayo',
-    name: 'Restaurante Sol de Mayo (1903)',
-    category: 'Picantería Tradicional',
-    district: 'Yanahuara',
-    points: '+50 PTS',
-    image: '/images/places/plaza-de-armas.jpg',
-  },
-  {
-    slug: 'ruta-del-sillar-anashuayco',
-    name: 'Canteras de Añashuayco — Ruta del Sillar',
-    category: 'Artesanía en Sillar',
-    district: 'Cerro Colorado',
-    points: '+50 PTS',
-    image: '/images/places/ruta-sillar.jpg',
-  },
-  {
-    slug: 'monasterio-de-santa-catalina',
-    name: 'Monasterio de Santa Catalina',
-    category: 'Patrimonio Histórico',
-    district: 'Cercado',
-    points: '+50 PTS',
-    image: '/images/places/monasterio-santa-catalina.webp',
-  },
-]
 
 export default function QRCheckInPage() {
   const { slug = '' } = useParams<{ slug: string }>()
@@ -72,6 +38,7 @@ export default function QRCheckInPage() {
   const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
   const [reviewSubmitted, setReviewSubmitted] = useState(false)
   const [scanTimestamp] = useState<number>(() => Date.now())
+  const [nearby, setNearby] = useState<NearbyPartner[]>([])
 
   const performCheckIn = useCallback(async (currentProfile: TAFAProfile, qrSlug: string) => {
     setPageState('checking_in')
@@ -108,6 +75,16 @@ export default function QRCheckInPage() {
       setLanding(data)
       setPageState('ready')
     })
+  }, [slug])
+
+  // FASE 6 — recomendaciones ordenadas por distancia real al sitio escaneado.
+  useEffect(() => {
+    if (!slug) return
+    let cancelled = false
+    fetchNearby(resolveSlug(slug), 3).then(list => {
+      if (!cancelled) setNearby(list)
+    })
+    return () => { cancelled = true }
   }, [slug])
 
   useEffect(() => {
@@ -169,7 +146,6 @@ export default function QRCheckInPage() {
   const description = isPlace ? landing!.place_description : landing!.business_description
   const address = isPlace ? landing!.place_address : landing!.business_address
   const category = isPlace ? landing!.place_category : landing!.business_category
-  const nearby = NEARBY_RECOMMENDATIONS.filter(r => r.slug !== slug).slice(0, 3)
 
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
   const isReviewExpired = Date.now() - scanTimestamp > SEVEN_DAYS_MS
@@ -458,31 +434,40 @@ export default function QRCheckInPage() {
               <span className="text-xs text-gray-400">Arequipa Tradicional</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {nearby.map((rec) => (
-                <Link
-                  key={rec.slug}
-                  to={`/qr/${rec.slug}`}
-                  className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tafa-volcán/50 rounded-2xl p-4 transition-all no-underline flex flex-col justify-between"
-                >
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
-                      {rec.category}
-                    </span>
-                    <h4 className="text-xs font-bold text-white group-hover:text-tafa-volcán transition-colors line-clamp-2">
-                      {rec.name}
-                    </h4>
-                    <p className="text-[11px] text-gray-400 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-tafa-volcán" /> {rec.district}
-                    </p>
-                  </div>
-                  <div className="pt-3 text-[10px] font-bold text-emerald-400 flex items-center justify-between border-t border-white/10 mt-3">
-                    <span>Ver info & QR</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">{rec.points}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            {nearby.length === 0 ? (
+              <p className="text-gray-400 text-xs" role="status">
+                Buscando lugares y aliados cercanos…
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {nearby.map((rec) => (
+                  <Link
+                    key={rec.slug}
+                    to={`/qr/${rec.slug}`}
+                    className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tafa-volcán/50 rounded-2xl p-4 transition-all no-underline flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
+                        {rec.categoryLabel}
+                      </span>
+                      <h4 className="text-xs font-bold text-white group-hover:text-tafa-volcán transition-colors line-clamp-2">
+                        {rec.name}
+                      </h4>
+                      <p className="text-[11px] text-gray-400 flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-tafa-volcán" aria-hidden="true" />
+                        {rec.district}
+                      </p>
+                    </div>
+                    <div className="pt-3 text-[10px] font-bold text-emerald-400 flex items-center justify-between border-t border-white/10 mt-3">
+                      <span className="text-gray-300">{rec.distanceLabel}</span>
+                      <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">
+                        +{rec.points} PTS
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
       </main>

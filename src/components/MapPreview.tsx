@@ -104,8 +104,10 @@ export default function MapPreview() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-[#8b949e] text-[17px] leading-relaxed mb-10 max-w-[440px]"
             >
-              Visualiza todos los atractivos y picanterías geolocalizadas desde el inventario
-              oficial Supabase. Haz clic en cualquier pin para ver los detalles.
+              Atractivos y picanterías geolocalizados del inventario oficial en Supabase.
+              La vista cubre el área metropolitana de Arequipa; los destinos provinciales
+              (Colca, Cotahuasi, Toro Muerto, Salinas, Mejía) se recorren más abajo.
+              Haz clic en cualquier pin para ver los detalles.
             </motion.p>
 
             {/* Layer toggles */}
@@ -115,35 +117,41 @@ export default function MapPreview() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="space-y-3 mb-10"
             >
-              <div
+              {/* Botones reales, no divs: los toggles deben ser alcanzables por
+                  teclado y anunciar su estado a un lector de pantalla. */}
+              <button
+                type="button"
                 onClick={() => setShowLugares(!showLugares)}
-                className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all ${
+                aria-pressed={showLugares}
+                className={`w-full flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   showLugares ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/40'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <Layers className="w-4 h-4 text-tafa-volcán" />
+                <span className="flex items-center gap-3">
+                  <Layers className="w-4 h-4 text-tafa-volcán" aria-hidden="true" />
                   <span className="font-medium text-sm">Atractivos Turísticos</span>
-                </div>
+                </span>
                 <span className="text-xs bg-white/10 px-2.5 py-0.5 rounded-full font-semibold">
                   {lugaresEnMapa.length} pins
                 </span>
-              </div>
+              </button>
 
-              <div
+              <button
+                type="button"
                 onClick={() => setShowGastro(!showGastro)}
-                className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all ${
+                aria-pressed={showGastro}
+                className={`w-full flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition-all text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
                   showGastro ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/40'
                 }`}
               >
-                <div className="flex items-center gap-3">
-                  <Layers className="w-4 h-4 text-tafa-oro" />
+                <span className="flex items-center gap-3">
+                  <Layers className="w-4 h-4 text-tafa-oro" aria-hidden="true" />
                   <span className="font-medium text-sm">Picanterías & Gastronomía</span>
-                </div>
+                </span>
                 <span className="text-xs bg-white/10 px-2.5 py-0.5 rounded-full font-semibold">
                   {gastroEnMapa.length} registros
                 </span>
-              </div>
+              </button>
             </motion.div>
 
             <motion.div
@@ -295,7 +303,9 @@ export default function MapPreview() {
             {/* Stats debajo del mapa */}
             <div className="mt-4 grid grid-cols-3 gap-3">
               {[
-                { label: 'Atractivos', value: `${lugares.length}+`, color: '#c0392b' },
+                // Se cuenta lo que realmente se dibuja: el recorte del mapa deja
+                // fuera los destinos provinciales.
+                { label: 'Atractivos en el mapa', value: `${lugaresEnMapa.length}`, color: '#c0392b' },
                 { label: 'Picanterías', value: `${gastro.length}+`, color: '#f39c12' },
                 { label: 'Distritos', value: '23', color: '#2980b9' },
               ].map(({ label, value, color }) => (

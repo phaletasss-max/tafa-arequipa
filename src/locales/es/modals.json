@@ -1,5 +1,7 @@
 {
-  "ai_welcome_message": "Bienvenido al asistente TAFA. Puedo ayudarte a planificar tu visita a Arequipa, encontrar rutas accesibles, gastronomia y gestionar reservas. ¿Que deseas saber?",
+  "ecosystem_success_title": "Postulación recibida",
+  "ecosystem_success_body": "Tu solicitud quedó registrada en el ecosistema TAFA. El equipo de DIRCETUR Arequipa validará tu RUC y tu registro, y te contactaremos al correo indicado.",
+  "ai_welcome_message":"Bienvenido al asistente TAFA. Puedo ayudarte a planificar tu visita a Arequipa, encontrar rutas accesibles, gastronomia y gestionar reservas. ¿Que deseas saber?",
   "ai_assistant_title": "Asistente AI de TAFA Arequipa",
   "ai_chat_title": "TAFA AI",
   "ai_chat_subtitle": "Asistente turístico inteligente",

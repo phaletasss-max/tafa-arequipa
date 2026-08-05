@@ -1,5 +1,12 @@
 import { supabase } from '@/lib/supabase'
-import { CATEGORY_LABELS, GUILDS, type PartnerCategory, type PartnerEntry } from './types'
+import {
+  CATEGORY_LABELS,
+  GUILDS,
+  type NearbyPartner,
+  type PartnerCategory,
+  type PartnerEntry,
+} from './types'
+import { centroidFromAddress, formatDistance, haversineKm } from './geo'
 
 /**
  * Clasificación curada por slug.
@@ -51,8 +58,12 @@ interface QRLandingRow {
   is_active: boolean
   place_name?: string | null
   place_address?: string | null
+  place_lat?: number | null
+  place_lng?: number | null
   business_name?: string | null
   business_address?: string | null
+  business_lat?: number | null
+  business_lng?: number | null
 }
 
 function toPartnerEntry(row: QRLandingRow): PartnerEntry {
@@ -61,6 +72,15 @@ function toPartnerEntry(row: QRLandingRow): PartnerEntry {
     ? 'atractivo'
     : CATEGORY_BY_SLUG[row.slug] ?? 'restaurante'
   const address = (isPlace ? row.place_address : row.business_address) ?? 'Arequipa, Perú'
+
+  // Los atractivos traen coordenadas reales; los negocios aliados las tienen en
+  // NULL en la base MVP, así que se deducen del distrito de su dirección.
+  const rawLat = isPlace ? row.place_lat : row.business_lat
+  const rawLng = isPlace ? row.place_lng : row.business_lng
+  const hasRealCoords = typeof rawLat === 'number' && typeof rawLng === 'number'
+  const coords = hasRealCoords
+    ? { lat: rawLat as number, lng: rawLng as number, approximate: false }
+    : centroidFromAddress(address)
 
   return {
     slug: row.slug,
@@ -72,6 +92,9 @@ function toPartnerEntry(row: QRLandingRow): PartnerEntry {
     address,
     points: row.effective_points ?? 50,
     guild: GUILDS[category],
+    lat: coords?.lat,
+    lng: coords?.lng,
+    coordsApproximate: coords?.approximate,
   }
 }
 
@@ -105,10 +128,12 @@ const FALLBACK_PARTNERS: PartnerEntry[] = (
  * Nunca lanza: si Supabase falla, entrega el catálogo de respaldo.
  */
 export async function fetchPartners(): Promise<PartnerEntry[]> {
+  // Los campos se enumeran en línea (no como constante) para que supabase-js
+  // conserve la inferencia de tipos sobre el literal.
   const { data, error } = await supabase
     .from('qr_landing')
     .select(
-      'slug, entity_type, effective_points, is_active, place_name, place_address, business_name, business_address',
+      'slug, entity_type, effective_points, is_active, place_name, place_address, place_lat, place_lng, business_name, business_address, business_lat, business_lng',
     )
     .eq('is_active', true)
     .order('entity_type', { ascending: true })
@@ -125,6 +150,64 @@ export async function fetchPartners(): Promise<PartnerEntry[]> {
 export async function fetchAlliedBusinesses(): Promise<PartnerEntry[]> {
   const all = await fetchPartners()
   return all.filter(p => p.entityType === 'business')
+}
+
+/**
+ * FASE 6 — Lugares y aliados más cercanos al slug indicado, ordenados por
+ * distancia real.
+ *
+ * Si ni el origen ni los candidatos tienen posición resoluble, se degrada a
+ * coincidencia por distrito y, en último término, a los primeros del catálogo:
+ * la sección nunca queda vacía.
+ *
+ * @param originSlug slug canónico del sitio escaneado
+ * @param limit      número máximo de recomendaciones
+ */
+export async function fetchNearby(originSlug: string, limit = 3): Promise<NearbyPartner[]> {
+  const all = await fetchPartners()
+  const origin = all.find(p => p.slug === originSlug)
+  const candidates = all.filter(p => p.slug !== originSlug)
+
+  const originHasCoords = typeof origin?.lat === 'number' && typeof origin?.lng === 'number'
+
+  if (originHasCoords) {
+    const withDistance = candidates
+      .filter(p => typeof p.lat === 'number' && typeof p.lng === 'number')
+      .map(p => {
+        const distanceKm = haversineKm(
+          { lat: origin!.lat as number, lng: origin!.lng as number },
+          { lat: p.lat as number, lng: p.lng as number },
+        )
+        // La distancia es aproximada si cualquiera de los dos extremos lo es.
+        const approx = Boolean(origin!.coordsApproximate || p.coordsApproximate)
+
+        // Dos entidades del mismo distrito sin coordenadas reales comparten
+        // centroide y darían "0 m", que leería como "misma puerta". En ese caso
+        // se nombra el distrito en vez de fingir una precisión que no existe.
+        // (El distrito ya se muestra en la tarjeta, así que no se repite aquí.)
+        const distanceLabel =
+          approx && distanceKm < 0.15
+            ? 'Mismo distrito'
+            : formatDistance(distanceKm, approx)
+
+        return { ...p, distanceKm, distanceLabel }
+      })
+      .sort((a, b) => a.distanceKm - b.distanceKm)
+
+    if (withDistance.length) return withDistance.slice(0, limit)
+  }
+
+  // Sin posición utilizable: se prioriza el mismo distrito.
+  const sameDistrict = candidates.filter(
+    p => origin && p.district.toLowerCase() === origin.district.toLowerCase(),
+  )
+  const pool = sameDistrict.length ? sameDistrict : candidates
+
+  return pool.slice(0, limit).map(p => ({
+    ...p,
+    distanceKm: Number.POSITIVE_INFINITY,
+    distanceLabel: p.district,
+  }))
 }
 
 export { FALLBACK_PARTNERS }

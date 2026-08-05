@@ -163,7 +163,7 @@ el diseño del formulario y el flujo de check-in tras escanear.
 
 ---
 
-### PT-07 — Aplicar `recompensas_catalogo` · 🟡 PENDIENTE
+### PT-07 — Aplicar `recompensas_catalogo` · 🔴 BLOQUEADO — falta acceso Supabase
 
 `tafaMasterService.getRecompensasCatalogo()` consulta una tabla inexistente;
 PostgREST responde `PGRST205` en cada carga y el catálogo cae siempre al respaldo
@@ -171,32 +171,99 @@ hardcodeado.
 
 `database/migrations/003_recompensas_catalogo.sql` crea la tabla, la siembra con
 aliados reales y la deja pública de solo lectura. **Es segura de aplicar ya** (solo
-agrega). Requiere acceso al panel Supabase del proyecto.
+agrega).
+
+> ⛔ **Bloqueante de acceso.** El proyecto `qorubtwxncubeyqttemn` no pertenece a
+> la cuenta Supabase disponible en el entorno de desarrollo: la API de gestión
+> responde `403`. Las migraciones **003 y 004 solo puede aplicarlas el titular
+> del proyecto** desde el SQL Editor del panel de Supabase. Ambos archivos están
+> listos para pegarse y ejecutarse tal cual.
 
 ---
 
-### PT-08 — FASE 6: recomendaciones cercanas reales · 🟡 PENDIENTE
+### PT-08 — FASE 6: recomendaciones cercanas reales · ✅ COMPLETADO
 
-Hoy `NEARBY_RECOMMENDATIONS` es una lista fija de cuatro sitios, igual para todos
-los QR. El roadmap pide proximidad real. `qr_landing` ya expone `place_lat/lng` y
-`business_lat/lng`: calcular distancia y ordenar por cercanía.
+`NEARBY_RECOMMENDATIONS` era una lista fija de cuatro sitios, idéntica para todos
+los QR. Ahora se calcula la distancia real y se ordena por cercanía.
+
+**El obstáculo**: los 30 atractivos tienen `place_lat`/`place_lng`, pero los 28
+negocios aliados los tienen en NULL. Como el caso más frecuente es escanear el QR
+de una picantería, ordenar solo por coordenadas habría dejado sin recomendaciones
+justo al escenario principal. La posición se resuelve en dos niveles
+(`src/features/partners/geo.ts`):
+
+1. Coordenadas reales de la base, cuando existen.
+2. Centroide del distrito deducido de la dirección, marcado como aproximado.
+
+Las distancias del nivel 2 se rotulan «aprox.», y dos entidades del mismo
+distrito muestran «Mismo distrito» en vez de un engañoso «0 m».
+
+Verificado: desde la Plaza de Armas, la Catedral aparece **a 34 m** y la Iglesia
+de la Compañía **a 131 m**, que es la geografía real del centro histórico.
 
 ---
 
-### PT-09 — Decidir el destino de los componentes huérfanos · 🟡 PENDIENTE
+### PT-09 — Componentes huérfanos y peso del bundle · ✅ COMPLETADO
 
-Los 16 componentes de PT-03 pesan en el bundle (`index.js` ≈ 744 kB, sobre el
-límite recomendado de 500 kB). Montar los que aporten o eliminarlos, y aplicar
-code-splitting por ruta.
+Auditados 18 componentes. **9 eliminados** (~1.700 líneas) y **6 secciones
+montadas**; `Footer` se mantiene.
+
+| Eliminados | Motivo |
+|---|---|
+| `Hero`, `ScrollyDestinations`, `HistoricVisualStories` | Duplicaban el hero cinematográfico ya montado |
+| `Features`, `CTA` | Copy de pitch cuyas claves i18n no existen; `id="explorar"` colisionaba con `Highlights` |
+| `Institutions` | El pie ya lista las mismas instituciones, con enlaces reales |
+| `QRModal` | Mock superado por `QRCheckInPage` + `qr_landing` |
+| `DirectAIConversation` | Chat simulado, con coincidencias en inglés sobre un sitio en español; duplicaba `TouristAIAssistant` |
+| `AccessibilityBar` | Versión anterior de `AccessibilitySettings`; competiría por el mismo DOM que `AccessibilityContext` |
+
+Montados: `MapPreview`, `UnexploredRoutes`, `Stats`, `Problem`, `AboutProject`,
+`JoinEcosystem` y el banner `EmergencyBanner`. Con ello **los enlaces `#mapa`,
+`#inexplorada`, `#sobre-proyecto` y `#ecosistema` del pie dejan de estar rotos**;
+`nav_qr`, que apuntaba a `#`, ahora lleva al directorio de aliados.
+
+**Peso del bundle**: 744 kB → **113 kB** el fragmento principal. Se logró con
+`React.lazy` por ruta, sección y modal, más `manualChunks` para las librerías
+(React, Framer Motion, Supabase, i18next, lucide), que ahora se cachean entre
+despliegues. Desapareció el aviso de «chunks larger than 500 kB».
+
+**No se montó `SurveyModal`** pese a estar terminado: envía a `/api/encuestas`,
+un backend Express que no existe en este repositorio. Montarlo habría añadido
+otro formulario que falla en silencio. Queda en el repo, listo para cuando las
+encuestas vivan en Supabase.
 
 ---
 
-## 3. Orden sugerido
+### PT-10 — Correcciones de integridad detectadas al montar · ✅ COMPLETADO
 
-1. **PT-07** — aplicar migración 003 (rápido, sin riesgo, quita un error recurrente).
-2. **PT-06** — Supabase Auth + RLS. Bloquea cualquier uso real con turistas.
-3. **PT-08** — recomendaciones por cercanía.
-4. **PT-09** — limpieza de bundle.
+Al mover secciones a producción aparecieron afirmaciones que el código no
+sostenía:
+
+- **`Stats` publicaba métricas inventadas.** «Satisfacción Turística» salía de
+  `MOCK_STATS.avg_satisfaccion`, un valor fijo que nunca se actualizaba, rotulado
+  como «promedio encuestas»; y «Protección de Datos 100 %» no es una medición.
+  Se retiraron ambas: quedan cuatro conteos reales y el cumplimiento de la
+  Ley 29733 como nota, no como cifra.
+- **`supabaseService` consultaba tablas inexistentes.** `lugares_turisticos` y
+  `gastronomia` devolvían 404 en cada carga; las reales son `places` y
+  `businesses`. Corregido: ya no hay peticiones fallidas.
+- **`JoinEcosystem` daba «postulación recibida» aunque el `insert` fallara**, y
+  las solicitudes se perdían en silencio. Ahora un fallo se informa.
+- **`AboutProject` enlazaba a `http://localhost:3000/admin.html`** y `/api/health`
+  — dos enlaces muertos en producción. Banner retirado.
+- **`MapPreview`**: los toggles de capa eran `div onClick`, inalcanzables por
+  teclado; ahora son `button` con `aria-pressed`. El contador decía
+  «{total} atractivos» cuando el recorte del mapa deja fuera los provinciales.
+
+---
+
+## 3. Orden sugerido de lo que queda
+
+1. **PT-06 + PT-07** — aplicar las migraciones 003 y 004 en el panel de Supabase.
+   Es lo único bloqueante y solo lo puede hacer el titular del proyecto.
+2. Poblar `businesses.lat/lng` para que las distancias de PT-08 dejen de ser
+   aproximadas en los aliados.
+3. Traducir a los 10 idiomas las secciones recién montadas, hoy en español fijo.
 
 ## 4. Regla de cierre (heredada del roadmap)
 

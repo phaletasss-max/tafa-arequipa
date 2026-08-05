@@ -13,25 +13,9 @@ function getMockImageForPlace(idOrName: number | string): string {
 }
 
 export async function getLugaresSupabase(categoria?: string, search?: string): Promise<Lugar[]> {
-  // Intento 1: tabla lugares_turisticos en Supabase
-  try {
-    let query = supabase.from('lugares_turisticos').select('*')
-    if (categoria) query = query.eq('categoria', categoria)
-    if (search) query = query.ilike('nombre', `%${search}%`)
-    const { data, error } = await query.order('nombre', { ascending: true })
-    if (!error && data && data.length > 0) {
-      return data.map(item => ({
-        ...item,
-        imagen_url: item.imagen_url && item.imagen_url.trim() !== '' 
-          ? item.imagen_url 
-          : getMockImageForPlace(item.id || item.nombre)
-      })) as Lugar[]
-    }
-  } catch (e) {
-    console.warn('Supabase lugares_turisticos no disponible, usando mockData...')
-  }
-
-  // Intento 2: tabla places (schema alternativo)
+  // La tabla del catálogo es `places`. Antes se consultaba primero
+  // `lugares_turisticos`, que no existe en el proyecto: cada carga disparaba un
+  // 404 contra PostgREST antes de caer a este mismo camino.
   try {
     let query2 = supabase.from('places').select('*')
     if (search) query2 = query2.ilike('name', `%${search}%`)
@@ -62,12 +46,49 @@ export async function getLugaresSupabase(categoria?: string, search?: string): P
   return result
 }
 
+/**
+ * Picanterías y restaurantes aliados.
+ *
+ * La tabla real es `businesses`; la anterior consulta a `gastronomia` no existe
+ * en el proyecto y devolvía 404 en cada carga, dejando siempre el mock. Se
+ * filtran los rubros gastronómicos y se mapean al tipo `Gastronomia`.
+ */
 export async function getGastronomiaSupabase(): Promise<Gastronomia[]> {
+  const RUBROS_GASTRONOMICOS = /picanter|restaurant|cafe|chicher|gastron/i
+
   try {
-    const { data, error } = await supabase.from('gastronomia').select('*').order('rating', { ascending: false })
-    if (!error && data && data.length > 0) return data as Gastronomia[]
+    const { data, error } = await supabase
+      .from('businesses')
+      .select('id, trade_name, business_name, description, address, slug, lat, lng')
+
+    if (!error && data && data.length > 0) {
+      const mapeados = data.map((b, i) => {
+        const nombre = b.trade_name || b.business_name || b.slug
+        const direccion: string = b.address ?? 'Arequipa, Perú'
+        const distrito = direccion.split(',').map(s => s.trim()).filter(Boolean).pop() ?? 'Arequipa'
+        return {
+          id: typeof b.id === 'number' ? b.id : i + 1,
+          nombre,
+          tipo: 'Gastronomía Arequipeña',
+          ubicacion: direccion,
+          precio_rango: 'S/ 25 - 60',
+          imagen_url: getMockImageForPlace(nombre),
+          distrito,
+          descripcion: b.description ?? '',
+          rating: 0,
+          lat: b.lat ?? 0,
+          lng: b.lng ?? 0,
+          slug: b.slug,
+        } as Gastronomia & { slug?: string }
+      })
+
+      // Si algún registro identifica rubro gastronómico se prioriza; si no, se
+      // devuelven todos los aliados (la base MVP no tiene `category_id` poblado).
+      const soloGastro = mapeados.filter(m => RUBROS_GASTRONOMICOS.test(m.nombre) || RUBROS_GASTRONOMICOS.test(m.descripcion))
+      return (soloGastro.length > 0 ? soloGastro : mapeados) as Gastronomia[]
+    }
   } catch (e) {
-    console.warn('Fallback a API local gastronomía:', e)
+    console.warn('Fallback a catálogo local de gastronomía:', e)
   }
   return MOCK_GASTRONOMIA
 }

@@ -14,5 +14,17 @@
   "nav_routes": "Unexplored Routes",
   "nav_mype": "MSME Ecosystem",
   "nav_about": "About TAFA",
-  "nav_qr": "QR Signage"
+  "nav_qr": "QR Signage",
+
+  "problem_label": "The diagnosis",
+  "problem_title_part1": "Arequipa has everything to offer.",
+  "problem_title_highlight": "Visitors only get to see a fraction of it.",
+  "problem_description": "The region's tourism offering is scattered across agencies that do not share data, and most visitors stay within a few blocks of the historic centre.",
+  "problem_quote": "Visitors feel they saw Arequipa in a day because they only found what was in plain sight.",
+  "problem_quote_author": "TAFA diagnosis · 5 Whys method",
+
+  "about_project_badge": "Institutional project",
+  "about_project_title_part1": "Official tourism data,",
+  "about_project_title_highlight": "in a single place",
+  "about_project_description": "TAFA brings together the inventories of MINCETUR, DIRCETUR Arequipa, AUTOCOLCA and INEI into one verifiable, accessible platform, built on open data and with visitor privacy safeguards."
 }

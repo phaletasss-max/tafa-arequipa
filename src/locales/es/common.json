@@ -14,5 +14,17 @@
   "nav_routes": "Rutas inexploradas",
   "nav_mype": "Ecosistema MYPE",
   "nav_about": "Sobre TAFA",
-  "nav_qr": "Señalética QR"
+  "nav_qr": "Señalética QR",
+
+  "problem_label": "El diagnóstico",
+  "problem_title_part1": "Arequipa tiene todo para ofrecer.",
+  "problem_title_highlight": "El turista solo llega a ver una parte.",
+  "problem_description": "La oferta turística de la región está dispersa entre organismos que no comparten datos, y la mayor parte del visitante se concentra en unas pocas cuadras del centro histórico.",
+  "problem_quote": "El turista siente que vio Arequipa en un día porque solo encontró lo que estaba a la vista.",
+  "problem_quote_author": "Diagnóstico TAFA · Método 5 Whys",
+
+  "about_project_badge": "Proyecto institucional",
+  "about_project_title_part1": "Datos turísticos oficiales,",
+  "about_project_title_highlight": "en un solo lugar",
+  "about_project_description": "TAFA integra los inventarios de MINCETUR, DIRCETUR Arequipa, AUTOCOLCA e INEI en una plataforma única, verificable y accesible, construida sobre datos abiertos y con protección de la información del visitante."
 }

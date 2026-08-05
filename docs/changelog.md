@@ -25,6 +25,15 @@ pendientes. Detalle y estado en `docs/plan-de-trabajo.md`.
 
 ### Añadido
 
+- **FASE 6 — recomendaciones por cercanía real** (`features/partners/geo.ts`).
+  Sustituye la lista fija de cuatro sitios. Como los aliados no tienen
+  coordenadas en la base, la posición se resuelve en dos niveles: coordenadas
+  reales cuando existen y centroide del distrito cuando no, rotulando esas
+  distancias como aproximadas en vez de presentarlas como exactas.
+- **Landing completa**: se montan `MapPreview`, `UnexploredRoutes`, `Stats`,
+  `Problem`, `AboutProject`, `JoinEcosystem` y el banner de seguridad
+  `EmergencyBanner`. Con ello dejan de estar rotos los enlaces `#mapa`,
+  `#inexplorada`, `#sobre-proyecto` y `#ecosistema` del pie de página.
 - **FASE 5 — `src/features/partners/`**: directorio público de aliados con
   filtros por categoría, gremios (Sociedad Picantera, AGAR, AHORA, AVIT,
   COLITUR) y enlace a la ruta QR de cada socio. Carga 28 aliados reales.
@@ -40,6 +49,37 @@ pendientes. Detalle y estado en `docs/plan-de-trabajo.md`.
 - **FASE 7 — documentación**: `architecture.md`, `database-schema.md`,
   `qr-system.md`, `changelog.md` y `plan-de-trabajo.md`.
 - `.gitignore` ahora excluye archivos `.env`.
+
+### Eliminado
+
+- 9 componentes huérfanos (~1.700 líneas) que ningún archivo importaba: `Hero`,
+  `Features`, `Institutions`, `CTA`, `ScrollyDestinations`, `QRModal`,
+  `HistoricVisualStories`, `DirectAIConversation` y `AccessibilityBar`.
+  Duplicaban secciones ya montadas, dependían de claves i18n inexistentes o eran
+  versiones anteriores y peores de componentes vigentes.
+
+### Rendimiento
+
+- Bundle principal de **744 kB a 113 kB**, con `React.lazy` por ruta, sección y
+  modal, y `manualChunks` para las librerías (React, Framer Motion, Supabase,
+  i18next, lucide), que ahora se cachean entre despliegues. Desaparece el aviso
+  de «chunks larger than 500 kB».
+- `supabaseService` consultaba `lugares_turisticos` y `gastronomia`, tablas
+  inexistentes que devolvían 404 en cada carga. Ahora usa `places` y
+  `businesses`: cero peticiones fallidas.
+
+### Integridad de la información
+
+- **`Stats` publicaba cifras inventadas**: «Satisfacción Turística» derivaba de
+  un valor fijo que nunca se actualizaba pero se rotulaba «promedio encuestas»,
+  y «Protección de Datos 100 %» no es una medición. Se retiran ambas; quedan
+  cuatro conteos reales y la Ley 29733 como nota de cumplimiento.
+- **`JoinEcosystem` mostraba «postulación recibida» aunque el guardado fallara**,
+  perdiendo solicitudes de aliados en silencio. Ahora el fallo se informa.
+- `AboutProject` enlazaba a `http://localhost:3000/admin.html` y `/api/health`,
+  dos enlaces muertos en producción. Banner retirado.
+- `MapPreview`: los toggles de capa eran `div` con `onClick`, inalcanzables por
+  teclado; ahora son `button` con `aria-pressed`.
 
 ### Seguridad
 
