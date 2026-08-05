@@ -21,7 +21,7 @@ type PageState = 'loading' | 'not_found' | 'ready' | 'checking_in' | 'checked_in
 // Catálogo de Recomendaciones Cercanas
 const NEARBY_RECOMMENDATIONS = [
   {
-    slug: 'la-nueva-palomino',
+    slug: 'aliado-la-nueva-palomino',
     name: 'Picantería La Nueva Palomino',
     category: 'Gastronomía Arequipeña',
     district: 'Yanahuara',
@@ -29,7 +29,7 @@ const NEARBY_RECOMMENDATIONS = [
     image: '/images/places/mirador-yanahuara.jpg',
   },
   {
-    slug: 'sol-de-mayo',
+    slug: 'aliado-sol-de-mayo',
     name: 'Restaurante Sol de Mayo (1903)',
     category: 'Picantería Tradicional',
     district: 'Yanahuara',
@@ -37,7 +37,7 @@ const NEARBY_RECOMMENDATIONS = [
     image: '/images/places/plaza-de-armas.jpg',
   },
   {
-    slug: 'canteras-anashuayco',
+    slug: 'ruta-del-sillar-anashuayco',
     name: 'Canteras de Añashuayco — Ruta del Sillar',
     category: 'Artesanía en Sillar',
     district: 'Cerro Colorado',
@@ -45,7 +45,7 @@ const NEARBY_RECOMMENDATIONS = [
     image: '/images/places/ruta-sillar.jpg',
   },
   {
-    slug: 'monasterio-santa-catalina',
+    slug: 'monasterio-de-santa-catalina',
     name: 'Monasterio de Santa Catalina',
     category: 'Patrimonio Histórico',
     district: 'Cercado',
@@ -62,6 +62,16 @@ export default function QRCheckInPage() {
   const [checkInResult, setCheckInResult] = useState<CheckInResult | null>(null)
   const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
+  // Estado del formulario opcional de reseña.
+  // Debe declararse aquí (antes de cualquier return condicional) para no romper
+  // las Rules of Hooks: los early returns de `loading` / `not_found` cambiaban
+  // el número de hooks entre renders y tumbaban la página con pantalla en blanco.
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [scanTimestamp] = useState<number>(() => Date.now())
 
   const performCheckIn = useCallback(async (currentProfile: TAFAProfile, qrSlug: string) => {
     setPageState('checking_in')
@@ -160,12 +170,6 @@ export default function QRCheckInPage() {
   const address = isPlace ? landing!.place_address : landing!.business_address
   const category = isPlace ? landing!.place_category : landing!.business_category
   const nearby = NEARBY_RECOMMENDATIONS.filter(r => r.slug !== slug).slice(0, 3)
-
-  const [rating, setRating] = useState(5)
-  const [comment, setComment] = useState('')
-  const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
-  const [scanTimestamp, setScanTimestamp] = useState<number>(Date.now())
 
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
   const isReviewExpired = Date.now() - scanTimestamp > SEVEN_DAYS_MS
@@ -305,9 +309,19 @@ export default function QRCheckInPage() {
                   ? `Ya habías registrado tu visita hoy a ${checkInResult.entity_name}. ¡Gracias por seguir explorando Arequipa!`
                   : `Se han añadido +${checkInResult.points_awarded} Puntos TAFA a tu perfil por visitar ${checkInResult.entity_name}.`}
               </p>
-              <div className="pt-1 text-xs font-bold text-amber-300">
-                Puntos Acumulados: {checkInResult.total_points} PTS TAFA
-              </div>
+              {typeof checkInResult.total_points === 'number' && (
+                <div className="pt-1 text-xs font-bold text-amber-300">
+                  Puntos Acumulados: {checkInResult.total_points} PTS TAFA
+                </div>
+              )}
+
+              {checkInResult.persisted === false && (
+                <div className="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 text-[11px] text-amber-200 leading-relaxed">
+                  <strong className="block text-amber-300">Registro pendiente de sincronización</strong>
+                  Tu visita se guardó solo en este dispositivo porque no hubo conexión con la red
+                  TAFA. Los puntos se acreditarán a tu Pase cuando vuelvas a entrar con sesión activa.
+                </div>
+              )}
 
               {/* Formulario Opcional de Calificación & Foto de Recuerdo (Plazo 7 días) */}
               <div className="bg-black/40 border border-white/10 rounded-2xl p-5 text-left space-y-4 mt-4">

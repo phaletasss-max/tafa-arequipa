@@ -1,5 +1,10 @@
 # FASE 0 — Auditoría del Estado Actual del Repositorio
 
+> ⚠️ **Documento histórico (2026-08-04).** Una segunda auditoría del 2026-08-05
+> verificó el estado ejecutando la app y consultando Supabase, y encontró que las
+> FASES 3 y 4 no estaban terminadas pese a figurar como tales. El estado vigente
+> y los planes de trabajo están en [`plan-de-trabajo.md`](./plan-de-trabajo.md).
+
 **Fecha**: 2026-08-04  
 **Proyecto**: TAFA (Tourism AI for Arequipa)  
 **Stack Core**: React 18 + TypeScript 5.5 + Vite 5 + TailwindCSS 3 + Framer Motion + i18next + Supabase JS client.

@@ -43,13 +43,31 @@ src/
     └── Footer.tsx             # Footer institucional
 ```
 
+## Configuración
+
+Copiar `.env.example` a `.env.local` y completar las variables `VITE_*`.
+Sin ellas la app usa los valores del proyecto MVP como respaldo.
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/plan-de-trabajo.md`](docs/plan-de-trabajo.md) | **Estado real y trabajo pendiente** |
+| [`docs/architecture.md`](docs/architecture.md) | Arquitectura y capas |
+| [`docs/database-schema.md`](docs/database-schema.md) | Esquema Supabase y estado de RLS |
+| [`docs/qr-system.md`](docs/qr-system.md) | Sistema QR y convención de slugs |
+| [`docs/accessibility.md`](docs/accessibility.md) | Accesibilidad WCAG 2.2 |
+| [`docs/image-system.md`](docs/image-system.md) | Sistema de imágenes |
+| [`docs/changelog.md`](docs/changelog.md) | Historial de cambios |
+
 ## Próximos pasos
 
-- [ ] Reemplazar video con producción cinematográfica de Arequipa (Veo 3)
-- [ ] Conectar Hero card a API de búsqueda
-- [ ] Integrar mapa real con Leaflet.js / API dashboard TAFA
-- [ ] Autenticación con Supabase Auth
-- [ ] Conectar endpoints Express del backend TAFA
+- [ ] **Migrar a Supabase Auth y cerrar RLS** (PT-06 — bloqueante: hoy el login
+      identifica por email sin contraseña y los perfiles son públicos)
+- [ ] Aplicar `database/migrations/003_recompensas_catalogo.sql` (PT-07)
+- [ ] Recomendaciones cercanas por geolocalización real (PT-08)
+- [ ] Code-splitting y limpieza de componentes huérfanos (PT-09)
+- [ ] Integrar mapa real con Leaflet.js
 
 ## Brandbook
 

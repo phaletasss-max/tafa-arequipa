@@ -3,9 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QrCode } from 'lucide-react'
 import { AccessibilityProvider } from '@/features/accessibility/context/AccessibilityContext'
 import QuickAccessBar from '@/features/accessibility/components/QuickAccessBar'
-import Hero from '@/components/Hero'
 import CinematicStoryteller from '@/components/CinematicStoryteller'
 import Highlights from '@/components/Highlights'
+import PartnersDirectory from '@/features/partners/PartnersDirectory'
 import Footer from '@/components/Footer'
 import TouristAIAssistant from '@/components/ai/TouristAIAssistant'
 import AuthModal from '@/components/auth/AuthModal'
@@ -48,6 +48,7 @@ function LandingPage({
       <main id="main-content" role="main">
         <CinematicStoryteller />
         <Highlights />
+        <PartnersDirectory />
         <TouristAIAssistant />
       </main>
 
