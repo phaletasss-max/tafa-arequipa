@@ -108,9 +108,30 @@ plan. `accessibility.md` e `image-system.md` ya existían.
 
 ---
 
-### PT-06 — Migrar a Supabase Auth y cerrar RLS · 🔴 PENDIENTE — BLOQUEANTE
+### PT-06 — Migrar a Supabase Auth y cerrar RLS · 🟠 FRONTEND HECHO · BD PENDIENTE
 
 **Severidad**: crítica (seguridad y datos personales). **Fase**: 3.
+
+> **Hecho (2026-08-05)**: el frontend ya usa Supabase Auth con email + contraseña.
+> `signUpTourist` / `signInTourist` / `signInWithGoogle` / `signOutTourist` en
+> `authService.ts`; `profiles.id` se liga a `auth.users.id`; el login exige
+> contraseña y muestra errores traducidos; `App.tsx` rehidrata la sesión al
+> arrancar. La función `registerOrLoginProfile` que permitía entrar solo con el
+> email fue eliminada.
+>
+> **Falta (requiere acceso al panel Supabase)**:
+> 1. Aplicar `database/migrations/004_rls_hardening.sql`. Hasta entonces los
+>    perfiles siguen siendo legibles y modificables con la clave anónima.
+> 2. Habilitar el proveedor Google si se quiere activar el botón OAuth.
+> 3. **Perfiles heredados**: las filas creadas por el flujo antiguo tienen un
+>    `id` aleatorio que no corresponde a ningún `auth.users`. Tras aplicar la
+>    migración 004 quedarán inaccesibles y esas personas deberán registrarse de
+>    nuevo. Si hay que conservar sus puntos, migrarlas a mano ligando el `id`
+>    al usuario de Auth creado con el mismo correo.
+>
+> El check-in tolera ambas situaciones: llama a la firma segura del RPC y, si aún
+> no existe (`PGRST202`), reintenta con la antigua, de modo que nada se rompe
+> entre un despliegue y el otro.
 
 El roadmap especifica Supabase Auth. Lo implementado **no lo es**:
 `registerOrLoginProfile` busca la fila de `profiles` por email y, si existe,

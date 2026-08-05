@@ -3,9 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { X, ShieldCheck, UserCheck, Globe, Lock, AlertCircle, CheckCircle2, Mail, UserPlus, LogIn } from 'lucide-react'
 import { validateIdentityDocument, ValidationResult } from '@/utils/identityValidator'
-import { registerOrLoginProfile, saveProfileSession, type TAFAProfile } from '@/services/authService'
+import { signUpTourist, signInTourist, type TAFAProfile } from '@/services/authService'
 import { useFocusTrap } from '@/features/accessibility/hooks/useFocusTrap'
-import { supabase } from '@/lib/supabase'
 
 interface AuthModalProps {
   isOpen: boolean
@@ -31,6 +30,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
   const [validation, setValidation] = useState<ValidationResult | null>(null)
   const [successUser, setSuccessUser] = useState<string | null>(null)
   const [emailConfirmedNote, setEmailConfirmedNote] = useState(false)
+  const [authError, setAuthError] = useState<string | null>(null)
 
   // Focus trap ref para modal accesible
   const focusTrapRef = useRef<HTMLDivElement>(null)
@@ -57,6 +57,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setAuthError(null)
 
     if (authMode === 'register') {
       const res = validateIdentityDocument(docType, docNumber, checkChar)
@@ -64,84 +65,73 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
       if (!res.isValid) return
 
       if (!nombre.trim() || !email.trim() || !password.trim()) {
-        alert('Por favor completa tu nombre, correo electrónico y contraseña.')
+        setAuthError('Completa tu nombre, correo electrónico y contraseña.')
+        return
+      }
+      if (password.length < 6) {
+        setAuthError('La contraseña debe tener al menos 6 caracteres.')
         return
       }
 
-      try {
-        setLoading(true)
+      setLoading(true)
+      const result = await signUpTourist({
+        fullName: nombre,
+        email,
+        password,
+        docType,
+        docNumber,
+        country: docType === 'DNI' ? 'Perú' : pais,
+      })
+      setLoading(false)
 
-        // Intento de Auth en Supabase si está disponible
-        try {
-          const { data: authData, error: authErr } = await supabase.auth.signUp({
-            email: email.trim().toLowerCase(),
-            password: password.trim(),
-            options: {
-              data: {
-                full_name: nombre.trim(),
-                doc_type: docType,
-                doc_number: docNumber,
-              },
-            },
-          })
-          if (!authErr && authData?.user) {
-            setEmailConfirmedNote(true)
-          }
-        } catch (_) {}
+      if (result.ok === false) {
+        setAuthError(result.error)
+        return
+      }
 
-        // Registrar perfil local / DB
-        const profile = await registerOrLoginProfile(nombre.trim(), email.trim().toLowerCase(), docType, docNumber.trim())
-
-        const touristUser = {
-          nombre: nombre.trim(),
-          email: email.trim(),
-          docType,
-          docNum: docNumber,
-          pais: docType === 'DNI' ? 'Perú' : pais,
-          profile,
-        }
-        localStorage.setItem('tafa_tourist_user', JSON.stringify(touristUser))
-
+      // El proyecto exige confirmar el correo: aún no hay sesión activa.
+      if (result.ok === 'email_confirmation_required') {
+        setEmailConfirmedNote(true)
         setSuccessUser(nombre.trim())
-        if (onAuthSuccess) onAuthSuccess(touristUser)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    } else {
-      // Modo Login
-      if (!email.trim()) {
-        alert('Ingresa tu correo electrónico o número de documento.')
         return
       }
 
-      try {
-        setLoading(true)
-        const profile = await registerOrLoginProfile(email.split('@')[0] || 'Turista TAFA', email.trim().toLowerCase(), 'DNI', docNumber || '00000000')
-
-        const touristUser = {
-          nombre: profile.full_name || 'Turista TAFA',
-          email: email.trim(),
-          docType: (profile.doc_type as any) || 'DNI',
-          docNum: profile.doc_number || docNumber,
-          profile,
-        }
-        localStorage.setItem('tafa_tourist_user', JSON.stringify(touristUser))
-
-        setSuccessUser(touristUser.nombre)
-        if (onAuthSuccess) onAuthSuccess(touristUser)
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
+      setSuccessUser(result.profile.full_name)
+      onAuthSuccess?.({
+        nombre: result.profile.full_name,
+        docType: result.profile.doc_type,
+        docNum: result.profile.doc_number,
+        profile: result.profile,
+      })
+    } else {
+      if (!email.trim() || !password.trim()) {
+        setAuthError('Ingresa tu correo electrónico y contraseña.')
+        return
       }
+
+      setLoading(true)
+      const result = await signInTourist(email, password)
+      setLoading(false)
+
+      if (result.ok !== true) {
+        setAuthError(result.ok === false ? result.error : 'Confirma tu correo para continuar.')
+        return
+      }
+
+      setSuccessUser(result.profile.full_name)
+      onAuthSuccess?.({
+        nombre: result.profile.full_name,
+        docType: result.profile.doc_type,
+        docNum: result.profile.doc_number,
+        profile: result.profile,
+      })
     }
   }
 
   function handleReset() {
     setSuccessUser(null)
     setEmailConfirmedNote(false)
+    setAuthError(null)
     setDocNumber('')
     setCheckChar('')
     setNombre('')
@@ -183,9 +173,13 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
               <div className="w-16 h-16 rounded-full bg-green-500/20 text-green-400 border border-green-500/40 flex items-center justify-center mx-auto text-3xl">
                 ✓
               </div>
-              <h3 className="text-2xl font-bold font-outfit text-white">¡Bienvenido a TAFA, {successUser}!</h3>
+              <h3 className="text-2xl font-bold font-outfit text-white">
+                {emailConfirmedNote ? `Casi listo, ${successUser}` : `¡Bienvenido a TAFA, ${successUser}!`}
+              </h3>
               <p className="text-gray-300 text-xs leading-relaxed max-w-xs mx-auto">
-                Tu perfil de turista ha sido autenticado correctamente. Ganaste tu Pase de Explorador Turístico TAFA de Arequipa.
+                {emailConfirmedNote
+                  ? 'Tu cuenta fue creada. Confirma tu correo para activarla y empezar a acumular Puntos TAFA.'
+                  : 'Tu perfil de turista ha sido autenticado correctamente. Ganaste tu Pase de Explorador Turístico TAFA de Arequipa.'}
               </p>
               {emailConfirmedNote && (
                 <div className="bg-emerald-500/15 border border-emerald-500/30 p-3 rounded-2xl text-[11px] text-emerald-300 flex items-center gap-2">
@@ -329,14 +323,14 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
                 </>
               ) : (
                 <>
-                  {/* Correo o Documento en Login */}
+                  {/* Correo en Login */}
                   <div className="mb-4">
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico o Documento</label>
+                    <label className="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico</label>
                     <input
-                      type="text"
+                      type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="tu.correo@gmail.com o DNI"
+                      placeholder="tu.correo@gmail.com"
                       required
                       className="w-full bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
                     />
@@ -355,6 +349,16 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, pendingQRSlu
                     />
                   </div>
                 </>
+              )}
+
+              {authError && (
+                <div
+                  role="alert"
+                  className="mb-4 bg-red-500/15 border border-red-500/40 rounded-2xl p-3 text-[11px] text-red-300 flex items-start gap-2"
+                >
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+                  <span>{authError}</span>
+                </div>
               )}
 
               <button

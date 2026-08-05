@@ -146,17 +146,31 @@ export async function registerQRCheckIn(
     return localCheckInResult(qrSlug)
   }
 
+  const canonical = resolveSlug(qrSlug)
+
+  // Firma segura (migración 004): el servidor toma la identidad de `auth.uid()`,
+  // de modo que el cliente nunca declara a nombre de quién acredita los puntos.
   const { data, error } = await supabase.rpc('register_qr_checkin', {
-    p_profile_id: profileId,
-    p_qr_slug: resolveSlug(qrSlug),
+    p_qr_slug: canonical,
   })
 
-  if (error) {
-    console.warn('Check-in RPC error:', error.message)
+  if (!error) return { ...(data as CheckInResult), persisted: true }
+
+  // PGRST202 = no existe función con esa firma. Ocurre mientras la migración 004
+  // no esté aplicada; se reintenta con la firma antigua para no dejar al turista
+  // sin registrar su visita durante la transición.
+  if (error.code === 'PGRST202') {
+    const legacy = await supabase.rpc('register_qr_checkin', {
+      p_profile_id: profileId,
+      p_qr_slug: canonical,
+    })
+    if (!legacy.error) return { ...(legacy.data as CheckInResult), persisted: true }
+    console.warn('Check-in RPC (firma antigua) falló:', legacy.error.message)
     return localCheckInResult(qrSlug)
   }
 
-  return { ...(data as CheckInResult), persisted: true }
+  console.warn('Check-in RPC error:', error.message)
+  return localCheckInResult(qrSlug)
 }
 
 function getMockQRLanding(slug: string): QRLandingData | null {

@@ -1,11 +1,15 @@
 -- ============================================================================
 -- TAFA MVP — Endurecimiento de Row Level Security
 --
--- ⚠️ NO APLICAR DE FORMA AISLADA.
--- Esta migración debe desplegarse EN EL MISMO CAMBIO que la migración del
--- frontend a Supabase Auth (ver docs/plan-de-trabajo.md → PT-06).
--- El flujo actual (`registerOrLoginProfile`) escribe en `profiles` con la clave
--- anónima y sin sesión; al activar estas políticas ese flujo dejará de operar.
+-- ✅ Requisito ya cumplido: el frontend migró a Supabase Auth (PT-06), así que
+-- `profiles.id` corresponde a `auth.users.id` y estas políticas pueden aplicarse.
+--
+-- ⚠️ Antes de ejecutar, revisar los perfiles heredados: las filas creadas por el
+-- flujo antiguo tienen un `id` aleatorio sin usuario de Auth asociado y quedarán
+-- inaccesibles. Para conservar sus puntos hay que ligarlas al usuario creado con
+-- el mismo correo:
+--   UPDATE profiles p SET id = u.id FROM auth.users u WHERE u.email = p.email;
+-- Sin ese paso, esas personas deberán registrarse de nuevo.
 --
 -- ── Problema que corrige ────────────────────────────────────────────────────
 -- Verificado el 2026-08-05 contra el proyecto MVP con la clave anónima que va

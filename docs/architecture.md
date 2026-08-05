@@ -96,5 +96,6 @@ debe aparecer jamás en este repositorio.
 
 - Bundle principal ≈ 744 kB (sobre el umbral de 500 kB): falta code-splitting por
   ruta y hay 16 componentes construidos pero nunca montados (PT-09).
-- La sesión del turista no usa Supabase Auth (PT-06).
+- Las políticas RLS de la migración 004 siguen sin aplicarse: hasta entonces los
+  perfiles son legibles y modificables con la clave anónima pública (PT-06).
 - Las recomendaciones cercanas son estáticas pese a existir coordenadas (PT-08).

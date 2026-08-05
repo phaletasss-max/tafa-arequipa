@@ -12,6 +12,7 @@ import AuthModal from '@/components/auth/AuthModal'
 import TAFAExplorerPassModal from '@/components/rewards/TAFAExplorerPassModal'
 import QRCheckInPage from '@/features/qr/QRCheckInPage'
 import QRStudioModal from '@/features/qr/QRStudioModal'
+import { loadSessionProfile } from '@/services/authService'
 
 function LandingPage({
   onOpenAuth,
@@ -75,13 +76,11 @@ export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false)
   const [isSignLanguageOpen, setIsSignLanguageOpen] = useState(false)
   const [isQRStudioOpen, setIsQRStudioOpen] = useState(false)
-  const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
-
+  // Rehidrata el perfil desde la sesión de Supabase Auth. La caché de
+  // localStorage puede sobrevivir a una sesión ya expirada, y sin esto la UI
+  // seguiría mostrando como conectado a alguien que ya no lo está.
   useEffect(() => {
-    const saved = localStorage.getItem('tafa_tourist_user')
-    if (saved) {
-      try { setTouristUser(JSON.parse(saved)); } catch (e) {}
-    }
+    void loadSessionProfile()
   }, [])
 
   return (
@@ -120,7 +119,6 @@ export default function App() {
         <AuthModal
           isOpen={isAuthOpen}
           onClose={() => setIsAuthOpen(false)}
-          onAuthSuccess={(u) => setTouristUser(u)}
         />
 
         <TAFAExplorerPassModal

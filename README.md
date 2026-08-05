@@ -62,8 +62,9 @@ Sin ellas la app usa los valores del proyecto MVP como respaldo.
 
 ## Próximos pasos
 
-- [ ] **Migrar a Supabase Auth y cerrar RLS** (PT-06 — bloqueante: hoy el login
-      identifica por email sin contraseña y los perfiles son públicos)
+- [ ] **Aplicar `database/migrations/004_rls_hardening.sql`** (PT-06 — el
+      frontend ya usa Supabase Auth; hasta aplicarla los perfiles siguen siendo
+      legibles y modificables con la clave anónima pública)
 - [ ] Aplicar `database/migrations/003_recompensas_catalogo.sql` (PT-07)
 - [ ] Recomendaciones cercanas por geolocalización real (PT-08)
 - [ ] Code-splitting y limpieza de componentes huérfanos (PT-09)

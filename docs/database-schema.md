@@ -89,10 +89,14 @@ Verificado el 2026-08-05 con la clave anónima pública del bundle:
 | `visit_logs` | Permitido | — | Historial de visitas legible |
 | `places`, `businesses`, `qr_landing` | Permitido | — | Correcto: son catálogo público |
 
-La migración `004_rls_hardening.sql` corrige lo anterior, pero **no puede
-aplicarse aislada**: el flujo de sesión actual escribe en `profiles` sin sesión
-autenticada y dejaría de funcionar. Debe desplegarse junto con la migración a
-Supabase Auth (PT-06).
+La migración `004_rls_hardening.sql` corrige lo anterior y **ya puede aplicarse**:
+el frontend migró a Supabase Auth, de modo que `profiles.id` corresponde a
+`auth.users.id` como exigen las políticas.
+
+Al aplicarla, tener en cuenta que **los perfiles creados por el flujo antiguo
+tienen un `id` aleatorio sin usuario de Auth asociado** y quedarán inaccesibles;
+esas personas deberán registrarse de nuevo salvo que se migren a mano. Detalle
+en `plan-de-trabajo.md` → PT-06.
 
 ## 6. Función `register_qr_checkin`
 

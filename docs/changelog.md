@@ -43,12 +43,16 @@ pendientes. Detalle y estado en `docs/plan-de-trabajo.md`.
 
 ### Seguridad
 
-- Documentado que la clave anónima pública permite hoy **leer el email y el
-  número de documento de todos los turistas** y **modificar cualquier perfil**,
-  incluidos los saldos de puntos. Corrección en la migración 004, que debe
-  desplegarse con la migración a Supabase Auth (PT-06).
-- Documentado que el login actual identifica por email sin contraseña: basta
-  conocer el correo de otra persona para acceder a su cuenta (PT-06).
+- **Cerrada la suplantación de cuentas (PT-06)**. `registerOrLoginProfile`
+  identificaba al turista solo por su email: escribir el correo de otra persona
+  bastaba para entrar en su cuenta y sus puntos. Sustituido por Supabase Auth
+  con email y contraseña (`signUpTourist`, `signInTourist`), con
+  `profiles.id` ligado a `auth.users.id` y Google OAuth preparado.
+- La sesión se rehidrata desde Supabase al arrancar, en vez de confiar en una
+  caché de `localStorage` que podía sobrevivir a una sesión expirada.
+- Documentado que la clave anónima pública permite todavía **leer el email y el
+  número de documento de todos los turistas** y **modificar cualquier perfil**.
+  Lo corrige la migración 004, **pendiente de aplicar en el panel de Supabase**.
 
 ---
 
