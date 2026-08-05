@@ -59,7 +59,9 @@ export default function Footer() {
                 { label: t('common:nav_routes'), href: '#inexplorada' },
                 { label: t('common:nav_mype'), href: '#ecosistema' },
                 { label: t('common:nav_about'), href: '#sobre-proyecto' },
-                { label: t('common:nav_qr'), href: '#' },
+                // Cada aliado del directorio enlaza a su propia página QR, así
+                // que #aliados es el índice real de la señalética.
+                { label: t('common:nav_qr'), href: '#aliados' },
               ].map(({ label, href }) => (
                 <li key={label}>
                   <a href={href} className="text-[14px] text-[#8b949e] hover:text-white transition-colors no-underline">

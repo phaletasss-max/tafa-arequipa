@@ -36,9 +36,66 @@ export interface CheckInResult {
   entity_name?: string
   total_points?: number
   error?: string
+  /**
+   * `false` cuando la visita NO llegó a persistirse en Supabase y se está
+   * mostrando un resultado local. La UI debe advertirlo en lugar de afirmar
+   * que los puntos quedaron acreditados.
+   */
+  persisted?: boolean
 }
 
-export async function getQRLanding(slug: string): Promise<QRLandingData | null> {
+/**
+ * Slugs heredados impresos en carteles antiguos → slug canónico de `qr_landing`.
+ * La base usa el nombre oficial completo (`plaza-de-armas-de-arequipa`) y prefija
+ * los negocios con `aliado-`, mientras que el primer Estudio QR generó slugs cortos.
+ * Sin esta tabla, todo QR ya impreso cae al mock y la visita nunca se registra.
+ */
+const LEGACY_SLUG_ALIASES: Record<string, string> = {
+  'plaza-de-armas': 'plaza-de-armas-de-arequipa',
+  'basilica-catedral': 'basilica-catedral-de-arequipa',
+  'monasterio-santa-catalina': 'monasterio-de-santa-catalina',
+  'iglesia-compania': 'iglesia-de-la-compania-de-jesus',
+  'barrio-san-lazaro': 'barrio-de-san-lazaro',
+  'mansion-fundador': 'mansion-del-fundador',
+  'santo-domingo': 'iglesia-y-convento-de-santo-domingo',
+  'museo-santuarios-andinos': 'museo-santuarios-andinos-juanita',
+  'museo-santa-teresa': 'museo-de-arte-virreinal-de-santa-teresa',
+  'mirador-yanahuara': 'mirador-de-yanahuara',
+  'mirador-carmen-alto': 'mirador-de-carmen-alto',
+  'mirador-sachaca': 'mirador-de-sachaca',
+  'canon-colca': 'canon-del-colca',
+  'reserva-salinas': 'reserva-nacional-salinas-y-aguada-blanca',
+  'laguna-salinas': 'laguna-de-salinas',
+  pillones: 'catarata-de-pillones',
+  'bosque-imata': 'bosque-de-piedras-de-imata',
+  'ruta-sillar': 'ruta-del-sillar-anashuayco',
+  'canteras-anashuayco': 'ruta-del-sillar-anashuayco',
+  'toro-muerto': 'petroglifos-de-toro-muerto',
+  'valle-andagua': 'valle-de-los-volcanes-de-andagua',
+  'canon-cotahuasi': 'canon-de-cotahuasi',
+  'cuevas-sumbay': 'cuevas-de-sumbay',
+  calera: 'banos-termales-la-calera-chivay',
+  'yanque-termas': 'banos-termales-de-yanque',
+  'yura-termas': 'banos-termales-de-yura',
+  mejia: 'playas-de-mejia-y-mollendo',
+  'lagunas-mejia': 'santuario-nacional-lagunas-de-mejia',
+  'molino-sabandia': 'molino-de-sabandia',
+  // Negocios aliados (la base los prefija con `aliado-`)
+  'la-nueva-palomino': 'aliado-la-nueva-palomino',
+  'sol-de-mayo': 'aliado-sol-de-mayo',
+  'la-lucila': 'aliado-la-lucila',
+  'la-capitana': 'aliado-la-capitana',
+  'la-benita': 'aliado-la-benita',
+  'zig-zag': 'aliado-zig-zag',
+  'chicha-arequipa': 'aliado-chicha-arequipa',
+}
+
+/** Traduce un slug impreso al slug canónico de la base. */
+export function resolveSlug(slug: string): string {
+  return LEGACY_SLUG_ALIASES[slug] ?? slug
+}
+
+async function fetchLandingBySlug(slug: string): Promise<QRLandingData | null> {
   const { data, error } = await supabase
     .from('qr_landing')
     .select('*')
@@ -48,44 +105,72 @@ export async function getQRLanding(slug: string): Promise<QRLandingData | null> 
 
   if (error) {
     console.warn('QR landing fetch error:', error.message)
-    return getMockQRLanding(slug)
+    return null
+  }
+  return (data as QRLandingData) ?? null
+}
+
+export async function getQRLanding(slug: string): Promise<QRLandingData | null> {
+  const canonical = resolveSlug(slug)
+
+  const byCanonical = await fetchLandingBySlug(canonical)
+  if (byCanonical) return byCanonical
+
+  // El slug escaneado puede ser ya canónico y no estar en la tabla de alias.
+  if (canonical !== slug) {
+    const byRaw = await fetchLandingBySlug(slug)
+    if (byRaw) return byRaw
   }
 
-  if (data) return data as QRLandingData
   return getMockQRLanding(slug)
+}
+
+/** Resultado local usado cuando la visita no pudo persistirse en Supabase. */
+function localCheckInResult(qrSlug: string): CheckInResult {
+  const mock = getMockQRLanding(qrSlug)
+  return {
+    success: true,
+    persisted: false,
+    already_visited: false,
+    points_awarded: 50,
+    entity_name: mock?.business_name || mock?.place_name || qrSlug,
+  }
 }
 
 export async function registerQRCheckIn(
   profileId: string,
   qrSlug: string,
 ): Promise<CheckInResult> {
+  // Perfil creado solo en localStorage: no existe fila en `profiles` que referenciar.
   if (profileId.startsWith('local-')) {
-    return {
-      success: true,
-      already_visited: false,
-      points_awarded: 50,
-      entity_name: getMockQRLanding(qrSlug)?.business_name || getMockQRLanding(qrSlug)?.place_name || qrSlug,
-      total_points: 150,
-    }
+    return localCheckInResult(qrSlug)
   }
 
+  const canonical = resolveSlug(qrSlug)
+
+  // Firma segura (migración 004): el servidor toma la identidad de `auth.uid()`,
+  // de modo que el cliente nunca declara a nombre de quién acredita los puntos.
   const { data, error } = await supabase.rpc('register_qr_checkin', {
-    p_profile_id: profileId,
-    p_qr_slug: qrSlug,
+    p_qr_slug: canonical,
   })
 
-  if (error) {
-    console.warn('Check-in RPC error:', error.message)
-    return { 
-      success: true,
-      already_visited: false,
-      points_awarded: 50,
-      entity_name: getMockQRLanding(qrSlug)?.business_name || getMockQRLanding(qrSlug)?.place_name || qrSlug,
-      total_points: 150,
-    }
+  if (!error) return { ...(data as CheckInResult), persisted: true }
+
+  // PGRST202 = no existe función con esa firma. Ocurre mientras la migración 004
+  // no esté aplicada; se reintenta con la firma antigua para no dejar al turista
+  // sin registrar su visita durante la transición.
+  if (error.code === 'PGRST202') {
+    const legacy = await supabase.rpc('register_qr_checkin', {
+      p_profile_id: profileId,
+      p_qr_slug: canonical,
+    })
+    if (!legacy.error) return { ...(legacy.data as CheckInResult), persisted: true }
+    console.warn('Check-in RPC (firma antigua) falló:', legacy.error.message)
+    return localCheckInResult(qrSlug)
   }
 
-  return data as CheckInResult
+  console.warn('Check-in RPC error:', error.message)
+  return localCheckInResult(qrSlug)
 }
 
 function getMockQRLanding(slug: string): QRLandingData | null {
@@ -202,10 +287,17 @@ function getMockQRLanding(slug: string): QRLandingData | null {
     },
   }
 
-  if (mocks[slug]) return mocks[slug]
+  // El mock está indexado por slugs cortos; el escaneo puede traer el canónico.
+  const reverseAlias = Object.entries(LEGACY_SLUG_ALIASES)
+    .find(([, canonical]) => canonical === slug)?.[0]
+
+  for (const candidate of [slug, resolveSlug(slug), reverseAlias, slug.replace(/^aliado-/, '')]) {
+    if (candidate && mocks[candidate]) return mocks[candidate]
+  }
 
   // Dynamic fallback generator for any custom slug
   const title = slug
+    .replace(/^aliado-/, '')
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import {
   QrCode, MapPin, Clock, Ticket, Phone, Globe, Sparkles,
@@ -14,54 +15,32 @@ import {
   clearPendingQRCheckIn,
   type TAFAProfile,
 } from '@/services/authService'
-import { getQRLanding, registerQRCheckIn, type QRLandingData, type CheckInResult } from '@/services/checkInService'
+import { getQRLanding, registerQRCheckIn, resolveSlug, type QRLandingData, type CheckInResult } from '@/services/checkInService'
+import { fetchNearby } from '@/features/partners/partnersService'
+import type { NearbyPartner } from '@/features/partners/types'
 
 type PageState = 'loading' | 'not_found' | 'ready' | 'checking_in' | 'checked_in' | 'error'
 
-// Catálogo de Recomendaciones Cercanas
-const NEARBY_RECOMMENDATIONS = [
-  {
-    slug: 'la-nueva-palomino',
-    name: 'Picantería La Nueva Palomino',
-    category: 'Gastronomía Arequipeña',
-    district: 'Yanahuara',
-    points: '+50 PTS',
-    image: '/images/places/mirador-yanahuara.jpg',
-  },
-  {
-    slug: 'sol-de-mayo',
-    name: 'Restaurante Sol de Mayo (1903)',
-    category: 'Picantería Tradicional',
-    district: 'Yanahuara',
-    points: '+50 PTS',
-    image: '/images/places/plaza-de-armas.jpg',
-  },
-  {
-    slug: 'canteras-anashuayco',
-    name: 'Canteras de Añashuayco — Ruta del Sillar',
-    category: 'Artesanía en Sillar',
-    district: 'Cerro Colorado',
-    points: '+50 PTS',
-    image: '/images/places/ruta-sillar.jpg',
-  },
-  {
-    slug: 'monasterio-santa-catalina',
-    name: 'Monasterio de Santa Catalina',
-    category: 'Patrimonio Histórico',
-    district: 'Cercado',
-    points: '+50 PTS',
-    image: '/images/places/monasterio-santa-catalina.webp',
-  },
-]
-
 export default function QRCheckInPage() {
   const { slug = '' } = useParams<{ slug: string }>()
+  const { t } = useTranslation(['sections'])
   const [landing, setLanding] = useState<QRLandingData | null>(null)
   const [profile, setProfile] = useState<TAFAProfile | null>(getStoredProfile())
   const [pageState, setPageState] = useState<PageState>('loading')
   const [checkInResult, setCheckInResult] = useState<CheckInResult | null>(null)
   const [isAuthOpen, setIsAuthOpen] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+
+  // Estado del formulario opcional de reseña.
+  // Debe declararse aquí (antes de cualquier return condicional) para no romper
+  // las Rules of Hooks: los early returns de `loading` / `not_found` cambiaban
+  // el número de hooks entre renders y tumbaban la página con pantalla en blanco.
+  const [rating, setRating] = useState(5)
+  const [comment, setComment] = useState('')
+  const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [scanTimestamp] = useState<number>(() => Date.now())
+  const [nearby, setNearby] = useState<NearbyPartner[]>([])
 
   const performCheckIn = useCallback(async (currentProfile: TAFAProfile, qrSlug: string) => {
     setPageState('checking_in')
@@ -78,11 +57,11 @@ export default function QRCheckInPage() {
       setPageState('checked_in')
     } else {
       setErrorMsg(result.error === 'daily_cap_reached'
-        ? 'Has alcanzado el límite diario de puntos TAFA (500 pts). ¡Vuelve mañana!'
-        : 'No se pudo registrar tu visita. Intenta de nuevo.')
+        ? t('sections:qr_error_daily_cap')
+        : t('sections:qr_error_generic'))
       setPageState('error')
     }
-  }, [])
+  }, [t])
 
   useEffect(() => {
     if (!slug) {
@@ -98,6 +77,16 @@ export default function QRCheckInPage() {
       setLanding(data)
       setPageState('ready')
     })
+  }, [slug])
+
+  // FASE 6 — recomendaciones ordenadas por distancia real al sitio escaneado.
+  useEffect(() => {
+    if (!slug) return
+    let cancelled = false
+    fetchNearby(resolveSlug(slug), 3).then(list => {
+      if (!cancelled) setNearby(list)
+    })
+    return () => { cancelled = true }
   }, [slug])
 
   useEffect(() => {
@@ -135,7 +124,7 @@ export default function QRCheckInPage() {
       <div className="min-h-screen bg-tafa-dark flex items-center justify-center">
         <div className="text-white text-sm animate-pulse flex items-center gap-2">
           <div className="w-5 h-5 border-2 border-tafa-volcán border-t-transparent rounded-full animate-spin" />
-          Cargando información del socio TAFA...
+          {t('sections:qr_loading')}
         </div>
       </div>
     )
@@ -145,10 +134,10 @@ export default function QRCheckInPage() {
     return (
       <div className="min-h-screen bg-tafa-dark flex flex-col items-center justify-center p-6 text-white text-center">
         <AlertCircle className="w-12 h-12 text-tafa-volcán mb-4" />
-        <h1 className="text-2xl font-bold mb-2">QR no encontrado</h1>
-        <p className="text-gray-400 text-sm mb-6 max-w-sm">El código QR escaneado no corresponde a un sitio o aliado registrado en TAFA.</p>
+        <h1 className="text-2xl font-bold mb-2">{t('sections:qr_not_found_title')}</h1>
+        <p className="text-gray-400 text-sm mb-6 max-w-sm">{t('sections:qr_not_found_desc')}</p>
         <Link to="/" className="flex items-center gap-2 bg-tafa-volcán text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-tafa-lava transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Volver al inicio
+          <ArrowLeft className="w-4 h-4" /> {t('sections:qr_back_home')}
         </Link>
       </div>
     )
@@ -159,16 +148,29 @@ export default function QRCheckInPage() {
   const description = isPlace ? landing!.place_description : landing!.business_description
   const address = isPlace ? landing!.place_address : landing!.business_address
   const category = isPlace ? landing!.place_category : landing!.business_category
-  const nearby = NEARBY_RECOMMENDATIONS.filter(r => r.slug !== slug).slice(0, 3)
-
-  const [rating, setRating] = useState(5)
-  const [comment, setComment] = useState('')
-  const [memoryPhoto, setMemoryPhoto] = useState<string | null>(null)
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
-  const [scanTimestamp, setScanTimestamp] = useState<number>(Date.now())
 
   const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
   const isReviewExpired = Date.now() - scanTimestamp > SEVEN_DAYS_MS
+
+  /**
+   * La distancia se traduce aquí y no en el servicio: la capa de datos no
+   * conoce el idioma activo. `distanceKind` dice qué frase corresponde, y
+   * cuando la precisión no da para metros se nombra el distrito.
+   */
+  function formatNearbyDistance(rec: NearbyPartner): string {
+    switch (rec.distanceKind) {
+      case 'exact':
+        return t('sections:qr_distance_exact', { value: rec.distanceValue })
+      case 'approx':
+        return t('sections:qr_distance_approx', { value: rec.distanceValue })
+      case 'very-close':
+        return t('sections:qr_distance_very_close')
+      case 'same-district':
+        return t('sections:qr_distance_same_district')
+      default:
+        return rec.district
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-tafa-dark via-[#1a1025] to-tafa-dark text-white pb-16">
@@ -179,7 +181,7 @@ export default function QRCheckInPage() {
         {profile && (
           <div className="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/40 px-3.5 py-1 rounded-full text-xs font-bold text-emerald-300">
             <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-            <span>{profile.points_earned} pts</span>
+            <span>{t('sections:qr_header_points', { points: profile.points_earned })}</span>
           </div>
         )}
       </header>
@@ -199,7 +201,7 @@ export default function QRCheckInPage() {
               <div className="space-y-1">
                 <span className="text-[11px] font-extrabold uppercase tracking-wider text-tafa-volcán flex items-center gap-1.5 bg-tafa-volcán/10 border border-tafa-volcán/30 px-3 py-0.5 rounded-full w-fit">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  {isPlace ? 'Atractivo Oficial DIRCETUR' : 'Aliado Turístico & Gastronómico'}
+                  {isPlace ? t('sections:qr_badge_place') : t('sections:qr_badge_business')}
                 </span>
                 <h1 className="text-2xl font-extrabold font-outfit text-white leading-tight">{name}</h1>
                 {category && <p className="text-amber-400 text-xs font-semibold">{category}</p>}
@@ -219,7 +221,7 @@ export default function QRCheckInPage() {
                 <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-tafa-volcán shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Ubicación / Dirección</span>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">{t('sections:qr_label_address')}</span>
                     <span className="text-gray-200 font-medium">{address}</span>
                   </div>
                 </div>
@@ -229,7 +231,7 @@ export default function QRCheckInPage() {
                 <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Horario Oficial</span>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">{t('sections:qr_label_hours')}</span>
                     <span className="text-gray-200 font-medium">{landing!.place_hours}</span>
                   </div>
                 </div>
@@ -239,7 +241,7 @@ export default function QRCheckInPage() {
                 <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <Ticket className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Tarifa de Ingreso</span>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">{t('sections:qr_label_fee')}</span>
                     <span className="text-gray-200 font-medium">{landing!.place_fee}</span>
                   </div>
                 </div>
@@ -249,7 +251,7 @@ export default function QRCheckInPage() {
                 <div className="bg-white/5 p-3 rounded-2xl border border-white/10 flex items-start gap-2.5">
                   <Phone className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-gray-400 text-[10px] uppercase font-bold block">Teléfono de Reserva</span>
+                    <span className="text-gray-400 text-[10px] uppercase font-bold block">{t('sections:qr_label_phone')}</span>
                     <span className="text-gray-200 font-medium">{landing!.business_phone}</span>
                   </div>
                 </div>
@@ -266,17 +268,17 @@ export default function QRCheckInPage() {
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-1.5 no-underline border border-white/15"
                 >
                   <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Cómo llegar (Maps)</span>
+                  <span>{t('sections:qr_action_maps')}</span>
                 </a>
               )}
               <a
-                href={`https://wa.me/51921378349?text=Hola%20TAFA%20Arequipa,%20deseo%20información%20u%20orientación%20sobre:%20${encodeURIComponent(name || '')}`}
+                href={`https://wa.me/51921378349?text=${encodeURIComponent(t('sections:qr_whatsapp_message', { name: name || '' }))}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-300 border border-emerald-500/40 text-xs font-semibold py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-1.5 no-underline"
               >
                 <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Consulta WhatsApp</span>
+                <span>{t('sections:qr_action_whatsapp')}</span>
               </a>
             </div>
           </div>
@@ -287,8 +289,8 @@ export default function QRCheckInPage() {
               <Award className="w-32 h-32 text-white" />
             </div>
             <Sparkles className="w-7 h-7 text-amber-400 mx-auto mb-2" />
-            <p className="text-4xl font-extrabold font-outfit text-amber-300">+{landing!.effective_points} PTS TAFA</p>
-            <p className="text-gray-300 text-xs mt-1">Recompensa oficial por validar tu visita en el lugar</p>
+            <p className="text-4xl font-extrabold font-outfit text-amber-300">{t('sections:qr_reward_points', { points: landing!.effective_points })}</p>
+            <p className="text-gray-300 text-xs mt-1">{t('sections:qr_reward_caption')}</p>
           </div>
 
           {/* Resultado de Confirmación de Asistencia */}
@@ -299,40 +301,49 @@ export default function QRCheckInPage() {
               className="bg-emerald-500/15 border border-emerald-500/40 rounded-[28px] p-6 text-center space-y-4 shadow-2xl"
             >
               <CheckCircle2 className="w-12 h-12 text-emerald-400 mx-auto" />
-              <h3 className="text-xl font-bold text-white">¡Visita Confirmada con Éxito!</h3>
+              <h3 className="text-xl font-bold text-white">{t('sections:qr_success_title')}</h3>
               <p className="text-emerald-300 text-xs leading-relaxed max-w-sm mx-auto">
                 {checkInResult.already_visited
-                  ? `Ya habías registrado tu visita hoy a ${checkInResult.entity_name}. ¡Gracias por seguir explorando Arequipa!`
-                  : `Se han añadido +${checkInResult.points_awarded} Puntos TAFA a tu perfil por visitar ${checkInResult.entity_name}.`}
+                  ? t('sections:qr_success_already_visited', { name: checkInResult.entity_name })
+                  : t('sections:qr_success_points_added', { points: checkInResult.points_awarded, name: checkInResult.entity_name })}
               </p>
-              <div className="pt-1 text-xs font-bold text-amber-300">
-                Puntos Acumulados: {checkInResult.total_points} PTS TAFA
-              </div>
+              {typeof checkInResult.total_points === 'number' && (
+                <div className="pt-1 text-xs font-bold text-amber-300">
+                  {t('sections:qr_success_total_points', { points: checkInResult.total_points })}
+                </div>
+              )}
+
+              {checkInResult.persisted === false && (
+                <div className="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 text-[11px] text-amber-200 leading-relaxed">
+                  <strong className="block text-amber-300">{t('sections:qr_offline_title')}</strong>
+                  {t('sections:qr_offline_desc')}
+                </div>
+              )}
 
               {/* Formulario Opcional de Calificación & Foto de Recuerdo (Plazo 7 días) */}
               <div className="bg-black/40 border border-white/10 rounded-2xl p-5 text-left space-y-4 mt-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">Opcional · Recuerdo de tu Visita</span>
-                    <h4 className="text-sm font-bold text-white">¿Qué tal tu experiencia en este lugar?</h4>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block">{t('sections:qr_review_badge')}</span>
+                    <h4 className="text-sm font-bold text-white">{t('sections:qr_review_title')}</h4>
                   </div>
-                  <span className="text-[10px] text-gray-400 bg-white/10 px-2 py-0.5 rounded-full">Plazo: 7 días</span>
+                  <span className="text-[10px] text-gray-400 bg-white/10 px-2 py-0.5 rounded-full">{t('sections:qr_review_deadline')}</span>
                 </div>
 
                 {isReviewExpired ? (
                   <div className="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl text-center text-xs text-amber-300">
-                    El plazo de 7 días para opinar o subir foto de recuerdo ha finalizado. Tu asistencia y tus Puntos TAFA se mantienen guardados permanentemente.
+                    {t('sections:qr_review_expired')}
                   </div>
                 ) : reviewSubmitted ? (
                   <div className="bg-emerald-500/20 border border-emerald-500/40 p-3 rounded-xl text-center text-xs text-emerald-300 space-y-1">
-                    <p className="font-bold">¡Reseña y foto de recuerdo guardadas!</p>
-                    <p className="text-[11px] text-gray-300">Tu opinión fortalece la calidad del turismo en Arequipa.</p>
+                    <p className="font-bold">{t('sections:qr_review_saved_title')}</p>
+                    <p className="text-[11px] text-gray-300">{t('sections:qr_review_saved_desc')}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     {/* Selector de Estrellas */}
                     <div>
-                      <label className="block text-[11px] text-gray-300 mb-1">Calificación por Estrellas:</label>
+                      <label className="block text-[11px] text-gray-300 mb-1">{t('sections:qr_review_rating_label')}</label>
                       <div className="flex items-center gap-1">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
@@ -349,11 +360,11 @@ export default function QRCheckInPage() {
 
                     {/* Comentario */}
                     <div>
-                      <label className="block text-[11px] text-gray-300 mb-1">Comentario (Opcional):</label>
+                      <label className="block text-[11px] text-gray-300 mb-1">{t('sections:qr_review_comment_label')}</label>
                       <textarea
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
-                        placeholder="Ej: Excelente comida y atención tradicional..."
+                        placeholder={t('sections:qr_review_comment_placeholder')}
                         rows={2}
                         className="w-full bg-white/10 border border-white/20 rounded-xl p-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
                       />
@@ -361,7 +372,7 @@ export default function QRCheckInPage() {
 
                     {/* Foto Opcional */}
                     <div>
-                      <label className="block text-[11px] text-gray-300 mb-1">Foto de Recuerdo (Opcional):</label>
+                      <label className="block text-[11px] text-gray-300 mb-1">{t('sections:qr_review_photo_label')}</label>
                       <input
                         type="file"
                         accept="image/*"
@@ -377,7 +388,7 @@ export default function QRCheckInPage() {
                       />
                       {memoryPhoto && (
                         <div className="mt-2 relative w-24 h-24 rounded-xl overflow-hidden border border-white/20">
-                          <img src={memoryPhoto} alt="Recuerdo de visita" className="w-full h-full object-cover" />
+                          <img src={memoryPhoto} alt={t('sections:qr_review_photo_alt')} className="w-full h-full object-cover" />
                         </div>
                       )}
                     </div>
@@ -387,7 +398,7 @@ export default function QRCheckInPage() {
                       onClick={() => setReviewSubmitted(true)}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition-all"
                     >
-                      Guardar Reseña & Foto de Recuerdo
+                      {t('sections:qr_review_submit')}
                     </button>
                   </div>
                 )}
@@ -410,19 +421,19 @@ export default function QRCheckInPage() {
                 className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <CheckCircle2 className="w-5 h-5" />
-                Confirmar mi visita y Reclamar +50 PTS
+                {t('sections:qr_cta_confirm')}
               </button>
             ) : (
               <div className="space-y-3 bg-white/5 p-5 rounded-2xl border border-white/10 text-center">
                 <p className="text-gray-300 text-xs">
-                  Inicia sesión o regístrate para confirmar tu asistencia y añadir los <strong>+{landing!.effective_points} PTS TAFA</strong> a tu Pase Turístico.
+                  {t('sections:qr_login_prompt_intro')} <strong>{t('sections:qr_login_prompt_points', { points: landing!.effective_points })}</strong> {t('sections:qr_login_prompt_outro')}
                 </p>
                 <button
                   onClick={handleLoginClick}
                   className="w-full bg-tafa-volcán hover:bg-tafa-lava text-white py-4 rounded-full font-bold text-xs uppercase tracking-wider transition-all shadow-xl hover:scale-[1.02] flex items-center justify-center gap-2"
                 >
                   <LogIn className="w-5 h-5" />
-                  Iniciar sesión / Registrarse
+                  {t('sections:qr_cta_login')}
                 </button>
               </div>
             )
@@ -430,7 +441,7 @@ export default function QRCheckInPage() {
 
           {pageState === 'checking_in' && (
             <div className="text-center text-gray-300 text-xs animate-pulse py-4 font-semibold">
-              Registrando tu visita en la red oficial de Arequipa...
+              {t('sections:qr_checking_in')}
             </div>
           )}
 
@@ -439,36 +450,47 @@ export default function QRCheckInPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-white font-bold font-outfit text-lg">
                 <Compass className="w-5 h-5 text-tafa-volcán" />
-                <span>Lugares y Aliados Cercanos</span>
+                <span>{t('sections:qr_nearby_title')}</span>
               </div>
-              <span className="text-xs text-gray-400">Arequipa Tradicional</span>
+              <span className="text-xs text-gray-400">{t('sections:qr_nearby_subtitle')}</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {nearby.map((rec) => (
-                <Link
-                  key={rec.slug}
-                  to={`/qr/${rec.slug}`}
-                  className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tafa-volcán/50 rounded-2xl p-4 transition-all no-underline flex flex-col justify-between"
-                >
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
-                      {rec.category}
-                    </span>
-                    <h4 className="text-xs font-bold text-white group-hover:text-tafa-volcán transition-colors line-clamp-2">
-                      {rec.name}
-                    </h4>
-                    <p className="text-[11px] text-gray-400 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-tafa-volcán" /> {rec.district}
-                    </p>
-                  </div>
-                  <div className="pt-3 text-[10px] font-bold text-emerald-400 flex items-center justify-between border-t border-white/10 mt-3">
-                    <span>Ver info & QR</span>
-                    <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">{rec.points}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            {nearby.length === 0 ? (
+              <p className="text-gray-400 text-xs" role="status">
+                {t('sections:qr_nearby_loading')}
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {nearby.map((rec) => (
+                  <Link
+                    key={rec.slug}
+                    to={`/qr/${rec.slug}`}
+                    className="group bg-white/5 hover:bg-white/10 border border-white/10 hover:border-tafa-volcán/50 rounded-2xl p-4 transition-all no-underline flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      {/* Traducida desde la clave de enum, no desde el
+                          `categoryLabel` en español que arma el servicio. */}
+                      <span className="text-[10px] font-bold text-amber-400 uppercase tracking-wider block">
+                        {t(`sections:partners_filter_${rec.category}`)}
+                      </span>
+                      <h4 className="text-xs font-bold text-white group-hover:text-tafa-volcán transition-colors line-clamp-2">
+                        {rec.name}
+                      </h4>
+                      <p className="text-[11px] text-gray-400 flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-tafa-volcán" aria-hidden="true" />
+                        {rec.district}
+                      </p>
+                    </div>
+                    <div className="pt-3 text-[10px] font-bold text-emerald-400 flex items-center justify-between border-t border-white/10 mt-3">
+                      <span className="text-gray-300">{formatNearbyDistance(rec)}</span>
+                      <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">
+                        {t('sections:qr_nearby_points', { points: rec.points })}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </motion.div>
       </main>

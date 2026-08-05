@@ -1,31 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { QrCode, Download, Printer, X, Sparkles, ShieldCheck, Copy, Check } from 'lucide-react'
+import { fetchPartners } from '@/features/partners/partnersService'
+import type { PartnerEntry } from '@/features/partners/types'
 
 interface QRStudioModalProps {
   isOpen: boolean
   onClose: () => void
 }
 
-const PRESET_PARTNERS = [
-  { slug: 'la-nueva-palomino', name: 'Picantería La Nueva Palomino', district: 'Yanahuara' },
-  { slug: 'sol-de-mayo', name: 'Restaurante Sol de Mayo (1903)', district: 'Yanahuara' },
-  { slug: 'la-lucila', name: 'Picantería La Lucila', district: 'Sachaca' },
-  { slug: 'bodega-majes-tradicion', name: 'Bodega Majes Tradición', district: 'Castilla' },
-  { slug: 'canteras-anashuayco', name: 'Canteras de Añashuayco (Ruta Sillar)', district: 'Cerro Colorado' },
-  { slug: 'plaza-de-armas', name: 'Plaza de Armas de Arequipa', district: 'Cercado' },
-  { slug: 'monasterio-santa-catalina', name: 'Monasterio de Santa Catalina', district: 'Cercado' },
-]
+/** Base pública donde se sirven las rutas /qr/:slug. */
+const PUBLIC_BASE_URL = import.meta.env.VITE_PUBLIC_SITE_URL ?? 'https://tafaqp.vercel.app'
 
 export default function QRStudioModal({ isOpen, onClose }: QRStudioModalProps) {
-  const [selectedSlug, setSelectedSlug] = useState('la-nueva-palomino')
+  // El catálogo se lee de `qr_landing`: así el Estudio nunca imprime un slug
+  // que no exista en la base y que por tanto no registraría ninguna visita.
+  const [partners, setPartners] = useState<PartnerEntry[]>([])
+  const [selectedSlug, setSelectedSlug] = useState('')
   const [customSlug, setCustomSlug] = useState('')
   const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    if (!isOpen) return
+    let cancelled = false
+    fetchPartners().then(list => {
+      if (cancelled) return
+      setPartners(list)
+      setSelectedSlug(current => current || list[0]?.slug || '')
+    })
+    return () => { cancelled = true }
+  }, [isOpen])
 
   if (!isOpen) return null
 
   const activeSlug = customSlug.trim() ? customSlug.trim().toLowerCase().replace(/\s+/g, '-') : selectedSlug
-  const partnerName = PRESET_PARTNERS.find(p => p.slug === activeSlug)?.name || activeSlug.replace(/-/g, ' ').toUpperCase()
-  const qrUrl = `https://tafaqp.vercel.app/qr/${activeSlug}`
+  const partnerName = partners.find(p => p.slug === activeSlug)?.name || activeSlug.replace(/-/g, ' ').toUpperCase()
+  const qrUrl = `${PUBLIC_BASE_URL}/qr/${activeSlug}`
+  const isKnownSlug = partners.some(p => p.slug === activeSlug)
 
   // Generador de QR SVG vectorial mediante API de alta definición
   const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrUrl)}&color=111827&bgcolor=ffffff&margin=1`
@@ -67,8 +77,9 @@ export default function QRStudioModal({ isOpen, onClose }: QRStudioModalProps) {
             onChange={(e) => { setSelectedSlug(e.target.value); setCustomSlug(''); }}
             className="w-full bg-slate-800 border border-white/20 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-tafa-volcán"
           >
-            {PRESET_PARTNERS.map(p => (
-              <option key={p.slug} value={p.slug}>{p.name} ({p.district})</option>
+            {partners.length === 0 && <option value="">Cargando catálogo oficial…</option>}
+            {partners.map(p => (
+              <option key={p.slug} value={p.slug}>{p.name} — {p.categoryLabel} ({p.district})</option>
             ))}
           </select>
 
@@ -82,6 +93,14 @@ export default function QRStudioModal({ isOpen, onClose }: QRStudioModalProps) {
               className="w-full bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-tafa-volcán"
             />
           </div>
+
+          {activeSlug && !isKnownSlug && (
+            <p className="text-[11px] text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 leading-relaxed">
+              <strong>Atención:</strong> «{activeSlug}» no está registrado en el catálogo oficial.
+              El cartel se generará, pero las visitas escaneadas no sumarán puntos hasta dar de alta
+              el aliado en Supabase.
+            </p>
+          )}
         </div>
 
         {/* ── VISTA PREVIA DEL CARTEL FÍSICO TAFA PARA IMPRESIÓN ── */}

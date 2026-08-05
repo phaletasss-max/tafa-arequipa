@@ -4,7 +4,9 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 
 const supportedLngs = ['es', 'en', 'fr', 'de', 'pt', 'it', 'ja', 'zh', 'ko', 'nl'] as const
 const defaultLng = 'es'
-const namespaces = ['navigation', 'hero', 'explorer', 'accessibility', 'common', 'forms', 'modals'] as const
+// `sections` cubre las secciones de la landing montadas en PT-09, que hasta
+// ahora tenían su texto fijo en español dentro de un sitio de 10 idiomas.
+const namespaces = ['navigation', 'hero', 'explorer', 'accessibility', 'common', 'forms', 'modals', 'sections'] as const
 const localeModules = import.meta.glob('../locales/*/*.json', { eager: false }) as Record<string, () => Promise<{ default: Record<string, unknown> }>>
 
 function normalizeLanguage(lng?: string | null) {

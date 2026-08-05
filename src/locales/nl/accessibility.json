@@ -1,13 +1,14 @@
 {
-  "screen_reader_prompt": "Gebruikt u een schermlezer? Activeer de ondersteunde navigatiemodus.",
-  "language_label": "Selecteer platformtaal",
-  "font_size_normal": "Tekst: A",
-  "font_size_large": "Tekst: A+",
-  "font_size_extralarge": "Tekst: A++",
-  "contrast_normal": "Contrast",
-  "contrast_high": "Hoog Contrast",
   "audio_route_start": "Audio Route",
   "audio_route_stop": "Stem Stoppen",
-  "visual_mode": "Visuele Modus",
-  "sign_language": "Gebarentaal"
+  "contrast_high": "Hoog Contrast",
+  "contrast_normal": "Contrast",
+  "font_size_extralarge": "Tekst: A++",
+  "font_size_large": "Tekst: A+",
+  "font_size_normal": "Tekst: A",
+  "language_label": "Selecteer platformtaal",
+  "screen_reader_prompt": "Gebruikt u een schermlezer? Activeer de ondersteunde navigatiemodus.",
+  "sign_language": "Gebarentaal",
+  "skip_to_content": "Ga naar de hoofdinhoud",
+  "visual_mode": "Visuele Modus"
 }

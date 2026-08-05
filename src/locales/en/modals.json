@@ -1,5 +1,7 @@
 {
-  "ai_welcome_message": "Welcome to TAFA assistant. I can help you plan your visit to Arequipa, find accessible routes, gastronomy and manage bookings. How can I help?",
+  "ecosystem_success_title": "Application received",
+  "ecosystem_success_body": "Your application has been registered in the TAFA ecosystem. The DIRCETUR Arequipa team will validate your tax ID and registration, and will contact you at the email address provided.",
+  "ai_welcome_message":"Welcome to TAFA assistant. I can help you plan your visit to Arequipa, find accessible routes, gastronomy and manage bookings. How can I help?",
   "ai_assistant_title": "TAFA Arequipa AI Assistant",
   "ai_chat_title": "TAFA AI",
   "ai_chat_subtitle": "Smart tourism assistant",

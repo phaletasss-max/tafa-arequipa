@@ -43,13 +43,35 @@ src/
     └── Footer.tsx             # Footer institucional
 ```
 
+## Configuración
+
+Copiar `.env.example` a `.env.local` y completar las variables `VITE_*`.
+Sin ellas la app usa los valores del proyecto MVP como respaldo.
+
+## Documentación
+
+| Documento | Contenido |
+|---|---|
+| [`docs/plan-de-trabajo.md`](docs/plan-de-trabajo.md) | **Estado real y trabajo pendiente** |
+| [`docs/architecture.md`](docs/architecture.md) | Arquitectura y capas |
+| [`docs/database-schema.md`](docs/database-schema.md) | Esquema Supabase y estado de RLS |
+| [`docs/qr-system.md`](docs/qr-system.md) | Sistema QR y convención de slugs |
+| [`docs/accessibility.md`](docs/accessibility.md) | Accesibilidad WCAG 2.2 |
+| [`docs/image-system.md`](docs/image-system.md) | Sistema de imágenes |
+| [`docs/changelog.md`](docs/changelog.md) | Historial de cambios |
+
 ## Próximos pasos
 
-- [ ] Reemplazar video con producción cinematográfica de Arequipa (Veo 3)
-- [ ] Conectar Hero card a API de búsqueda
-- [ ] Integrar mapa real con Leaflet.js / API dashboard TAFA
-- [ ] Autenticación con Supabase Auth
-- [ ] Conectar endpoints Express del backend TAFA
+- [ ] **Aplicar `database/migrations/004_rls_hardening.sql`** (PT-06 — el
+      frontend ya usa Supabase Auth; hasta aplicarla los perfiles siguen siendo
+      legibles y modificables con la clave anónima pública)
+- [ ] Aplicar `database/migrations/003_recompensas_catalogo.sql` (PT-07)
+- [x] Recomendaciones cercanas por geolocalización real (PT-08)
+- [x] Code-splitting y limpieza de componentes huérfanos (PT-09)
+- [ ] Aplicar `database/migrations/005_coordenadas_aliados.sql` y completar a
+      mano los 6 aliados sin coordenada (PT-12)
+- [x] Traducir a los 10 idiomas — 4.360 cadenas, paridad completa (PT-11)
+- [ ] Integrar mapa real con Leaflet.js
 
 ## Brandbook
 

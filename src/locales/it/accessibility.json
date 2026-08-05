@@ -1,13 +1,14 @@
 {
-  "screen_reader_prompt": "Usi uno screen reader? Attiva la modalità di navigazione assistita.",
-  "language_label": "Seleziona la lingua della piattaforma",
-  "font_size_normal": "Testo: A",
-  "font_size_large": "Testo: A+",
-  "font_size_extralarge": "Testo: A++",
-  "contrast_normal": "Contrasto",
-  "contrast_high": "Alto Contrasto",
   "audio_route_start": "Audiorotta",
   "audio_route_stop": "Interrompi Voce",
-  "visual_mode": "Modalità Visiva",
-  "sign_language": "Lingua dei Segni"
+  "contrast_high": "Alto Contrasto",
+  "contrast_normal": "Contrasto",
+  "font_size_extralarge": "Testo: A++",
+  "font_size_large": "Testo: A+",
+  "font_size_normal": "Testo: A",
+  "language_label": "Seleziona la lingua della piattaforma",
+  "screen_reader_prompt": "Usi uno screen reader? Attiva la modalità di navigazione assistita.",
+  "sign_language": "Lingua dei Segni",
+  "skip_to_content": "Vai al contenuto principale",
+  "visual_mode": "Modalità Visiva"
 }

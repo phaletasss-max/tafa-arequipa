@@ -1,10 +1,13 @@
 {
+  "about": "소개",
+  "account": "관광객 계정",
+  "admin": "관리자",
   "explore": "탐색",
   "map": "지도",
-  "about": "소개",
-  "admin": "관리자",
-  "sign_in": "로그인",
-  "account": "관광객 계정",
+  "mype": "MYPE 생태계",
+  "routes": "미탐험 루트",
   "settings": "설정",
+  "sign_in": "로그인",
+  "sign_up": "회원가입",
   "survey": "설문조사"
 }

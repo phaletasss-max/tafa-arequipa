@@ -1,17 +1,48 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense, startTransition } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QrCode } from 'lucide-react'
 import { AccessibilityProvider } from '@/features/accessibility/context/AccessibilityContext'
 import QuickAccessBar from '@/features/accessibility/components/QuickAccessBar'
-import Hero from '@/components/Hero'
 import CinematicStoryteller from '@/components/CinematicStoryteller'
 import Highlights from '@/components/Highlights'
+import PartnersDirectory from '@/features/partners/PartnersDirectory'
 import Footer from '@/components/Footer'
-import TouristAIAssistant from '@/components/ai/TouristAIAssistant'
-import AuthModal from '@/components/auth/AuthModal'
-import TAFAExplorerPassModal from '@/components/rewards/TAFAExplorerPassModal'
-import QRCheckInPage from '@/features/qr/QRCheckInPage'
-import QRStudioModal from '@/features/qr/QRStudioModal'
+import EmergencyBanner from '@/components/safety/EmergencyBanner'
+import { loadSessionProfile } from '@/services/authService'
+
+/**
+ * PT-09 — Secciones diferidas.
+ * Van por debajo del primer pantallazo, así que no necesitan estar en el bundle
+ * inicial: se descargan mientras el visitante recorre el hero y los destacados.
+ */
+const MapPreview = lazy(() => import('@/components/MapPreview'))
+const UnexploredRoutes = lazy(() => import('@/components/UnexploredRoutes'))
+const Stats = lazy(() => import('@/components/Stats'))
+const Problem = lazy(() => import('@/components/Problem'))
+const AboutProject = lazy(() => import('@/components/AboutProject'))
+const JoinEcosystem = lazy(() => import('@/components/ecosystem/JoinEcosystem'))
+
+/**
+ * PT-09 — Carga diferida.
+ * La página QR es una ruta aparte y los modales solo aparecen tras una acción
+ * del usuario: sacarlos del bundle inicial evita que quien entra a la landing
+ * (o quien escanea un QR) descargue código que no va a usar.
+ */
+const QRCheckInPage = lazy(() => import('@/features/qr/QRCheckInPage'))
+const TouristAIAssistant = lazy(() => import('@/components/ai/TouristAIAssistant'))
+const AuthModal = lazy(() => import('@/components/auth/AuthModal'))
+const TAFAExplorerPassModal = lazy(() => import('@/components/rewards/TAFAExplorerPassModal'))
+const QRStudioModal = lazy(() => import('@/features/qr/QRStudioModal'))
+
+/** Indicador mientras se descarga un fragmento diferido. */
+function ChunkFallback() {
+  return (
+    <div className="min-h-[40vh] flex items-center justify-center" role="status" aria-live="polite">
+      <span className="sr-only">Cargando contenido…</span>
+      <div className="w-6 h-6 border-2 border-tafa-volcán border-t-transparent rounded-full animate-spin" />
+    </div>
+  )
+}
 
 function LandingPage({
   onOpenAuth,
@@ -29,12 +60,16 @@ function LandingPage({
   return (
     <div className="w-full overflow-x-hidden bg-white text-tafa-text font-sans relative">
       {/* Skip to Main Content Link (WCAG 2.1) */}
-      <a 
+      <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[100] focus:p-4 focus:bg-tafa-volcán focus:text-white focus:font-bold"
       >
         Ir al contenido principal
       </a>
+
+      {/* Aviso de seguridad y auxilio al visitante. Va por encima de la barra
+          sticky: si quedara debajo, se perdería al hacer scroll. */}
+      <EmergencyBanner />
 
       {/* Barra Superior de Configuración Institucional */}
       <QuickAccessBar
@@ -44,11 +79,24 @@ function LandingPage({
         onOpenSignLanguage={onOpenSignLanguage}
       />
 
-      {/* Main Content Area */}
+      {/* Orden: primero el recorrido del turista (qué ver → dónde queda → qué
+          hay fuera de la ciudad → con quién comer y reservar) y después el
+          bloque institucional (cifras → diagnóstico → proyecto → postulación).
+          Con estas secciones montadas se reparan además los enlaces #mapa,
+          #inexplorada, #sobre-proyecto y #ecosistema del pie de página. */}
       <main id="main-content" role="main">
         <CinematicStoryteller />
         <Highlights />
-        <TouristAIAssistant />
+        <Suspense fallback={<ChunkFallback />}>
+          <MapPreview />
+          <UnexploredRoutes />
+          <PartnersDirectory />
+          <Stats />
+          <Problem />
+          <AboutProject />
+          <JoinEcosystem />
+          <TouristAIAssistant />
+        </Suspense>
       </main>
 
       {/* Botón Flotante para Generador / Estudio de QRs de Socios */}
@@ -74,63 +122,79 @@ export default function App() {
   const [isAIOpen, setIsAIOpen] = useState(false)
   const [isSignLanguageOpen, setIsSignLanguageOpen] = useState(false)
   const [isQRStudioOpen, setIsQRStudioOpen] = useState(false)
-  const [touristUser, setTouristUser] = useState<{ nombre: string; docType: string; docNum: string } | null>(null)
 
+  /**
+   * Abrir un modal diferido desde un clic es una actualización síncrona que
+   * suspende mientras se descarga su fragmento, y React lo rechaza con
+   * "A component suspended while responding to synchronous input".
+   * `startTransition` marca la apertura como no urgente y lo evita.
+   */
+  const abrirDiferido = (set: (v: boolean) => void) => () => startTransition(() => set(true))
+
+  // Rehidrata el perfil desde la sesión de Supabase Auth. La caché de
+  // localStorage puede sobrevivir a una sesión ya expirada, y sin esto la UI
+  // seguiría mostrando como conectado a alguien que ya no lo está.
   useEffect(() => {
-    const saved = localStorage.getItem('tafa_tourist_user')
-    if (saved) {
-      try { setTouristUser(JSON.parse(saved)); } catch (e) {}
-    }
+    void loadSessionProfile()
   }, [])
+
+  // El asistente IA y la guía en lengua de señas se abren desde QuickAccessBar,
+  // que gestiona su propio estado; aquí solo se conserva el de los modales
+  // globales montados más abajo.
+  void isAIOpen
+  void isSignLanguageOpen
 
   return (
     <AccessibilityProvider>
       <BrowserRouter>
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
-              <LandingPage 
-                onOpenAuth={() => setIsAuthOpen(true)}
-                onOpenSettings={() => setIsPassOpen(true)}
+              <LandingPage
+                onOpenAuth={abrirDiferido(setIsAuthOpen)}
+                onOpenSettings={abrirDiferido(setIsPassOpen)}
                 onOpenAI={() => setIsAIOpen(true)}
                 onOpenSignLanguage={() => setIsSignLanguageOpen(true)}
-                onOpenQRStudio={() => setIsQRStudioOpen(true)}
+                onOpenQRStudio={abrirDiferido(setIsQRStudioOpen)}
               />
-            } 
+            }
           />
-          <Route path="/qr/:slug" element={<QRCheckInPage />} />
-          <Route path="/aliados/:slug" element={<QRCheckInPage />} />
-          <Route 
-            path="*" 
+          <Route
+            path="/qr/:slug"
+            element={<Suspense fallback={<ChunkFallback />}><QRCheckInPage /></Suspense>}
+          />
+          <Route
+            path="/aliados/:slug"
+            element={<Suspense fallback={<ChunkFallback />}><QRCheckInPage /></Suspense>}
+          />
+          <Route
+            path="*"
             element={
-              <LandingPage 
-                onOpenAuth={() => setIsAuthOpen(true)}
-                onOpenSettings={() => setIsPassOpen(true)}
+              <LandingPage
+                onOpenAuth={abrirDiferido(setIsAuthOpen)}
+                onOpenSettings={abrirDiferido(setIsPassOpen)}
                 onOpenAI={() => setIsAIOpen(true)}
                 onOpenSignLanguage={() => setIsSignLanguageOpen(true)}
-                onOpenQRStudio={() => setIsQRStudioOpen(true)}
+                onOpenQRStudio={abrirDiferido(setIsQRStudioOpen)}
               />
-            } 
+            }
           />
         </Routes>
 
-        {/* Modales Globales */}
-        <AuthModal
-          isOpen={isAuthOpen}
-          onClose={() => setIsAuthOpen(false)}
-          onAuthSuccess={(u) => setTouristUser(u)}
-        />
-
-        <TAFAExplorerPassModal
-          isOpen={isPassOpen}
-          onClose={() => setIsPassOpen(false)}
-        />
-
-        <QRStudioModal
-          isOpen={isQRStudioOpen}
-          onClose={() => setIsQRStudioOpen(false)}
-        />
+        {/* Modales globales: se montan solo al abrirse, para que su fragmento
+            no se descargue hasta que el usuario realmente lo necesite. */}
+        <Suspense fallback={null}>
+          {isAuthOpen && (
+            <AuthModal isOpen onClose={() => setIsAuthOpen(false)} />
+          )}
+          {isPassOpen && (
+            <TAFAExplorerPassModal isOpen onClose={() => setIsPassOpen(false)} />
+          )}
+          {isQRStudioOpen && (
+            <QRStudioModal isOpen onClose={() => setIsQRStudioOpen(false)} />
+          )}
+        </Suspense>
       </BrowserRouter>
     </AccessibilityProvider>
   )

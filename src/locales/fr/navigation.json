@@ -1,13 +1,13 @@
 {
+  "about": "À propos de TAFA",
+  "account": "Compte Touriste",
+  "admin": "Admin",
   "explore": "Explorer les Attractions",
   "map": "Carte Interactive",
-  "about": "À propos de TAFA",
-  "admin": "Admin",
-  "sign_in": "Se Connecter",
-  "account": "Compte Touriste",
-  "settings": "Paramètres",
-  "survey": "Enquête",
-  "routes": "Itinéraires Inexplorés",
   "mype": "Écosystème MPME",
-  "sign_up": "S'Inscrire"
+  "routes": "Itinéraires Inexplorés",
+  "settings": "Paramètres",
+  "sign_in": "Se Connecter",
+  "sign_up": "S'Inscrire",
+  "survey": "Enquête"
 }

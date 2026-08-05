@@ -61,6 +61,14 @@ export default function TouristAIAssistant() {
     initialFocusRef: chatInputRef as React.RefObject<HTMLElement>,
   })
 
+  // Permite abrir el asistente desde otras secciones (p. ej. el CTA "Asistente
+  // IA" del hero, que antes saltaba a una sección mock ya retirada).
+  useEffect(() => {
+    const abrir = () => setIsOpen(true)
+    window.addEventListener('tafa_open_ai', abrir)
+    return () => window.removeEventListener('tafa_open_ai', abrir)
+  }, [])
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     if (messages.length > 1) {

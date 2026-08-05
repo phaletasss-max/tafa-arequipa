@@ -1,10 +1,13 @@
 {
+  "about": "Over",
+  "account": "Toeristenaccount",
+  "admin": "Admin",
   "explore": "Verkennen",
   "map": "Kaart",
-  "about": "Over",
-  "admin": "Admin",
-  "sign_in": "Inloggen",
-  "account": "Toeristenaccount",
+  "mype": "MYPE-ecosysteem",
+  "routes": "Onontgonnen routes",
   "settings": "Instellingen",
+  "sign_in": "Inloggen",
+  "sign_up": "Registreren",
   "survey": "Enquête"
 }

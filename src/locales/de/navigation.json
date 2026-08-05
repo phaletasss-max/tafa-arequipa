@@ -1,10 +1,13 @@
 {
+  "about": "Über uns",
+  "account": "Touristenkonto",
+  "admin": "Admin",
   "explore": "Erkunden",
   "map": "Karte",
-  "about": "Über uns",
-  "admin": "Admin",
-  "sign_in": "Anmelden",
-  "account": "Touristenkonto",
+  "mype": "MYPE-Ökosystem",
+  "routes": "Unentdeckte Routen",
   "settings": "Einstellungen",
+  "sign_in": "Anmelden",
+  "sign_up": "Registrieren",
   "survey": "Umfrage"
 }
